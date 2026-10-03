@@ -3,7 +3,6 @@
 import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -11,20 +10,11 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { quickLeadSchema, QuickLeadFormValues } from "@/features/leads/schemas/lead.schema"
 import { LeadService } from "@/features/leads/services/lead.service"
-import { FINANCIAL_SERVICES } from "@/data/services"
-import { Sparkles, CheckCircle2, Loader2, ArrowRight } from "lucide-react"
+import { CheckCircle2, Loader2, ArrowRight } from "lucide-react"
 
 export function LeadCaptureSection() {
   const [success, setSuccess] = React.useState(false)
@@ -36,7 +26,7 @@ export function LeadCaptureSection() {
       fullName: "",
       email: "",
       phone: "",
-      serviceInterest: FINANCIAL_SERVICES[0].title,
+      serviceInterest: "Investment Planning",
     },
   })
 
@@ -54,143 +44,120 @@ export function LeadCaptureSection() {
   }
 
   return (
-    <section className="py-16 md:py-20 border-t border-border/60 bg-gradient-to-br from-primary/5 via-card to-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Card className="border border-primary/20 shadow-xl overflow-hidden bg-card/90 backdrop-blur-md">
-          <CardContent className="p-8 sm:p-10">
+    <section className="py-24 md:py-32 border-b border-border bg-background">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+          {/* Left: Problem → Solution Editorial Statement */}
+          <div className="lg:col-span-6 space-y-6">
+            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
+              The Finora Standard
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-[1.08]">
+              Financial decisions <br />
+              shouldn’t feel complicated.
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Get guidance designed around your goals, not generic advice or commission-driven quotas. We translate complex balance sheets into actionable, verifiable execution steps.
+            </p>
+          </div>
+
+          {/* Right: Clean Editorial Lead Capture Form (No Cards) */}
+          <div className="lg:col-span-6 border-t lg:border-t-0 lg:border-l border-border pt-8 lg:pt-0 lg:pl-16 space-y-6">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+                Want personalized financial guidance?
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Receive initial benchmarking notes before you schedule your call.
+              </p>
+            </div>
+
             {success ? (
-              <div className="text-center py-8 space-y-4">
-                <div className="mx-auto h-12 w-12 rounded-full bg-success/15 text-success flex items-center justify-center">
+              <div className="py-8 space-y-4">
+                <div className="flex items-center gap-3 text-primary">
                   <CheckCircle2 className="h-6 w-6" />
+                  <span className="font-bold text-lg text-foreground">Inquiry received.</span>
                 </div>
-                <h3 className="text-xl font-bold text-foreground">
-                  Inquiry Received!
-                </h3>
-                <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
-                  A senior fiduciary specialist will review your request and send custom consultation slot recommendations to your email.
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  A fiduciary specialist will review your request and send tailored consultation notes directly to your inbox.
                 </p>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setSuccess(false)}
-                  className="text-xs"
+                  className="rounded-none text-xs"
                 >
                   Submit Another Inquiry
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-5 space-y-3 text-center lg:text-left">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    <span>Free Advisory Strategy</span>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="fullName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder="Your full name"
+                              className="h-12 rounded-none border-border bg-background focus:border-primary text-sm"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder="Your email address"
+                              type="email"
+                              className="h-12 rounded-none border-border bg-background focus:border-primary text-sm"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  <h3 className="text-2xl font-bold tracking-tight text-foreground">
-                    Want personalized financial guidance?
-                  </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Leave your contact info and tell us what you&apos;re solving for. A matched specialist will prepare initial benchmarking before your call.
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full sm:w-auto h-12 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Get Started</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+
+                  <p className="text-[11px] font-mono text-muted-foreground">
+                    Strict privacy. We never share your data or sell marketing lists.
                   </p>
-                </div>
-
-                <div className="lg:col-span-7">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3.5">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <FormField
-                          control={form.control}
-                          name="fullName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">Full Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Alex Vance" className="h-9 text-xs" {...field} />
-                              </FormControl>
-                              <FormMessage className="text-[10px]" />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">Email</FormLabel>
-                              <FormControl>
-                                <Input placeholder="alex@company.com" type="email" className="h-9 text-xs" {...field} />
-                              </FormControl>
-                              <FormMessage className="text-[10px]" />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <FormField
-                          control={form.control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">Phone (Optional)</FormLabel>
-                              <FormControl>
-                                <Input placeholder="+1 (555) 000-0000" className="h-9 text-xs" {...field} />
-                              </FormControl>
-                              <FormMessage className="text-[10px]" />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="serviceInterest"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-xs">Primary Interest</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-9 text-xs">
-                                    <SelectValue placeholder="Select interest" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {FINANCIAL_SERVICES.map((s) => (
-                                    <SelectItem key={s.id} value={s.title}>
-                                      {s.title}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage className="text-[10px]" />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full h-10 text-xs font-semibold shadow-xs gap-1.5"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          <>
-                            <span>Get Started with Finora</span>
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </Form>
-                </div>
-              </div>
+                </form>
+              </Form>
             )}
-          </CardContent>
-        </Card>
+          </div>
+
+        </div>
       </div>
     </section>
   )

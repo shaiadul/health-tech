@@ -1,47 +1,46 @@
 import * as React from "react"
 import { FAQS } from "@/data/faqs"
-import { Badge } from "@/components/ui/badge"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { HelpCircle } from "lucide-react"
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-16 md:py-24 border-t border-border/60 bg-muted/15">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-xl mx-auto space-y-3 mb-12">
-          <Badge variant="outline" className="text-xs uppercase tracking-wider text-primary border-primary/20">
-            Frequently Asked Questions
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-            Clear Answers, Zero Jargon
+    <section id="faq" className="py-24 md:py-32 border-b border-border bg-background">
+      <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+        
+        {/* Section Header */}
+        <div className="space-y-3 pb-16 border-b border-border">
+          <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
+            Common Inquiries
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+            Frequently asked questions.
           </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Everything you need to know about our fiduciary consultations, remote meetings, and privacy protections.
+          <p className="text-sm text-muted-foreground max-w-lg leading-relaxed">
+            Everything you need to know about our fiduciary standard, scheduling flexibility, and meeting preparations.
           </p>
         </div>
 
-        <div className="bg-card rounded-2xl border border-border/80 p-6 sm:p-8 shadow-xs">
-          <Accordion type="single" collapsible className="w-full">
+        {/* Minimal Accordion (Zero Cards) */}
+        <div className="pt-4">
+          <Accordion type="single" collapsible className="w-full divide-y divide-border">
             {FAQS.map((faq) => (
-              <AccordionItem key={faq.id} value={faq.id}>
-                <AccordionTrigger className="text-left font-semibold hover:no-underline">
-                  <div className="flex items-center gap-2.5">
-                    <HelpCircle className="h-4 w-4 text-primary shrink-0" />
-                    <span>{faq.question}</span>
-                  </div>
+              <AccordionItem key={faq.id} value={faq.id} className="border-b-0 py-2">
+                <AccordionTrigger className="text-left text-lg sm:text-xl font-bold text-foreground hover:text-primary hover:no-underline py-5 transition-colors">
+                  <span>{faq.question}</span>
                 </AccordionTrigger>
-                <AccordionContent className="pl-6.5 text-muted-foreground leading-relaxed">
+                <AccordionContent className="text-sm sm:text-base text-muted-foreground leading-relaxed pb-6 max-w-2xl font-normal">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
+
       </div>
     </section>
   )

@@ -2,8 +2,10 @@ import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingHero } from "@/components/marketing/hero"
 import { TrustSection } from "@/components/marketing/trust-section"
 import { ServicesGrid } from "@/components/marketing/services-grid"
+import { FeaturedConsultation } from "@/components/marketing/featured-consultation"
 import { HowItWorks } from "@/components/marketing/how-it-works"
 import { SpecialistsPreview } from "@/components/marketing/specialists-preview"
+import { InsightsSection } from "@/components/marketing/insights-section"
 import { LeadCaptureSection } from "@/components/marketing/lead-capture"
 import { TestimonialsSection } from "@/components/marketing/testimonials-section"
 import { FAQSection } from "@/components/marketing/faq-section"
@@ -23,8 +25,10 @@ export default function HomePage() {
         <MarketingHero />
         <TrustSection />
         <ServicesGrid />
+        <FeaturedConsultation />
         <HowItWorks />
         <SpecialistsPreview />
+        <InsightsSection />
         <LeadCaptureSection />
         <TestimonialsSection />
         <FAQSection />

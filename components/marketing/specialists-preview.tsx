@@ -1,96 +1,109 @@
 import * as React from "react"
 import Link from "next/link"
+import { ArrowRight, ArrowUpRight, Star } from "lucide-react"
 import { SPECIALISTS } from "@/data/specialists"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Star, Clock, Zap, ArrowRight, Video, Phone, Building } from "lucide-react"
 
 export function SpecialistsPreview() {
+  // Show top featured specialists
   const featured = SPECIALISTS.slice(0, 4)
 
   return (
-    <section id="specialists" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-border/60">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
-        <div className="space-y-2">
-          <Badge variant="outline" className="text-xs uppercase tracking-wider text-primary border-primary/20">
-            Fiduciary Specialists
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-            Meet Your Advisory Partners
-          </h2>
-          <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
-            Every Finora specialist signs a legally binding fiduciary pledge: unbiased, fee-only advice with zero proprietary incentives.
+    <section id="experts" className="py-24 md:py-32 border-b border-border bg-background">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-16 border-b border-border">
+          <div className="space-y-3">
+            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
+              Advisory Leadership
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
+              Direct access to <br className="hidden sm:inline" />
+              seasoned practitioners.
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+            All Finora advisors are independent fiduciaries held to the highest standard of client care. Never compensated by mutual funds, annuities, or third-party products.
           </p>
         </div>
 
-        <Button asChild variant="outline" size="sm" className="self-start sm:self-auto text-xs h-9 border-border">
-          <Link href="/specialists">View All Specialists ({SPECIALISTS.length})</Link>
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {featured.map((sp) => (
-          <Card
-            key={sp.id}
-            className="border border-border/80 hover:border-primary/50 transition-all bg-card overflow-hidden shadow-2xs flex flex-col justify-between"
-          >
-            <CardContent className="p-5 space-y-4">
-              {/* Avatar & Availability */}
-              <div className="flex items-start justify-between">
-                <Avatar className="h-16 w-16 border-2 border-border/80">
-                  <AvatarImage src={sp.avatar} alt={sp.name} />
-                  <AvatarFallback>{sp.name.slice(0, 2)}</AvatarFallback>
-                </Avatar>
-                <div className="text-right">
-                  <div className="flex items-center gap-1 text-amber-500 justify-end">
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    <span className="font-bold text-xs text-foreground font-mono">{sp.rating}</span>
-                  </div>
-                  <span className="text-[10px] text-muted-foreground">({sp.reviewCount} reviews)</span>
+        {/* Clean Editorial Specialists List (No Cards) */}
+        <div className="divide-y divide-border">
+          {featured.map((specialist) => (
+            <div
+              key={specialist.id}
+              className="py-8 sm:py-10 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-muted/30 px-2 sm:px-4 transition-colors group"
+            >
+              {/* Left Column: Name, Role, Specialties */}
+              <div className="space-y-2 max-w-xl">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
+                    {specialist.name}
+                  </h3>
                 </div>
-              </div>
 
-              <div>
-                <h3 className="text-sm font-bold text-foreground">{sp.name}</h3>
-                <p className="text-xs text-primary font-medium">{sp.title}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  {sp.experienceYears} years experience
+                <p className="text-sm font-medium text-foreground/80">
+                  {specialist.title}
+                </p>
+
+                <p className="text-xs font-mono text-muted-foreground">
+                  {specialist.specialties.join(" • ")}
                 </p>
               </div>
 
-              {/* Specialties Pills */}
-              <div className="flex flex-wrap gap-1">
-                {sp.specialties.slice(0, 2).map((s) => (
-                  <Badge key={s} variant="secondary" className="text-[10px] font-normal">
-                    {s}
-                  </Badge>
-                ))}
+              {/* Middle: Experience & Rating */}
+              <div className="flex items-center gap-8 sm:gap-12 text-xs font-mono text-muted-foreground">
+                <div>
+                  <span className="block text-foreground font-semibold text-sm">
+                    {specialist.experienceYears} years
+                  </span>
+                  <span>experience</span>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-1 text-foreground font-semibold text-sm">
+                    <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+                    <span>{specialist.rating}</span>
+                  </div>
+                  <span>rating ({specialist.reviewCount})</span>
+                </div>
+
+                <div className="hidden lg:block text-right">
+                  <span className="block text-primary font-medium">
+                    {specialist.nextAvailableSlot}
+                  </span>
+                  <span>next opening</span>
+                </div>
               </div>
 
-              {/* Next Available Pill */}
-              <div className="p-2.5 rounded-lg bg-muted/40 border border-border/60 text-[11px] text-muted-foreground flex items-center justify-between">
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3 text-primary" />
-                  Next Slot:
-                </span>
-                <span className="font-semibold text-foreground font-mono">
-                  {sp.nextAvailableSlot}
-                </span>
-              </div>
-            </CardContent>
-
-            <div className="p-4 pt-0 border-t border-border/40 mt-1">
-              <Button asChild className="w-full text-xs h-8 font-medium">
-                <Link href={`/book?specialist=${sp.id}`}>
-                  <span>Book with {sp.name.split(" ")[0]}</span>
-                  <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              {/* Right: Select Action */}
+              <div className="pt-2 md:pt-0">
+                <Link
+                  href={`/book?specialist=${specialist.id}`}
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground group-hover:text-primary transition-colors pb-1 border-b border-border group-hover:border-primary"
+                >
+                  <span>Select</span>
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-              </Button>
+              </div>
             </div>
-          </Card>
-        ))}
+          ))}
+        </div>
+
+        {/* Directory CTA */}
+        <div className="pt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-xs font-mono text-muted-foreground">
+            Looking for niche industry expertise like biotech exits or international cross-border estates?
+          </span>
+          <Link
+            href="/specialists"
+            className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 group"
+          >
+            <span>View all advisory specialists</span>
+            <ArrowUpRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </Link>
+        </div>
+
       </div>
     </section>
   )

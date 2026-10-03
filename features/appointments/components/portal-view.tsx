@@ -2,10 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { RescheduleDialog } from "./reschedule-dialog"
 import { CancelDialog } from "./cancel-dialog"
 import { Appointment } from "@/types/appointment"
@@ -13,15 +10,11 @@ import {
   Calendar,
   Clock,
   Video,
-  Phone,
-  Building,
-  CheckCircle2,
-  AlertCircle,
   PlusCircle,
-  TrendingUp,
-  Activity,
-  ArrowUpRight,
+  ArrowRight,
   ExternalLink,
+  RotateCcw,
+  X,
 } from "lucide-react"
 
 interface PortalViewProps {
@@ -55,260 +48,336 @@ export function PortalView({
 
   const nextAppointment = upcoming[0]
 
+  // Timeline events representing appointment lifecycle
+  const timelineEvents = [
+    {
+      title: "Investment Planning Scheduled",
+      subtitle: "With Sarah Ahmed, CFA · Video Consultation",
+      date: "Oct 12, 2026",
+      status: "active",
+      type: "booked",
+    },
+    {
+      title: "Preliminary Risk Profile Audited",
+      subtitle: "Benchmark model calibrated to 72% portfolio progress",
+      date: "Oct 03, 2026",
+      status: "completed",
+      type: "audit",
+    },
+    {
+      title: "Tax Drag Consultation Completed",
+      subtitle: "With Elena Rostova, CPA · Action items executed",
+      date: "Sep 28, 2026",
+      status: "completed",
+      type: "completed",
+    },
+    {
+      title: "Retirement Cashflow Strategy Session",
+      subtitle: "Priya Patel, RICP® · Roth conversion timeline delivered",
+      date: "Aug 14, 2026",
+      status: "completed",
+      type: "completed",
+    },
+  ]
+
   return (
-    <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            Welcome back, Alex
+    <div className="space-y-16">
+      
+      {/* Editorial Header & Large Greeting */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8">
+        <div className="space-y-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
+            Client Portal · Fiduciary Overview
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            Good morning, Alex.
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Manage your fiduciary consultations, advisory materials, and financial milestones.
+          <p className="text-sm text-muted-foreground">
+            Account ID: <span className="font-mono text-foreground font-semibold">FN-89241</span> · Fiduciary Officer: Sarah Ahmed, CFA
           </p>
         </div>
 
-        <Button asChild size="sm" className="text-xs h-9 gap-1.5 shadow-xs font-semibold self-start sm:self-auto">
-          <Link href="/book">
-            <PlusCircle className="h-4 w-4" />
-            <span>Book New Consultation</span>
-          </Link>
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button
+            asChild
+            className="h-10 px-6 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
+          >
+            <Link href="/book">
+              <PlusCircle className="h-4 w-4" />
+              <span>Book consultation</span>
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Top 3 KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {/* Next Appointment Hero Card */}
-        <Card className="border border-primary/30 bg-primary/5 shadow-xs sm:col-span-2 lg:col-span-1">
-          <CardContent className="p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                Next Upcoming Session
-              </span>
-              <Badge variant="default" className="text-[10px]">
-                Confirmed
-              </Badge>
-            </div>
-
-            {nextAppointment ? (
-              <div>
-                <p className="text-lg font-bold text-foreground">
-                  {nextAppointment.dateFormatted}
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5 font-mono">
-                  <Clock className="h-3.5 w-3.5 text-primary" />
-                  <span>{nextAppointment.time} ({nextAppointment.durationMinutes} mins)</span>
-                </div>
-                <p className="text-xs text-foreground font-medium mt-2">
-                  {nextAppointment.serviceTitle} with {nextAppointment.specialistName}
-                </p>
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">No upcoming appointments scheduled.</p>
-            )}
-
-            {nextAppointment && (
-              <Button
-                asChild
-                size="sm"
-                className="w-full text-xs h-8 gap-1.5 font-medium bg-primary text-primary-foreground mt-2"
-              >
-                <a
-                  href={nextAppointment.meetingLink || "#"}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Video className="h-3.5 w-3.5" />
-                  <span>Join HD Video Room</span>
-                  <ExternalLink className="h-3 w-3 ml-auto" />
-                </a>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Financial Health Diagnostic Score */}
-        <Card className="border border-border/80 bg-card shadow-xs">
-          <CardContent className="p-5 space-y-2">
-            <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-medium">
-              <span>Financial Health Score</span>
-              <Activity className="h-4 w-4 text-success" />
-            </div>
-
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold font-mono text-foreground">94</span>
-              <span className="text-xs text-muted-foreground">/ 100</span>
-              <Badge variant="success" className="text-[10px] ml-auto">
-                Excellent
-              </Badge>
-            </div>
-
-            <p className="text-xs text-muted-foreground leading-relaxed pt-1">
-              Top 5% for your peer cohort. Cashflow velocity and emergency reserve fully funded.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Monthly Retained Savings */}
-        <Card className="border border-border/80 bg-card shadow-xs">
-          <CardContent className="p-5 space-y-2">
-            <div className="flex items-center justify-between text-muted-foreground text-xs uppercase font-medium">
-              <span>Monthly Capital Retention</span>
-              <TrendingUp className="h-4 w-4 text-primary" />
-            </div>
-
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold font-mono text-foreground">৳42,500</span>
-              <span className="text-xs text-success font-semibold font-mono">+12.4%</span>
-            </div>
-
-            <p className="text-xs text-muted-foreground leading-relaxed pt-1">
-              Generated via automated sweep to Goldman Sachs Treasury Reserve (4.95% APY).
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Upcoming Appointments List */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">Upcoming Consultations</h2>
-          <span className="text-xs text-muted-foreground font-mono">{upcoming.length} scheduled</span>
+      {/* Large Balance & Metric Typography Strip (No Boxed Cards) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 border-b border-border pb-12">
+        <div className="space-y-1">
+          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            Monitored Portfolio
+          </span>
+          <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-foreground">
+            $482,500
+          </p>
+          <span className="text-xs font-mono text-primary font-semibold block pt-1">
+            +12.8% YTD Alpha
+          </span>
         </div>
 
-        {upcoming.length === 0 ? (
-          <div className="p-8 text-center rounded-xl border border-dashed border-border bg-card space-y-3">
-            <p className="text-xs text-muted-foreground">You currently have no scheduled appointments.</p>
-            <Button asChild size="sm" className="text-xs">
-              <Link href="/book">Book a Consultation Now</Link>
-            </Button>
+        <div className="space-y-1 sm:border-l sm:border-border sm:pl-10">
+          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            Monthly Savings Yield
+          </span>
+          <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-foreground">
+            ৳42,500
+          </p>
+          <span className="text-xs font-mono text-muted-foreground block pt-1">
+            4.95% annualized automated sweep
+          </span>
+        </div>
+
+        <div className="space-y-1 sm:border-l sm:border-border sm:pl-10">
+          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+            Financial Health
+          </span>
+          <div className="flex items-baseline gap-2">
+            <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-primary">
+              94
+            </p>
+            <span className="text-xs font-mono text-muted-foreground">/ 100</span>
           </div>
-        ) : (
-          <div className="space-y-4">
-            {upcoming.map((apt) => (
-              <Card key={apt.id} className="border border-border/80 bg-card shadow-2xs hover:border-border transition-all">
-                <CardContent className="p-5 sm:p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    <div className="flex items-start gap-4">
-                      <Avatar className="h-14 w-14 border border-border">
-                        <AvatarImage src={apt.specialistAvatar} alt={apt.specialistName} />
-                        <AvatarFallback>{apt.specialistName.slice(0, 2)}</AvatarFallback>
-                      </Avatar>
-
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-bold text-foreground">{apt.serviceTitle}</h3>
-                          <Badge
-                            variant={apt.status === "rescheduled" ? "warning" : "default"}
-                            className="text-[10px] capitalize"
-                          >
-                            {apt.status}
-                          </Badge>
-                        </div>
-
-                        <p className="text-xs text-primary font-medium">
-                          Specialist: {apt.specialistName} ({apt.specialistTitle})
-                        </p>
-
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground pt-1">
-                          <span className="flex items-center gap-1 font-mono font-medium text-foreground">
-                            <Calendar className="h-3.5 w-3.5 text-primary" />
-                            {apt.dateFormatted}
-                          </span>
-                          <span>•</span>
-                          <span className="flex items-center gap-1 font-mono font-medium text-foreground">
-                            <Clock className="h-3.5 w-3.5 text-primary" />
-                            {apt.time}
-                          </span>
-                          <span>•</span>
-                          <span className="flex items-center gap-1 capitalize">
-                            <Video className="h-3.5 w-3.5 text-primary" />
-                            {apt.consultationType} Call
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex flex-wrap items-center gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-border/60">
-                      {apt.meetingLink && (
-                        <Button asChild size="sm" className="text-xs h-8 gap-1.5 bg-primary text-primary-foreground">
-                          <a href={apt.meetingLink} target="_blank" rel="noreferrer">
-                            <Video className="h-3.5 w-3.5" />
-                            <span>Join Meeting</span>
-                          </a>
-                        </Button>
-                      )}
-
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setActiveRescheduleApt(apt)}
-                        className="text-xs h-8 border-border"
-                      >
-                        Reschedule
-                      </Button>
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setActiveCancelApt(apt)}
-                        className="text-xs h-8 text-destructive hover:bg-destructive/10"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+          <span className="text-xs font-mono text-foreground font-medium block pt-1">
+            Excellent Tier (Top 5% Cohort)
+          </span>
+        </div>
       </div>
 
-      {/* Previous Consultations */}
-      <div className="space-y-4 pt-4 border-t border-border/60">
-        <h2 className="text-lg font-bold text-foreground">Previous Consultation History</h2>
+      {/* Your Next Consultation (Editorial Layout, No Shadow Cards) */}
+      <section className="space-y-6">
+        <div className="flex items-baseline justify-between border-b border-border pb-4">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            Your next consultation
+          </h2>
+          <span className="text-xs font-mono text-primary font-semibold">
+            Confirmed Slot
+          </span>
+        </div>
 
-        <div className="space-y-3">
+        {nextAppointment ? (
+          <div className="py-8 border-b border-border space-y-6">
+            <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-6">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-foreground">
+                  {nextAppointment.serviceTitle}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  with <strong className="text-foreground">{nextAppointment.specialistName}</strong> · {nextAppointment.specialistTitle}
+                </p>
+              </div>
+
+              <div className="text-left md:text-right font-mono text-xs space-y-1">
+                <p className="text-xl font-bold text-foreground">
+                  {nextAppointment.dateFormatted} · {nextAppointment.time}
+                </p>
+                <p className="text-muted-foreground capitalize flex items-center md:justify-end gap-1.5">
+                  <Video className="h-3.5 w-3.5 text-primary" />
+                  <span>{nextAppointment.consultationType} Consultation ({nextAppointment.durationMinutes} min)</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Actions for Next Consultation */}
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-border/60">
+              {nextAppointment.meetingLink && (
+                <Button
+                  asChild
+                  className="h-10 px-6 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
+                >
+                  <a href={nextAppointment.meetingLink} target="_blank" rel="noreferrer">
+                    <Video className="h-3.5 w-3.5" />
+                    <span>Join video consultation</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </Button>
+              )}
+
+              <Button
+                variant="outline"
+                onClick={() => setActiveRescheduleApt(nextAppointment)}
+                className="h-10 px-6 rounded-none border-border hover:border-primary text-xs font-semibold gap-1.5"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>Reschedule</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                onClick={() => setActiveCancelApt(nextAppointment)}
+                className="h-10 px-4 rounded-none text-xs text-destructive hover:bg-destructive/10 font-semibold gap-1.5"
+              >
+                <X className="h-3.5 w-3.5" />
+                <span>Cancel</span>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="py-10 border-b border-border text-center space-y-3">
+            <p className="text-sm text-muted-foreground">No upcoming consultations scheduled.</p>
+            <Button asChild size="sm" className="rounded-none text-xs">
+              <Link href="/book">Schedule a Consultation</Link>
+            </Button>
+          </div>
+        )}
+      </section>
+
+      {/* Two Column Layout: Upcoming List & Appointment Timeline */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        
+        {/* Left Column: Upcoming Consultations List */}
+        <section className="lg:col-span-7 space-y-6">
+          <div className="border-b border-border pb-4 flex items-baseline justify-between">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">
+              All upcoming sessions
+            </h2>
+            <span className="text-xs font-mono text-muted-foreground">
+              {upcoming.length} active
+            </span>
+          </div>
+
+          <div className="divide-y divide-border">
+            {upcoming.map((apt) => (
+              <div key={apt.id} className="py-6 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-foreground">
+                      {apt.serviceTitle}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Advisor: {apt.specialistName}
+                    </p>
+                  </div>
+                  <span className="font-mono text-xs text-primary font-semibold">
+                    {apt.dateFormatted} · {apt.time}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4 text-xs font-mono">
+                  <button
+                    type="button"
+                    onClick={() => setActiveRescheduleApt(apt)}
+                    className="text-primary hover:underline"
+                  >
+                    Reschedule →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveCancelApt(apt)}
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Right Column: Appointment Timeline (Section 18) */}
+        <section className="lg:col-span-5 space-y-6">
+          <div className="border-b border-border pb-4">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">
+              Advisory timeline
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Complete history of your consultations and milestones.
+            </p>
+          </div>
+
+          <div className="relative pl-6 space-y-8 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
+            {timelineEvents.map((event, idx) => {
+              const isTeal = event.status === "active" || event.status === "completed"
+
+              return (
+                <div key={idx} className="relative">
+                  {/* Timeline Node (Teal for active / completed) */}
+                  <span
+                    className={`absolute -left-6 top-1 h-4 w-4 rounded-full border-2 bg-background flex items-center justify-center ${
+                      isTeal
+                        ? "border-primary text-primary"
+                        : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        isTeal ? "bg-primary" : "bg-muted-foreground"
+                      }`}
+                    />
+                  </span>
+
+                  <div className="space-y-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h4 className="text-sm font-bold text-foreground">
+                        {event.title}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {event.subtitle}
+                    </p>
+                    <span className="text-[11px] font-mono text-muted-foreground/80 block pt-0.5">
+                      {event.date}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+      </div>
+
+      {/* Previous Consultations History Table */}
+      <section className="space-y-6 pt-6 border-t border-border">
+        <div className="border-b border-border pb-4 flex items-baseline justify-between">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
+            Previous consultations
+          </h2>
+          <span className="text-xs font-mono text-muted-foreground">
+            {past.length} archived
+          </span>
+        </div>
+
+        <div className="divide-y divide-border">
           {past.map((apt) => (
             <div
               key={apt.id}
-              className="p-4 rounded-xl border border-border/60 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+              className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono"
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`h-9 w-9 rounded-lg flex items-center justify-center shrink-0 ${
-                    apt.status === "completed"
-                      ? "bg-success/15 text-success"
-                      : "bg-destructive/10 text-destructive"
-                  }`}
-                >
-                  {apt.status === "completed" ? (
-                    <CheckCircle2 className="h-4 w-4" />
-                  ) : (
-                    <AlertCircle className="h-4 w-4" />
-                  )}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-foreground">{apt.serviceTitle}</span>
-                    <Badge
-                      variant={apt.status === "completed" ? "success" : "destructive"}
-                      className="text-[10px] capitalize"
-                    >
-                      {apt.status}
-                    </Badge>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
-                    with {apt.specialistName} • {apt.dateFormatted}
-                  </p>
-                </div>
+              <div className="space-y-1">
+                <span className="font-bold text-foreground text-sm block">
+                  {apt.serviceTitle}
+                </span>
+                <span className="text-muted-foreground">
+                  Specialist: {apt.specialistName} · {apt.dateFormatted}
+                </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Button asChild variant="outline" size="xs" className="h-7 text-xs border-border">
+              <div className="flex items-center gap-6">
+                <span
+                  className={`capitalize font-semibold ${
+                    apt.status === "completed"
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  ● {apt.status}
+                </span>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="rounded-none text-xs h-8 px-4 border-border hover:border-primary text-foreground"
+                >
                   <Link href={`/book?service=${apt.serviceId}`}>
                     Rebook Follow-up
                   </Link>
@@ -317,7 +386,7 @@ export function PortalView({
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Reschedule Dialog */}
       <RescheduleDialog
@@ -334,6 +403,7 @@ export function PortalView({
         onClose={() => setActiveCancelApt(null)}
         onCancelled={handleCancelled}
       />
+
     </div>
   )
 }

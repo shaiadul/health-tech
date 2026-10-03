@@ -5,18 +5,9 @@ import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Form,
   FormControl,
@@ -32,7 +23,7 @@ import {
 import { AppointmentService } from "../services/appointment.service"
 import { FinancialService } from "@/types/service"
 import { Specialist, ConsultationType } from "@/types/specialist"
-import { DayAvailability, TimeSlot, Appointment } from "@/types/appointment"
+import { DayAvailability, Appointment } from "@/types/appointment"
 import {
   Check,
   CheckCircle2,
@@ -44,12 +35,10 @@ import {
   Video,
   Phone,
   Building,
-  ShieldCheck,
   Loader2,
-  Download,
   CalendarPlus,
-  ChevronRight,
-  Sparkles,
+  Home,
+  Edit2,
 } from "lucide-react"
 
 interface BookingFlowProps {
@@ -91,8 +80,8 @@ export function BookingFlow({
     resolver: zodResolver(customerInfoSchema),
     defaultValues: {
       firstName: "Alex",
-      lastName: "Mercer",
-      email: "alex.mercer@gmail.com",
+      lastName: "Rahman",
+      email: "alex@example.com",
       phone: "+1 (555) 389-9921",
       contactMethod: "video",
       reason: "Comprehensive portfolio review and tax-efficient wealth growth",
@@ -100,7 +89,6 @@ export function BookingFlow({
     },
   })
 
-  // Synchronize consultation type with contactMethod
   React.useEffect(() => {
     form.setValue("contactMethod", consultationType)
   }, [consultationType, form])
@@ -109,13 +97,12 @@ export function BookingFlow({
   const selectedSpecialist = specialists.find((sp) => sp.id === selectedSpecialistId) || specialists[0]
   const currentDayAvailability = initialDates.find((d) => d.date === selectedDate)
 
-  // Stepper definition
-  const STEPS: { id: Step; label: string }[] = [
-    { id: "service", label: "Service" },
-    { id: "specialist", label: "Specialist" },
-    { id: "schedule", label: "Date & Time" },
-    { id: "details", label: "Details" },
-    { id: "review", label: "Review" },
+  const STEPS: { id: Step; label: string; number: string }[] = [
+    { id: "service", label: "Service", number: "01" },
+    { id: "specialist", label: "Specialist", number: "02" },
+    { id: "schedule", label: "Date & time", number: "03" },
+    { id: "details", label: "Your details", number: "04" },
+    { id: "review", label: "Confirm", number: "05" },
   ]
 
   const getStepIndex = (step: Step) => {
@@ -146,7 +133,7 @@ export function BookingFlow({
     }
   }
 
-  // Download .ics calendar file simulation
+  // Calendar download (.ics)
   const handleDownloadCalendar = () => {
     if (!confirmedAppointment) return
 
@@ -173,411 +160,409 @@ END:VCALENDAR`
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <Badge variant="outline" className="text-xs uppercase tracking-wider text-primary border-primary/20">
-          Fiduciary Scheduler
-        </Badge>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-          Schedule Your Consultation
-        </h1>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
-          Book private 1-on-1 advisory time with a credentialed fiduciary expert. Zero sales incentives, 100% focused on your goals.
-        </p>
-      </div>
-
-      {/* Stepper (Hidden on Confirmed screen) */}
+    <div className="max-w-4xl mx-auto py-12 px-6 sm:px-8 space-y-12">
+      
+      {/* Subtle Top Progress Header (Hidden on Confirmed) */}
       {currentStep !== "confirmed" && (
-        <div className="bg-card border border-border/80 rounded-xl p-3 sm:p-4 shadow-2xs">
-          <div className="flex items-center justify-between overflow-x-auto text-xs font-medium pb-1">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border pb-6">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold block">
+                Book a Consultation
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mt-1">
+                Schedule your session.
+              </h1>
+            </div>
+
+            <div className="text-xs font-mono text-muted-foreground">
+              Step {getStepIndex(currentStep) + 1} of {STEPS.length}
+            </div>
+          </div>
+
+          {/* Minimal Editorial Stepper */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 text-xs font-mono">
             {STEPS.map((s, idx) => {
               const activeIdx = getStepIndex(currentStep)
               const isPassed = activeIdx > idx
               const isCurrent = activeIdx === idx
 
               return (
-                <React.Fragment key={s.id}>
-                  <div className="flex items-center gap-1.5 shrink-0 px-2">
-                    <div
-                      className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
-                        isPassed
-                          ? "bg-success text-success-foreground"
-                          : isCurrent
-                          ? "bg-primary text-primary-foreground ring-2 ring-primary/20"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {isPassed ? <Check className="h-3 w-3" /> : idx + 1}
-                    </div>
-                    <span
-                      className={`${
-                        isCurrent
-                          ? "font-bold text-foreground"
-                          : isPassed
-                          ? "text-foreground/80 font-medium"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {s.label}
-                    </span>
-                  </div>
-                  {idx < STEPS.length - 1 && (
-                    <div
-                      className={`h-0.5 flex-1 min-w-[20px] max-w-[60px] mx-1 ${
-                        isPassed ? "bg-success" : "bg-border"
-                      }`}
-                    />
-                  )}
-                </React.Fragment>
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    if (isPassed) setCurrentStep(s.id)
+                  }}
+                  disabled={!isPassed}
+                  className={`text-left pt-2 border-t-2 transition-colors ${
+                    isCurrent
+                      ? "border-primary text-foreground font-semibold"
+                      : isPassed
+                      ? "border-primary/50 text-foreground cursor-pointer hover:border-primary"
+                      : "border-border text-muted-foreground cursor-not-allowed"
+                  }`}
+                >
+                  <span className="block text-[11px] text-primary font-bold">
+                    {s.number}
+                  </span>
+                  <span className="truncate block mt-0.5">{s.label}</span>
+                </button>
               )
             })}
           </div>
         </div>
       )}
 
-      {/* STEP 1: Select Service */}
+      {/* STEP 1: Service Selection (Large Selectable Rows, No Cards) */}
       {currentStep === "service" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-foreground">Select Advisory Service</h2>
-              <p className="text-xs text-muted-foreground">Choose the primary area of guidance you are looking to address</p>
-            </div>
-            <span className="text-xs font-mono text-muted-foreground">{services.length} services</span>
+        <div className="space-y-8">
+          <div className="border-b border-border pb-4">
+            <h2 className="text-xl font-bold text-foreground">
+              01 · Select Advisory Service
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Choose the primary area of strategic guidance you want to discuss.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map((srv) => {
+          <div className="divide-y divide-border">
+            {services.map((srv, index) => {
               const isSelected = selectedServiceId === srv.id
+              const indexFormatted = String(index + 1).padStart(2, "0")
+
               return (
                 <div
                   key={srv.id}
                   onClick={() => setSelectedServiceId(srv.id)}
-                  className={`p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                  className={`py-6 px-4 sm:px-6 cursor-pointer transition-all border-l-4 ${
                     isSelected
-                      ? "border-primary bg-primary/5 ring-2 ring-primary shadow-sm"
-                      : "border-border/80 bg-card hover:border-border hover:bg-muted/20"
+                      ? "border-primary bg-primary/5"
+                      : "border-transparent hover:bg-muted/30"
                   }`}
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-bold text-foreground">{srv.title}</h3>
-                      <div
-                        className={`h-4 w-4 rounded-full border flex items-center justify-center ${
-                          isSelected
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted-foreground/40"
-                        }`}
-                      >
-                        {isSelected && <Check className="h-2.5 w-2.5" />}
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+                    <div className="flex items-start sm:items-baseline gap-4 sm:gap-6">
+                      <span className="font-mono text-sm text-muted-foreground">
+                        {indexFormatted}
+                      </span>
+                      <div className="space-y-1 max-w-xl">
+                        <div className="flex items-center gap-3">
+                          <h3 className="text-lg sm:text-xl font-bold text-foreground">
+                            {srv.title}
+                          </h3>
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {srv.shortDescription}
+                        </p>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {srv.shortDescription}
-                    </p>
-                  </div>
 
-                  <div className="flex items-center justify-between pt-3 mt-3 border-t border-border/50 text-[11px] text-muted-foreground">
-                    <span className="flex items-center gap-1 font-mono">
-                      <Clock className="h-3 w-3 text-primary" />
-                      {srv.durationMinutes} min consultation
-                    </span>
-                    <span className="font-semibold text-foreground">{srv.feeDisplay}</span>
+                    <div className="flex items-center justify-between sm:justify-end gap-6 pl-10 sm:pl-0 font-mono text-xs">
+                      <span className="text-muted-foreground">
+                        {srv.durationMinutes} min
+                      </span>
+                      <ArrowRight
+                        className={`h-4 w-4 transition-transform ${
+                          isSelected
+                            ? "text-primary translate-x-1.5"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </div>
                   </div>
                 </div>
               )
             })}
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end pt-6 border-t border-border">
             <Button
               onClick={() => setCurrentStep("specialist")}
-              className="gap-1.5 px-6 font-semibold"
+              className="h-11 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
             >
-              <span>Continue to Specialist</span>
+              <span>Choose Specialist</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* STEP 2: Choose Specialist */}
+      {/* STEP 2: Specialist Selection (Clean Editorial List, No Cards) */}
       {currentStep === "specialist" && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
+        <div className="space-y-8">
+          <div className="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
             <div>
-              <h2 className="text-lg font-bold text-foreground">Select Financial Specialist</h2>
-              <p className="text-xs text-muted-foreground">
-                Matched for: <strong className="text-foreground">{selectedService.title}</strong>
+              <h2 className="text-xl font-bold text-foreground">
+                02 · Select Financial Specialist
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                Fiduciary advisors available for: <strong className="text-foreground">{selectedService.title}</strong>
               </p>
             </div>
-            <Badge variant="outline" className="text-[10px]">
-              Fiduciary Bound
-            </Badge>
+            <span className="text-xs font-mono text-primary font-semibold">
+              Fiduciary Duty Bound
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="divide-y divide-border">
             {specialists.map((sp) => {
               const isSelected = selectedSpecialistId === sp.id
+
               return (
                 <div
                   key={sp.id}
                   onClick={() => setSelectedSpecialistId(sp.id)}
-                  className={`p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                  className={`py-6 px-4 sm:px-6 cursor-pointer transition-all border-l-4 ${
                     isSelected
-                      ? "border-primary bg-primary/5 ring-2 ring-primary shadow-sm"
-                      : "border-border/80 bg-card hover:border-border hover:bg-muted/20"
+                      ? "border-primary bg-primary/5"
+                      : "border-transparent hover:bg-muted/30"
                   }`}
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-1.5 max-w-lg">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12 border border-border">
-                          <AvatarImage src={sp.avatar} alt={sp.name} />
-                          <AvatarFallback>{sp.name.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="text-sm font-bold text-foreground">{sp.name}</h3>
-                          <p className="text-[11px] text-primary font-medium">{sp.title}</p>
-                          <p className="text-[10px] text-muted-foreground">
-                            {sp.experienceYears} Years • {sp.role}
-                          </p>
-                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold text-foreground">
+                          {sp.name}
+                        </h3>
+                        {isSelected && (
+                          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 bg-primary text-primary-foreground">
+                            Selected
+                          </span>
+                        )}
                       </div>
-                      <div
-                        className={`h-4 w-4 rounded-full border flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted-foreground/40"
-                        }`}
-                      >
-                        {isSelected && <Check className="h-2.5 w-2.5" />}
+                      <p className="text-xs font-medium text-foreground/80">
+                        {sp.title}
+                      </p>
+                      <p className="text-xs font-mono text-muted-foreground">
+                        {sp.specialties.join(" • ")}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between md:justify-end gap-6 sm:gap-10 text-xs font-mono">
+                      <div>
+                        <span className="block text-foreground font-semibold">
+                          {sp.experienceYears} yrs
+                        </span>
+                        <span className="text-muted-foreground text-[11px]">experience</span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+                        <span className="font-semibold text-foreground">{sp.rating}</span>
+                        <span className="text-muted-foreground text-[11px]">rating</span>
+                      </div>
+
+                      <div>
+                        <Button
+                          type="button"
+                          variant={isSelected ? "default" : "outline"}
+                          size="sm"
+                          className={`rounded-none text-xs h-8 px-4 ${
+                            isSelected
+                              ? "bg-primary text-primary-foreground"
+                              : "border-border hover:border-primary text-foreground"
+                          }`}
+                        >
+                          {isSelected ? "Selected" : "Select →"}
+                        </Button>
                       </div>
                     </div>
-
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                      {sp.bio}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1">
-                      {sp.credentials.map((cred, i) => (
-                        <Badge key={i} variant="secondary" className="text-[9px] py-0 px-1 font-normal">
-                          {cred}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-3 mt-3 border-t border-border/50 text-[11px]">
-                    <div className="flex items-center gap-1 text-amber-500 font-mono">
-                      <Star className="h-3.5 w-3.5 fill-current" />
-                      <span className="font-bold text-foreground">{sp.rating}</span>
-                      <span className="text-muted-foreground">({sp.reviewCount})</span>
-                    </div>
-                    <span className="text-muted-foreground font-mono">
-                      Next: <strong className="text-foreground">{sp.nextAvailableSlot}</strong>
-                    </span>
                   </div>
                 </div>
               )
             })}
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between pt-6 border-t border-border">
             <Button
               variant="outline"
               onClick={() => setCurrentStep("service")}
-              className="gap-1.5 text-xs"
+              className="rounded-none text-xs h-10 px-6 gap-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back</span>
             </Button>
             <Button
               onClick={() => setCurrentStep("schedule")}
-              className="gap-1.5 px-6 font-semibold"
+              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
             >
-              <span>Continue to Schedule</span>
+              <span>Continue to Date & Time</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* STEP 3: Date & Time Scheduler */}
+      {/* STEP 3: Date & Time (Calendar + Available Times, No Giant Cards) */}
       {currentStep === "schedule" && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Select Date & Time</h2>
-            <p className="text-xs text-muted-foreground">
-              Advisor: <strong className="text-foreground">{selectedSpecialist.name}</strong> • Timezone: Eastern Time (US & Canada)
+        <div className="space-y-8">
+          <div className="border-b border-border pb-4">
+            <h2 className="text-xl font-bold text-foreground">
+              03 · Choose Date & Time
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Advisor: <strong className="text-foreground">{selectedSpecialist.name}</strong> · All slots displayed in Eastern Time (US & Canada).
             </p>
           </div>
 
-          {/* Consultation Type Selector */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-foreground">
-              Appointment Format
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div
-                onClick={() => setConsultationType("video")}
-                className={`p-3.5 rounded-xl border cursor-pointer text-xs transition-all ${
-                  consultationType === "video"
-                    ? "border-primary bg-primary/5 ring-1 ring-primary shadow-xs"
-                    : "border-border bg-card hover:bg-muted/20"
-                }`}
-              >
-                <div className="flex items-center gap-2 font-bold text-foreground mb-1">
-                  <Video className="h-4 w-4 text-primary" />
-                  <span>Video Conference</span>
-                </div>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Join via HD video from phone or computer. Screen sharing enabled.
-                </p>
-              </div>
-
-              <div
-                onClick={() => setConsultationType("phone")}
-                className={`p-3.5 rounded-xl border cursor-pointer text-xs transition-all ${
-                  consultationType === "phone"
-                    ? "border-primary bg-primary/5 ring-1 ring-primary shadow-xs"
-                    : "border-border bg-card hover:bg-muted/20"
-                }`}
-              >
-                <div className="flex items-center gap-2 font-bold text-foreground mb-1">
-                  <Phone className="h-4 w-4 text-primary" />
-                  <span>Telephone Call</span>
-                </div>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Advisor dials your direct line at the appointed time.
-                </p>
-              </div>
-
-              <div
-                onClick={() => setConsultationType("in_person")}
-                className={`p-3.5 rounded-xl border cursor-pointer text-xs transition-all ${
-                  consultationType === "in_person"
-                    ? "border-primary bg-primary/5 ring-1 ring-primary shadow-xs"
-                    : "border-border bg-card hover:bg-muted/20"
-                }`}
-              >
-                <div className="flex items-center gap-2 font-bold text-foreground mb-1">
-                  <Building className="h-4 w-4 text-primary" />
-                  <span>In-Person Office</span>
-                </div>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Private suite at Finora Financial District headquarters.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Calendar Day Pills Row */}
-          <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-foreground">Available Dates</span>
-              <span className="text-[11px] text-muted-foreground font-mono">Next 14 Days</span>
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-              {initialDates.map((day) => {
-                const isSelected = selectedDate === day.date
-                return (
-                  <button
-                    key={day.date}
-                    type="button"
-                    disabled={!day.isAvailable}
-                    onClick={() => setSelectedDate(day.date)}
-                    className={`flex flex-col items-center justify-center min-w-[64px] h-[72px] rounded-xl border text-center transition-all ${
-                      !day.isAvailable
-                        ? "opacity-35 cursor-not-allowed border-border/40 bg-muted/20"
-                        : isSelected
-                        ? "border-primary bg-primary text-primary-foreground shadow-sm scale-102"
-                        : "border-border bg-card hover:border-primary/40 hover:bg-muted/30"
-                    }`}
-                  >
-                    <span className="text-[11px] font-medium uppercase">{day.dayName}</span>
-                    <span className="text-lg font-bold font-mono mt-0.5">{day.dayNumber}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Available Slots Grid */}
-          <div className="space-y-3 pt-2">
-            <span className="text-xs font-semibold text-foreground block">
-              Available Times on {selectedDate}
+          {/* Meeting Format Selector */}
+          <div className="space-y-3">
+            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              Consultation Format
             </span>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-              {currentDayAvailability?.slots.map((slot) => {
-                const isSelected = selectedTime === slot.time
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { id: "video", label: "Video Call", desc: "Encrypted HD conference link", icon: Video },
+                { id: "phone", label: "Phone Call", desc: "Advisor dials your direct line", icon: Phone },
+                { id: "in_person", label: "In-Person", desc: "Finora Private Office Suite", icon: Building },
+              ].map((fmt) => {
+                const isSelected = consultationType === fmt.id
+                const IconComponent = fmt.icon
                 return (
                   <button
-                    key={slot.id}
+                    key={fmt.id}
                     type="button"
-                    disabled={!slot.available}
-                    onClick={() => setSelectedTime(slot.time)}
-                    className={`p-3 rounded-xl border text-xs font-mono font-medium transition-all ${
-                      !slot.available
-                        ? "opacity-30 cursor-not-allowed border-border/40 bg-muted/10 line-through"
-                        : isSelected
-                        ? "border-primary bg-primary text-primary-foreground shadow-xs font-bold ring-2 ring-primary/20"
-                        : "border-border bg-card hover:border-primary hover:bg-muted/20 text-foreground"
+                    onClick={() => setConsultationType(fmt.id as ConsultationType)}
+                    className={`p-4 text-left border transition-all ${
+                      isSelected
+                        ? "border-primary bg-primary/5 text-foreground"
+                        : "border-border hover:bg-muted/20 text-muted-foreground"
                     }`}
                   >
-                    {slot.time}
+                    <div className="flex items-center gap-2 font-bold text-sm text-foreground mb-1">
+                      <IconComponent className={`h-4 w-4 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                      <span>{fmt.label}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{fmt.desc}</p>
                   </button>
                 )
               })}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          {/* Desktop & Mobile Responsive Scheduler */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 border-t border-border">
+            
+            {/* Left: Date Selection Strip / Grid */}
+            <div className="md:col-span-6 space-y-4">
+              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                Available Dates (Next 14 Days)
+              </span>
+
+              <div className="grid grid-cols-4 sm:grid-cols-4 gap-2">
+                {initialDates.map((day) => {
+                  const isSelected = selectedDate === day.date
+                  return (
+                    <button
+                      key={day.date}
+                      type="button"
+                      disabled={!day.isAvailable}
+                      onClick={() => setSelectedDate(day.date)}
+                      className={`py-3 px-2 border text-center transition-all ${
+                        !day.isAvailable
+                          ? "opacity-30 cursor-not-allowed border-border bg-muted/10 line-through"
+                          : isSelected
+                          ? "border-primary bg-primary text-primary-foreground font-bold"
+                          : "border-border hover:border-primary hover:bg-muted/20 text-foreground"
+                      }`}
+                    >
+                      <span className="block text-[10px] uppercase font-mono">{day.dayName}</span>
+                      <span className="block text-base font-mono font-bold mt-0.5">{day.dayNumber}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Right: Available Times List */}
+            <div className="md:col-span-6 space-y-4 md:border-l md:border-border md:pl-8">
+              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                Available Times on {selectedDate}
+              </span>
+
+              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                {currentDayAvailability?.slots.map((slot) => {
+                  const isSelected = selectedTime === slot.time
+                  return (
+                    <button
+                      key={slot.id}
+                      type="button"
+                      disabled={!slot.available}
+                      onClick={() => setSelectedTime(slot.time)}
+                      className={`w-full py-2.5 px-4 border text-left font-mono text-xs transition-all flex items-center justify-between ${
+                        !slot.available
+                          ? "opacity-30 cursor-not-allowed border-border/60 bg-muted/10"
+                          : isSelected
+                          ? "border-primary bg-primary text-primary-foreground font-bold"
+                          : "border-border hover:border-primary hover:bg-muted/20 text-foreground"
+                      }`}
+                    >
+                      <span>{slot.time}</span>
+                      {isSelected ? (
+                        <Check className="h-3.5 w-3.5 text-primary-foreground" />
+                      ) : (
+                        <span className="text-[10px] text-muted-foreground">Available</span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+          </div>
+
+          <div className="flex items-center justify-between pt-6 border-t border-border">
             <Button
               variant="outline"
               onClick={() => setCurrentStep("specialist")}
-              className="gap-1.5 text-xs"
+              className="rounded-none text-xs h-10 px-6 gap-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back</span>
             </Button>
             <Button
               onClick={() => setCurrentStep("details")}
-              className="gap-1.5 px-6 font-semibold"
+              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
             >
-              <span>Continue to Information</span>
+              <span>Continue to Details</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* STEP 4: Customer Information Form */}
+      {/* STEP 4: Customer Details Form (React Hook Form + Zod, No Card Containers) */}
       {currentStep === "details" && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Your Contact Information</h2>
-            <p className="text-xs text-muted-foreground">
-              We send your secure calendar invitation and preparation materials here.
+        <div className="space-y-8">
+          <div className="border-b border-border pb-4">
+            <h2 className="text-xl font-bold text-foreground">
+              04 · Your Contact Information
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Your calendar invitation and preparatory diagnostic notes will be sent here.
             </p>
           </div>
 
           <Form {...form}>
-            <form className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">First Name</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        First Name
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="Alex" className="h-9 text-xs" {...field} />
+                        <Input
+                          placeholder="Alex"
+                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -586,28 +571,41 @@ END:VCALENDAR`
                   control={form.control}
                   name="lastName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">Last Name</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        Last Name
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="Mercer" className="h-9 text-xs" {...field} />
+                        <Input
+                          placeholder="Rahman"
+                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">Email Address (for calendar invite)</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        Email Address (for calendar invite)
+                      </FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="alex.mercer@gmail.com" className="h-9 text-xs" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="alex@example.com"
+                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -616,12 +614,18 @@ END:VCALENDAR`
                   control={form.control}
                   name="phone"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs">Direct Phone Number</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        Phone Number
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="+1 (555) 389-9921" className="h-9 text-xs" {...field} />
+                        <Input
+                          placeholder="+1 (555) 389-9921"
+                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-[10px]" />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -631,16 +635,18 @@ END:VCALENDAR`
                 control={form.control}
                 name="reason"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs">Primary Consultation Objective</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                      Primary Consultation Objective
+                    </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g. Evaluating tech stock concentration and retirement target timeline"
-                        className="h-9 text-xs"
+                        placeholder="e.g. Evaluating investment diversification and tax strategies"
+                        className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-[10px]" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -649,27 +655,29 @@ END:VCALENDAR`
                 control={form.control}
                 name="additionalNotes"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs">Additional Notes or Questions (Optional)</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                      Additional Notes or Questions (Optional)
+                    </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Any specific topics, assets, or accounts you want covered"
-                        className="h-9 text-xs"
+                      <Textarea
+                        placeholder="Any specific topics, accounts, or liquidity events you want to focus on"
+                        className="rounded-none border-border bg-background focus:border-primary text-sm resize-none min-h-[90px]"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-[10px]" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
             </form>
           </Form>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between pt-6 border-t border-border">
             <Button
               variant="outline"
               onClick={() => setCurrentStep("schedule")}
-              className="gap-1.5 text-xs"
+              className="rounded-none text-xs h-10 px-6 gap-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back</span>
@@ -679,113 +687,121 @@ END:VCALENDAR`
                 const isValid = await form.trigger()
                 if (isValid) setCurrentStep("review")
               }}
-              className="gap-1.5 px-6 font-semibold"
+              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
             >
-              <span>Review Consultation</span>
+              <span>Review Details</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* STEP 5: Review Summary */}
+      {/* STEP 5: Editorial Review Summary (Clean Editorial Table/List, No Shadow Card) */}
       {currentStep === "review" && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Review Appointment Summary</h2>
-            <p className="text-xs text-muted-foreground">
-              Verify your advisory session details before confirming.
-            </p>
+        <div className="space-y-8">
+          <div className="border-b border-border pb-4">
+            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold block">
+              Review Appointment
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground mt-1">
+              Verify your session.
+            </h2>
           </div>
 
-          <Card className="border border-border/80 bg-card p-6 space-y-4 shadow-sm">
-            <div className="divide-y divide-border/60 text-xs">
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Selected Service:</span>
-                <span className="font-bold text-foreground flex items-center gap-1.5">
+          <div className="divide-y divide-border border-y border-border">
+            
+            {/* Service & Specialist */}
+            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+              <div>
+                <span className="text-xs font-mono uppercase text-muted-foreground block">
+                  Service
+                </span>
+                <p className="text-2xl font-bold text-foreground mt-1">
                   {selectedService.title}
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep("service")}
-                    className="text-primary hover:underline text-[11px] font-normal"
-                  >
-                    (Edit)
-                  </button>
-                </span>
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  with {selectedSpecialist.name} · {selectedSpecialist.title}
+                </p>
               </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Assigned Specialist:</span>
-                <span className="font-medium text-foreground flex items-center gap-1.5">
-                  {selectedSpecialist.name} ({selectedSpecialist.title})
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep("specialist")}
-                    className="text-primary hover:underline text-[11px] font-normal"
-                  >
-                    (Edit)
-                  </button>
-                </span>
-              </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Scheduled Date:</span>
-                <span className="font-mono font-medium text-foreground flex items-center gap-1.5">
-                  {selectedDate}
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep("schedule")}
-                    className="text-primary hover:underline text-[11px] font-normal"
-                  >
-                    (Edit)
-                  </button>
-                </span>
-              </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Scheduled Time:</span>
-                <span className="font-mono font-medium text-foreground">{selectedTime}</span>
-              </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Format & Duration:</span>
-                <span className="font-medium text-foreground capitalize">
-                  {consultationType.replace("_", " ")} ({selectedService.durationMinutes} Minutes)
-                </span>
-              </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Client Name:</span>
-                <span className="font-medium text-foreground">
-                  {form.getValues("firstName")} {form.getValues("lastName")}
-                </span>
-              </div>
-
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Confirmation Email:</span>
-                <span className="font-mono text-foreground">{form.getValues("email")}</span>
-              </div>
-
-              <div className="flex justify-between py-2 font-bold text-sm">
-                <span className="text-foreground">Consultation Fee:</span>
-                <span className="font-mono text-success font-bold">100% Free Fiduciary Audit</span>
-              </div>
+              <button
+                type="button"
+                onClick={() => setCurrentStep("service")}
+                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
+              >
+                <Edit2 className="h-3 w-3" />
+                <span>Change service</span>
+              </button>
             </div>
 
-            <div className="p-3 bg-muted/30 rounded-lg border border-border/60 flex items-center gap-2 text-xs text-muted-foreground">
-              <ShieldCheck className="h-4 w-4 text-success shrink-0" />
-              <span>
-                Zero sales pressure guarantee: Your advisor is compensated exclusively on advice quality, never product commissions.
+            {/* Date & Time */}
+            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+              <div>
+                <span className="text-xs font-mono uppercase text-muted-foreground block">
+                  Date & Time
+                </span>
+                <p className="text-2xl font-bold text-foreground mt-1">
+                  {selectedDate} · {selectedTime}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5 capitalize">
+                  {selectedService.durationMinutes} minutes · {consultationType.replace("_", " ")} consultation
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCurrentStep("schedule")}
+                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
+              >
+                <Edit2 className="h-3 w-3" />
+                <span>Change time</span>
+              </button>
+            </div>
+
+            {/* Client Info */}
+            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+              <div>
+                <span className="text-xs font-mono uppercase text-muted-foreground block">
+                  Your Information
+                </span>
+                <p className="text-lg font-bold text-foreground mt-1">
+                  {form.getValues("firstName")} {form.getValues("lastName")}
+                </p>
+                <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                  {form.getValues("email")} · {form.getValues("phone")}
+                </p>
+                {form.getValues("reason") && (
+                  <p className="text-xs text-muted-foreground mt-2 max-w-lg">
+                    <span className="font-medium text-foreground">Objective:</span> {form.getValues("reason")}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setCurrentStep("details")}
+                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
+              >
+                <Edit2 className="h-3 w-3" />
+                <span>Edit details</span>
+              </button>
+            </div>
+
+            {/* Advisory Fee Disclosure */}
+            <div className="py-6 flex items-center justify-between">
+              <span className="text-xs font-mono uppercase text-muted-foreground">
+                Introductory Fee
+              </span>
+              <span className="font-mono text-sm font-bold text-primary">
+                100% Complimentary · Fiduciary Audit
               </span>
             </div>
-          </Card>
 
-          <div className="flex items-center justify-between pt-4">
+          </div>
+
+          <div className="flex items-center justify-between pt-6">
             <Button
               variant="outline"
               onClick={() => setCurrentStep("details")}
               disabled={isSubmitting}
-              className="gap-1.5 text-xs"
+              className="rounded-none text-xs h-11 px-6 gap-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back</span>
@@ -794,17 +810,16 @@ END:VCALENDAR`
             <Button
               onClick={handleFinalSubmit}
               disabled={isSubmitting}
-              className="gap-2 px-8 font-semibold shadow-xs"
+              className="h-11 px-10 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Confirming Slot...</span>
+                  <span>Confirming slot...</span>
                 </>
               ) : (
                 <>
-                  <span>Confirm & Schedule</span>
-                  <Check className="h-4 w-4" />
+                  <span>Confirm appointment →</span>
                 </>
               )}
             </Button>
@@ -812,80 +827,80 @@ END:VCALENDAR`
         </div>
       )}
 
-      {/* STEP 6: Confirmation Screen */}
+      {/* STEP 6: Confirmation Screen (Full-Screen Minimal Success, No Card Wrapper) */}
       {currentStep === "confirmed" && confirmedAppointment && (
-        <Card className="border border-border shadow-xl bg-card p-8 sm:p-10 text-center space-y-6">
-          <div className="mx-auto h-14 w-14 rounded-full bg-success/15 text-success flex items-center justify-center animate-in zoom-in-95">
-            <CheckCircle2 className="h-8 w-8" />
-          </div>
+        <div className="py-12 sm:py-16 text-left space-y-12">
+          
+          <div className="space-y-4 border-b border-border pb-8">
+            <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+              <Check className="h-6 w-6" />
+            </div>
 
-          <div className="space-y-1">
-            <Badge variant="outline" className="text-xs font-mono">
-              Ref: {confirmedAppointment.referenceNumber}
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-              Appointment Confirmed!
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-              Your consultation has been booked on {confirmedAppointment.specialistName}&apos;s verified calendar.
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+              You’re all set.
+            </h1>
+
+            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+              Your consultation with <strong className="text-foreground">{confirmedAppointment.specialistName}</strong> has been scheduled for <strong className="text-foreground">{confirmedAppointment.dateFormatted}</strong> at <strong className="text-foreground">{confirmedAppointment.time}</strong>.
             </p>
           </div>
 
-          {/* Details Pill Box */}
-          <div className="p-5 rounded-2xl bg-muted/30 border border-border/80 max-w-lg mx-auto text-left text-xs space-y-3">
-            <div className="flex justify-between items-center pb-2 border-b border-border/50">
-              <span className="text-muted-foreground">Service:</span>
-              <span className="font-bold text-foreground">{confirmedAppointment.serviceTitle}</span>
+          {/* Minimal Editorial Summary */}
+          <div className="divide-y divide-border border-b border-border text-xs font-mono">
+            <div className="py-3 flex justify-between">
+              <span className="text-muted-foreground">Reference ID</span>
+              <span className="font-bold text-foreground">{confirmedAppointment.referenceNumber}</span>
             </div>
-            <div className="flex justify-between items-center pb-2 border-b border-border/50">
-              <span className="text-muted-foreground">Specialist:</span>
-              <span className="font-medium text-foreground">{confirmedAppointment.specialistName}</span>
+            <div className="py-3 flex justify-between">
+              <span className="text-muted-foreground">Advisory Vertical</span>
+              <span className="text-foreground">{confirmedAppointment.serviceTitle}</span>
             </div>
-            <div className="flex justify-between items-center pb-2 border-b border-border/50">
-              <span className="text-muted-foreground">Date & Time:</span>
-              <span className="font-mono font-bold text-foreground">
-                {confirmedAppointment.dateFormatted} at {confirmedAppointment.time}
-              </span>
+            <div className="py-3 flex justify-between">
+              <span className="text-muted-foreground">Format</span>
+              <span className="text-foreground capitalize">{confirmedAppointment.consultationType} Call</span>
             </div>
-            <div className="flex justify-between items-center pb-2 border-b border-border/50">
-              <span className="text-muted-foreground">Meeting Format:</span>
-              <span className="font-medium text-primary capitalize flex items-center gap-1">
-                <Video className="h-3.5 w-3.5" />
-                {confirmedAppointment.consultationType} Call (Link Sent)
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Attendee:</span>
-              <span className="font-medium text-foreground">
-                {confirmedAppointment.customer.firstName} {confirmedAppointment.customer.lastName} ({confirmedAppointment.customer.email})
-              </span>
+            <div className="py-3 flex justify-between">
+              <span className="text-muted-foreground">Client</span>
+              <span className="text-foreground">{confirmedAppointment.customer.firstName} {confirmedAppointment.customer.lastName}</span>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          {/* Clean Editorial Action Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
             <Button
               variant="outline"
               onClick={handleDownloadCalendar}
-              className="w-full sm:w-auto text-xs h-10 gap-1.5 border-border font-medium"
+              className="h-12 px-6 rounded-none border-border hover:border-primary text-xs font-semibold gap-2"
             >
               <CalendarPlus className="h-4 w-4 text-primary" />
-              <span>Add to Calendar (.ics)</span>
+              <span>Add to calendar</span>
             </Button>
 
-            <Button asChild className="w-full sm:w-auto text-xs h-10 font-semibold shadow-xs">
+            <Button
+              asChild
+              className="h-12 px-8 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
+            >
               <Link href="/portal">
-                <span>View in Customer Portal</span>
-                <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                <span>View appointment</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+
+            <Button
+              asChild
+              variant="ghost"
+              className="h-12 px-6 rounded-none text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              <Link href="/" className="flex items-center gap-1.5">
+                <Home className="h-3.5 w-3.5" />
+                <span>Back to home</span>
               </Link>
             </Button>
           </div>
 
-          <div className="pt-4 border-t border-border/60 text-[11px] text-muted-foreground flex items-center justify-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-success" />
-            <span>A calendar invite with preparation links has been simulated to your inbox.</span>
-          </div>
-        </Card>
+        </div>
       )}
+
     </div>
   )
 }
