@@ -38,7 +38,9 @@ import {
   Loader2,
   CalendarPlus,
   Home,
-  Edit2,
+  ShieldCheck,
+  Briefcase,
+  UserCheck,
 } from "lucide-react"
 
 interface BookingFlowProps {
@@ -47,7 +49,7 @@ interface BookingFlowProps {
   initialDates: DayAvailability[]
 }
 
-type Step = "service" | "specialist" | "schedule" | "details" | "review" | "confirmed"
+type Stage = "schedule" | "details" | "confirmed"
 
 export function BookingFlow({
   services,
@@ -60,7 +62,7 @@ export function BookingFlow({
   const preselectedServiceId = searchParams.get("service")
   const preselectedSpecialistId = searchParams.get("specialist")
 
-  const [currentStep, setCurrentStep] = React.useState<Step>("service")
+  const [currentStage, setCurrentStage] = React.useState<Stage>("schedule")
   const [selectedServiceId, setSelectedServiceId] = React.useState<string>(
     preselectedServiceId || services[0]?.id || ""
   )
@@ -84,7 +86,7 @@ export function BookingFlow({
       email: "alex@example.com",
       phone: "+1 (555) 389-9921",
       contactMethod: "video",
-      reason: "Comprehensive portfolio review and tax-efficient wealth growth",
+      reason: "Portfolio audit & capital allocation strategy",
       additionalNotes: "",
     },
   })
@@ -97,35 +99,22 @@ export function BookingFlow({
   const selectedSpecialist = specialists.find((sp) => sp.id === selectedSpecialistId) || specialists[0]
   const currentDayAvailability = initialDates.find((d) => d.date === selectedDate)
 
-  const STEPS: { id: Step; label: string; number: string }[] = [
-    { id: "service", label: "Service", number: "01" },
-    { id: "specialist", label: "Specialist", number: "02" },
-    { id: "schedule", label: "Date & time", number: "03" },
-    { id: "details", label: "Your details", number: "04" },
-    { id: "review", label: "Confirm", number: "05" },
-  ]
-
-  const getStepIndex = (step: Step) => {
-    return STEPS.findIndex((s) => s.id === step)
-  }
-
   // Handle final submission
-  const handleFinalSubmit = async () => {
+  const handleFinalSubmit = async (values: CustomerInfoFormValues) => {
     setIsSubmitting(true)
 
     try {
-      const customerData = form.getValues()
       const newApt = await AppointmentService.createAppointment({
         serviceId: selectedServiceId,
         specialistId: selectedSpecialistId,
         consultationType,
         date: selectedDate,
         time: selectedTime,
-        customer: customerData,
+        customer: values,
       })
 
       setConfirmedAppointment(newApt)
-      setCurrentStep("confirmed")
+      setCurrentStage("confirmed")
     } catch (err) {
       console.error("Booking failed", err)
     } finally {
@@ -160,298 +149,196 @@ END:VCALENDAR`
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6 sm:px-8 space-y-12">
+    <div className="max-w-6xl mx-auto py-10 px-6 sm:px-8 space-y-12">
       
-      {/* Subtle Top Progress Header (Hidden on Confirmed) */}
-      {currentStep !== "confirmed" && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border pb-6">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold block">
-                Book a Consultation
-              </span>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mt-1">
-                Schedule your session.
-              </h1>
+      {/* Header with Business Focus */}
+      {currentStage !== "confirmed" && (
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary font-semibold">
+              <ShieldCheck className="h-4 w-4" />
+              <span>Institutional Fiduciary Consultation</span>
             </div>
-
-            <div className="text-xs font-mono text-muted-foreground">
-              Step {getStepIndex(currentStep) + 1} of {STEPS.length}
-            </div>
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
+              Schedule Your Strategy Session
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-xl">
+              Connect directly with a verified fiduciary advisor. Free initial diagnostic, zero sales pitches, and a written executive briefing within 24 hours.
+            </p>
           </div>
 
-          {/* Minimal Editorial Stepper */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 text-xs font-mono">
-            {STEPS.map((s, idx) => {
-              const activeIdx = getStepIndex(currentStep)
-              const isPassed = activeIdx > idx
-              const isCurrent = activeIdx === idx
+          {/* Simple 2-Step Business Stepper */}
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <div className="flex items-center gap-2">
+              <span
+                className={`h-6 w-6 rounded-full flex items-center justify-center font-bold ${
+                  currentStage === "schedule"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-foreground"
+                }`}
+              >
+                1
+              </span>
+              <span className={currentStage === "schedule" ? "font-bold text-foreground" : "text-muted-foreground"}>
+                Schedule & Advisor
+              </span>
+            </div>
 
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => {
-                    if (isPassed) setCurrentStep(s.id)
-                  }}
-                  disabled={!isPassed}
-                  className={`text-left pt-2 border-t-2 transition-colors ${
-                    isCurrent
-                      ? "border-primary text-foreground font-semibold"
-                      : isPassed
-                      ? "border-primary/50 text-foreground cursor-pointer hover:border-primary"
-                      : "border-border text-muted-foreground cursor-not-allowed"
-                  }`}
-                >
-                  <span className="block text-[11px] text-primary font-bold">
-                    {s.number}
-                  </span>
-                  <span className="truncate block mt-0.5">{s.label}</span>
-                </button>
-              )
-            })}
+            <div className="h-0.5 w-8 bg-border" />
+
+            <div className="flex items-center gap-2">
+              <span
+                className={`h-6 w-6 rounded-full flex items-center justify-center font-bold ${
+                  currentStage === "details"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                2
+              </span>
+              <span className={currentStage === "details" ? "font-bold text-foreground" : "text-muted-foreground"}>
+                Executive Details
+              </span>
+            </div>
           </div>
         </div>
       )}
 
-      {/* STEP 1: Service Selection (Large Selectable Rows, No Cards) */}
-      {currentStep === "service" && (
-        <div className="space-y-8">
-          <div className="border-b border-border pb-4">
-            <h2 className="text-xl font-bold text-foreground">
-              01 · Select Advisory Service
-            </h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Choose the primary area of strategic guidance you want to discuss.
-            </p>
-          </div>
+      {/* STAGE 1: Schedule & Advisor (Clear, 2-Column Business Scheduler) */}
+      {currentStage === "schedule" && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+          
+          {/* Left Column: Service & Advisor Selection */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Service Selector */}
+            <div className="space-y-3">
+              <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                1. Select Advisory Vertical
+              </label>
 
-          <div className="divide-y divide-border">
-            {services.map((srv, index) => {
-              const isSelected = selectedServiceId === srv.id
-              const indexFormatted = String(index + 1).padStart(2, "0")
-
-              return (
-                <div
-                  key={srv.id}
-                  onClick={() => setSelectedServiceId(srv.id)}
-                  className={`py-6 px-4 sm:px-6 cursor-pointer transition-all border-l-4 ${
-                    isSelected
-                      ? "border-primary bg-primary/5"
-                      : "border-transparent hover:bg-muted/30"
-                  }`}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-                    <div className="flex items-start sm:items-baseline gap-4 sm:gap-6">
-                      <span className="font-mono text-sm text-muted-foreground">
-                        {indexFormatted}
-                      </span>
-                      <div className="space-y-1 max-w-xl">
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-lg sm:text-xl font-bold text-foreground">
-                            {srv.title}
-                          </h3>
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <div className="space-y-2">
+                {services.map((srv) => {
+                  const isSelected = selectedServiceId === srv.id
+                  return (
+                    <button
+                      key={srv.id}
+                      type="button"
+                      onClick={() => setSelectedServiceId(srv.id)}
+                      className={`w-full p-4 text-left border transition-all flex items-start justify-between gap-3 ${
+                        isSelected
+                          ? "border-primary bg-primary/5 text-foreground"
+                          : "border-border hover:bg-muted/20 text-muted-foreground hover:text-foreground bg-background"
+                      }`}
+                    >
+                      <div className="space-y-1">
+                        <span className="font-bold text-sm block text-foreground">
+                          {srv.title}
+                        </span>
+                        <p className="text-xs text-muted-foreground line-clamp-1">
                           {srv.shortDescription}
                         </p>
                       </div>
-                    </div>
-
-                    <div className="flex items-center justify-between sm:justify-end gap-6 pl-10 sm:pl-0 font-mono text-xs">
-                      <span className="text-muted-foreground">
-                        {srv.durationMinutes} min
+                      <span className="text-[11px] font-mono shrink-0 text-muted-foreground">
+                        {srv.durationMinutes}m
                       </span>
-                      <ArrowRight
-                        className={`h-4 w-4 transition-transform ${
-                          isSelected
-                            ? "text-primary translate-x-1.5"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="flex justify-end pt-6 border-t border-border">
-            <Button
-              onClick={() => setCurrentStep("specialist")}
-              className="h-11 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-            >
-              <span>Choose Specialist</span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 2: Specialist Selection (Clean Editorial List, No Cards) */}
-      {currentStep === "specialist" && (
-        <div className="space-y-8">
-          <div className="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-            <div>
-              <h2 className="text-xl font-bold text-foreground">
-                02 · Select Financial Specialist
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                Fiduciary advisors available for: <strong className="text-foreground">{selectedService.title}</strong>
-              </p>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-            <span className="text-xs font-mono text-primary font-semibold">
-              Fiduciary Duty Bound
-            </span>
-          </div>
 
-          <div className="divide-y divide-border">
-            {specialists.map((sp) => {
-              const isSelected = selectedSpecialistId === sp.id
+            {/* Matched Fiduciary Advisor */}
+            <div className="space-y-3 pt-4 border-t border-border">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                  2. Assigned Fiduciary Specialist
+                </label>
+                <span className="text-[11px] font-mono text-primary font-semibold">
+                  Matched for {selectedService.title}
+                </span>
+              </div>
 
-              return (
-                <div
-                  key={sp.id}
-                  onClick={() => setSelectedSpecialistId(sp.id)}
-                  className={`py-6 px-4 sm:px-6 cursor-pointer transition-all border-l-4 ${
-                    isSelected
-                      ? "border-primary bg-primary/5"
-                      : "border-transparent hover:bg-muted/30"
-                  }`}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-1.5 max-w-lg">
-                      <div className="flex items-center gap-3">
-                        <h3 className="text-lg sm:text-xl font-bold text-foreground">
+              <div className="space-y-2">
+                {specialists.map((sp) => {
+                  const isSelected = selectedSpecialistId === sp.id
+                  return (
+                    <button
+                      key={sp.id}
+                      type="button"
+                      onClick={() => setSelectedSpecialistId(sp.id)}
+                      className={`w-full p-3.5 text-left border transition-all flex items-center justify-between gap-4 ${
+                        isSelected
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:bg-muted/20 bg-background"
+                      }`}
+                    >
+                      <div className="space-y-0.5">
+                        <span className="text-sm font-bold text-foreground block">
                           {sp.name}
-                        </h3>
-                        {isSelected && (
-                          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 bg-primary text-primary-foreground">
-                            Selected
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs font-medium text-foreground/80">
-                        {sp.title}
-                      </p>
-                      <p className="text-xs font-mono text-muted-foreground">
-                        {sp.specialties.join(" • ")}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between md:justify-end gap-6 sm:gap-10 text-xs font-mono">
-                      <div>
-                        <span className="block text-foreground font-semibold">
-                          {sp.experienceYears} yrs
                         </span>
-                        <span className="text-muted-foreground text-[11px]">experience</span>
+                        <span className="text-xs text-muted-foreground block">
+                          {sp.title} · {sp.experienceYears} yrs exp
+                        </span>
                       </div>
 
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 text-xs font-mono font-semibold text-foreground">
                         <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-                        <span className="font-semibold text-foreground">{sp.rating}</span>
-                        <span className="text-muted-foreground text-[11px]">rating</span>
+                        <span>{sp.rating}</span>
                       </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
 
-                      <div>
-                        <Button
-                          type="button"
-                          variant={isSelected ? "default" : "outline"}
-                          size="sm"
-                          className={`rounded-none text-xs h-8 px-4 ${
-                            isSelected
-                              ? "bg-primary text-primary-foreground"
-                              : "border-border hover:border-primary text-foreground"
-                          }`}
-                        >
-                          {isSelected ? "Selected" : "Select →"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+            {/* Format Selector */}
+            <div className="space-y-3 pt-4 border-t border-border">
+              <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                3. Meeting Format
+              </label>
 
-          <div className="flex items-center justify-between pt-6 border-t border-border">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentStep("service")}
-              className="rounded-none text-xs h-10 px-6 gap-2"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back</span>
-            </Button>
-            <Button
-              onClick={() => setCurrentStep("schedule")}
-              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-            >
-              <span>Continue to Date & Time</span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 3: Date & Time (Calendar + Available Times, No Giant Cards) */}
-      {currentStep === "schedule" && (
-        <div className="space-y-8">
-          <div className="border-b border-border pb-4">
-            <h2 className="text-xl font-bold text-foreground">
-              03 · Choose Date & Time
-            </h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Advisor: <strong className="text-foreground">{selectedSpecialist.name}</strong> · All slots displayed in Eastern Time (US & Canada).
-            </p>
-          </div>
-
-          {/* Meeting Format Selector */}
-          <div className="space-y-3">
-            <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-              Consultation Format
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { id: "video", label: "Video Call", desc: "Encrypted HD conference link", icon: Video },
-                { id: "phone", label: "Phone Call", desc: "Advisor dials your direct line", icon: Phone },
-                { id: "in_person", label: "In-Person", desc: "Finora Private Office Suite", icon: Building },
-              ].map((fmt) => {
-                const isSelected = consultationType === fmt.id
-                const IconComponent = fmt.icon
-                return (
-                  <button
-                    key={fmt.id}
-                    type="button"
-                    onClick={() => setConsultationType(fmt.id as ConsultationType)}
-                    className={`p-4 text-left border transition-all ${
-                      isSelected
-                        ? "border-primary bg-primary/5 text-foreground"
-                        : "border-border hover:bg-muted/20 text-muted-foreground"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 font-bold text-sm text-foreground mb-1">
-                      <IconComponent className={`h-4 w-4 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: "video", label: "Video Call", icon: Video },
+                  { id: "phone", label: "Phone Call", icon: Phone },
+                  { id: "in_person", label: "In-Person", icon: Building },
+                ].map((fmt) => {
+                  const isSelected = consultationType === fmt.id
+                  const Icon = fmt.icon
+                  return (
+                    <button
+                      key={fmt.id}
+                      type="button"
+                      onClick={() => setConsultationType(fmt.id as ConsultationType)}
+                      className={`p-3 text-center border font-mono text-xs transition-all ${
+                        isSelected
+                          ? "border-primary bg-primary text-primary-foreground font-bold"
+                          : "border-border hover:border-primary text-foreground bg-background"
+                      }`}
+                    >
+                      <Icon className="h-4 w-4 mx-auto mb-1 opacity-90" />
                       <span>{fmt.label}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{fmt.desc}</p>
-                  </button>
-                )
-              })}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Desktop & Mobile Responsive Scheduler */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-4 border-t border-border">
-            
-            {/* Left: Date Selection Strip / Grid */}
-            <div className="md:col-span-6 space-y-4">
-              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                Available Dates (Next 14 Days)
-              </span>
+          {/* Right Column: Date & Available Times Calendar Strip */}
+          <div className="lg:col-span-7 space-y-8 lg:border-l lg:border-border lg:pl-10">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                  4. Select Consultation Date
+                </span>
+                <span className="text-xs font-mono text-primary font-semibold">
+                  14-Day Calendar
+                </span>
+              </div>
 
-              <div className="grid grid-cols-4 sm:grid-cols-4 gap-2">
-                {initialDates.map((day) => {
+              <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                {initialDates.slice(0, 14).map((day) => {
                   const isSelected = selectedDate === day.date
                   return (
                     <button
@@ -461,10 +348,10 @@ END:VCALENDAR`
                       onClick={() => setSelectedDate(day.date)}
                       className={`py-3 px-2 border text-center transition-all ${
                         !day.isAvailable
-                          ? "opacity-30 cursor-not-allowed border-border bg-muted/10 line-through"
+                          ? "opacity-25 cursor-not-allowed border-border bg-muted/10 line-through text-muted-foreground"
                           : isSelected
-                          ? "border-primary bg-primary text-primary-foreground font-bold"
-                          : "border-border hover:border-primary hover:bg-muted/20 text-foreground"
+                          ? "border-primary bg-primary text-primary-foreground font-bold shadow-xs"
+                          : "border-border hover:border-primary text-foreground bg-background"
                       }`}
                     >
                       <span className="block text-[10px] uppercase font-mono">{day.dayName}</span>
@@ -475,13 +362,18 @@ END:VCALENDAR`
               </div>
             </div>
 
-            {/* Right: Available Times List */}
-            <div className="md:col-span-6 space-y-4 md:border-l md:border-border md:pl-8">
-              <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
-                Available Times on {selectedDate}
-              </span>
+            {/* Time Slot Picker */}
+            <div className="space-y-4 pt-4 border-t border-border">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground block">
+                  5. Available Openings on {selectedDate}
+                </span>
+                <span className="text-xs font-mono text-muted-foreground">
+                  Eastern Time (US)
+                </span>
+              </div>
 
-              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {currentDayAvailability?.slots.map((slot) => {
                   const isSelected = selectedTime === slot.time
                   return (
@@ -490,19 +382,19 @@ END:VCALENDAR`
                       type="button"
                       disabled={!slot.available}
                       onClick={() => setSelectedTime(slot.time)}
-                      className={`w-full py-2.5 px-4 border text-left font-mono text-xs transition-all flex items-center justify-between ${
+                      className={`p-3 border font-mono text-xs transition-all flex items-center justify-between ${
                         !slot.available
-                          ? "opacity-30 cursor-not-allowed border-border/60 bg-muted/10"
+                          ? "opacity-30 cursor-not-allowed border-border/60 bg-muted/10 line-through"
                           : isSelected
                           ? "border-primary bg-primary text-primary-foreground font-bold"
-                          : "border-border hover:border-primary hover:bg-muted/20 text-foreground"
+                          : "border-border hover:border-primary text-foreground bg-background"
                       }`}
                     >
                       <span>{slot.time}</span>
                       {isSelected ? (
                         <Check className="h-3.5 w-3.5 text-primary-foreground" />
                       ) : (
-                        <span className="text-[10px] text-muted-foreground">Available</span>
+                        <span className="text-[10px] text-muted-foreground">Open</span>
                       )}
                     </button>
                   )
@@ -510,326 +402,277 @@ END:VCALENDAR`
               </div>
             </div>
 
+            {/* Live Session Briefing Bar */}
+            <div className="p-4 bg-muted/30 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono">
+              <div className="space-y-0.5">
+                <span className="text-foreground font-bold block">
+                  {selectedService.title} with {selectedSpecialist.name}
+                </span>
+                <span className="text-muted-foreground">
+                  {selectedDate} at {selectedTime} · {consultationType} format
+                </span>
+              </div>
+
+              <div className="shrink-0">
+                <span className="text-primary font-bold block sm:text-right">
+                  100% Free Fiduciary Audit
+                </span>
+                <span className="text-[11px] text-muted-foreground block sm:text-right">
+                  Written Strategy Deck Included
+                </span>
+              </div>
+            </div>
+
+            {/* Continue to Details Action */}
+            <div className="flex justify-end pt-4">
+              <Button
+                type="button"
+                onClick={() => setCurrentStage("details")}
+                className="w-full sm:w-auto h-12 px-10 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
+              >
+                <span>Continue to Executive Details</span>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between pt-6 border-t border-border">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentStep("specialist")}
-              className="rounded-none text-xs h-10 px-6 gap-2"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back</span>
-            </Button>
-            <Button
-              onClick={() => setCurrentStep("details")}
-              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-            >
-              <span>Continue to Details</span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
         </div>
       )}
 
-      {/* STEP 4: Customer Details Form (React Hook Form + Zod, No Card Containers) */}
-      {currentStep === "details" && (
-        <div className="space-y-8">
-          <div className="border-b border-border pb-4">
-            <h2 className="text-xl font-bold text-foreground">
-              04 · Your Contact Information
-            </h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Your calendar invitation and preparatory diagnostic notes will be sent here.
-            </p>
-          </div>
-
-          <Form {...form}>
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1.5">
-                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                        First Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Alex"
-                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1.5">
-                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                        Last Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Rahman"
-                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1.5">
-                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                        Email Address (for calendar invite)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="alex@example.com"
-                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1.5">
-                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="+1 (555) 389-9921"
-                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="reason"
-                render={({ field }) => (
-                  <FormItem className="space-y-1.5">
-                    <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                      Primary Consultation Objective
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g. Evaluating investment diversification and tax strategies"
-                        className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="additionalNotes"
-                render={({ field }) => (
-                  <FormItem className="space-y-1.5">
-                    <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
-                      Additional Notes or Questions (Optional)
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Any specific topics, accounts, or liquidity events you want to focus on"
-                        className="rounded-none border-border bg-background focus:border-primary text-sm resize-none min-h-[90px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-
-          <div className="flex items-center justify-between pt-6 border-t border-border">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentStep("schedule")}
-              className="rounded-none text-xs h-10 px-6 gap-2"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back</span>
-            </Button>
-            <Button
-              onClick={async () => {
-                const isValid = await form.trigger()
-                if (isValid) setCurrentStep("review")
-              }}
-              className="h-10 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-            >
-              <span>Review Details</span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 5: Editorial Review Summary (Clean Editorial Table/List, No Shadow Card) */}
-      {currentStep === "review" && (
-        <div className="space-y-8">
-          <div className="border-b border-border pb-4">
-            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold block">
-              Review Appointment
-            </span>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground mt-1">
-              Verify your session.
-            </h2>
-          </div>
-
-          <div className="divide-y divide-border border-y border-border">
-            
-            {/* Service & Specialist */}
-            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-              <div>
-                <span className="text-xs font-mono uppercase text-muted-foreground block">
-                  Service
-                </span>
-                <p className="text-2xl font-bold text-foreground mt-1">
-                  {selectedService.title}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  with {selectedSpecialist.name} · {selectedSpecialist.title}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setCurrentStep("service")}
-                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
-              >
-                <Edit2 className="h-3 w-3" />
-                <span>Change service</span>
-              </button>
+      {/* STAGE 2: Executive Details & 1-Click Confirmation */}
+      {currentStage === "details" && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+          
+          {/* Left Column: Form Inputs */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="border-b border-border pb-4">
+              <h2 className="text-2xl font-bold text-foreground">
+                Executive Contact Information
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                Your direct calendar invite, encrypted video room link, and advisory prep notes will be sent here.
+              </p>
             </div>
 
-            {/* Date & Time */}
-            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-              <div>
-                <span className="text-xs font-mono uppercase text-muted-foreground block">
-                  Date & Time
-                </span>
-                <p className="text-2xl font-bold text-foreground mt-1">
-                  {selectedDate} · {selectedTime}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 capitalize">
-                  {selectedService.durationMinutes} minutes · {consultationType.replace("_", " ")} consultation
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setCurrentStep("schedule")}
-                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
-              >
-                <Edit2 className="h-3 w-3" />
-                <span>Change time</span>
-              </button>
-            </div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleFinalSubmit)} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                          First Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Alex"
+                            className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
 
-            {/* Client Info */}
-            <div className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
-              <div>
-                <span className="text-xs font-mono uppercase text-muted-foreground block">
-                  Your Information
-                </span>
-                <p className="text-lg font-bold text-foreground mt-1">
-                  {form.getValues("firstName")} {form.getValues("lastName")}
-                </p>
-                <p className="text-xs font-mono text-muted-foreground mt-0.5">
-                  {form.getValues("email")} · {form.getValues("phone")}
-                </p>
-                {form.getValues("reason") && (
-                  <p className="text-xs text-muted-foreground mt-2 max-w-lg">
-                    <span className="font-medium text-foreground">Objective:</span> {form.getValues("reason")}
-                  </p>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => setCurrentStep("details")}
-                className="text-xs font-mono text-primary hover:underline self-start sm:self-auto flex items-center gap-1"
-              >
-                <Edit2 className="h-3 w-3" />
-                <span>Edit details</span>
-              </button>
-            </div>
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                          Last Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Rahman"
+                            className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-            {/* Advisory Fee Disclosure */}
-            <div className="py-6 flex items-center justify-between">
-              <span className="text-xs font-mono uppercase text-muted-foreground">
-                Introductory Fee
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                          Work or Personal Email
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="alex@company.com"
+                            className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                          Direct Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="+1 (555) 389-9921"
+                            className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="reason"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        Primary Strategic Objective
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. Portfolio diversification, tax drag mitigation, liquidity planning"
+                          className="h-11 rounded-none border-border bg-background focus:border-primary text-sm"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="additionalNotes"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-xs font-mono uppercase text-muted-foreground">
+                        Specific Questions or Financial Goals (Optional)
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Tell us any specific assets, questions, or accounts to focus on during your session"
+                          className="rounded-none border-border bg-background focus:border-primary text-sm resize-none min-h-[85px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex items-center justify-between pt-6 border-t border-border">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setCurrentStage("schedule")}
+                    className="rounded-none text-xs h-11 px-6 gap-2"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <span>Back to Schedule</span>
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="h-11 px-10 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Securing Slot...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Confirm Consultation →</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+
+          {/* Right Column: Live Executive Summary Card */}
+          <div className="lg:col-span-5 lg:border-l lg:border-border lg:pl-10 space-y-6">
+            <div className="border-b border-border pb-4">
+              <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold block">
+                Executive Summary
               </span>
-              <span className="font-mono text-sm font-bold text-primary">
-                100% Complimentary · Fiduciary Audit
-              </span>
+              <h3 className="text-xl font-bold text-foreground mt-1">
+                Your Consultation Overview
+              </h3>
             </div>
 
+            <div className="divide-y divide-border text-xs font-mono">
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Service Vertical</span>
+                <span className="font-bold text-foreground">{selectedService.title}</span>
+              </div>
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Advisor</span>
+                <span className="font-bold text-foreground">{selectedSpecialist.name}</span>
+              </div>
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Credentials</span>
+                <span className="text-foreground">{selectedSpecialist.title}</span>
+              </div>
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Scheduled Date</span>
+                <span className="font-bold text-foreground">{selectedDate}</span>
+              </div>
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Scheduled Time</span>
+                <span className="font-bold text-foreground">{selectedTime} EST</span>
+              </div>
+              <div className="py-3 flex justify-between">
+                <span className="text-muted-foreground">Meeting Format</span>
+                <span className="text-foreground capitalize">{consultationType} Call</span>
+              </div>
+              <div className="py-3 flex justify-between font-bold">
+                <span className="text-muted-foreground">Engagement Fee</span>
+                <span className="text-primary">100% Free Fiduciary Audit</span>
+              </div>
+            </div>
+
+            {/* Fiduciary Standard Assurance */}
+            <div className="p-4 bg-muted/40 border border-border space-y-2 text-xs">
+              <div className="flex items-center gap-2 text-foreground font-bold">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                <span>The Finora Fiduciary Commitment</span>
+              </div>
+              <p className="text-muted-foreground leading-relaxed text-[11px]">
+                Your advisor is legally bound to put your interests first. No product sales quotas, no hidden commissions, and total confidentiality guaranteed.
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between pt-6">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentStep("details")}
-              disabled={isSubmitting}
-              className="rounded-none text-xs h-11 px-6 gap-2"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Back</span>
-            </Button>
-
-            <Button
-              onClick={handleFinalSubmit}
-              disabled={isSubmitting}
-              className="h-11 px-10 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Confirming slot...</span>
-                </>
-              ) : (
-                <>
-                  <span>Confirm appointment →</span>
-                </>
-              )}
-            </Button>
-          </div>
         </div>
       )}
 
-      {/* STEP 6: Confirmation Screen (Full-Screen Minimal Success, No Card Wrapper) */}
-      {currentStep === "confirmed" && confirmedAppointment && (
-        <div className="py-12 sm:py-16 text-left space-y-12">
+      {/* STAGE 3: Executive Confirmation Screen */}
+      {currentStage === "confirmed" && confirmedAppointment && (
+        <div className="py-12 sm:py-16 text-left space-y-12 max-w-3xl mx-auto">
           
           <div className="space-y-4 border-b border-border pb-8">
             <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
@@ -840,32 +683,36 @@ END:VCALENDAR`
               You’re all set.
             </h1>
 
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Your consultation with <strong className="text-foreground">{confirmedAppointment.specialistName}</strong> has been scheduled for <strong className="text-foreground">{confirmedAppointment.dateFormatted}</strong> at <strong className="text-foreground">{confirmedAppointment.time}</strong>.
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Your consultation with <strong className="text-foreground">{confirmedAppointment.specialistName}</strong> has been secured for <strong className="text-foreground">{confirmedAppointment.dateFormatted}</strong> at <strong className="text-foreground">{confirmedAppointment.time}</strong>.
             </p>
           </div>
 
           {/* Minimal Editorial Summary */}
           <div className="divide-y divide-border border-b border-border text-xs font-mono">
-            <div className="py-3 flex justify-between">
-              <span className="text-muted-foreground">Reference ID</span>
+            <div className="py-3.5 flex justify-between">
+              <span className="text-muted-foreground">Consultation Ref</span>
               <span className="font-bold text-foreground">{confirmedAppointment.referenceNumber}</span>
             </div>
-            <div className="py-3 flex justify-between">
-              <span className="text-muted-foreground">Advisory Vertical</span>
+            <div className="py-3.5 flex justify-between">
+              <span className="text-muted-foreground">Practice Vertical</span>
               <span className="text-foreground">{confirmedAppointment.serviceTitle}</span>
             </div>
-            <div className="py-3 flex justify-between">
-              <span className="text-muted-foreground">Format</span>
-              <span className="text-foreground capitalize">{confirmedAppointment.consultationType} Call</span>
+            <div className="py-3.5 flex justify-between">
+              <span className="text-muted-foreground">Advisor</span>
+              <span className="text-foreground">{confirmedAppointment.specialistName}</span>
             </div>
-            <div className="py-3 flex justify-between">
-              <span className="text-muted-foreground">Client</span>
+            <div className="py-3.5 flex justify-between">
+              <span className="text-muted-foreground">Meeting Format</span>
+              <span className="text-foreground capitalize">{confirmedAppointment.consultationType} Consultation</span>
+            </div>
+            <div className="py-3.5 flex justify-between">
+              <span className="text-muted-foreground">Client Attendee</span>
               <span className="text-foreground">{confirmedAppointment.customer.firstName} {confirmedAppointment.customer.lastName}</span>
             </div>
           </div>
 
-          {/* Clean Editorial Action Row */}
+          {/* Direct Action Strip */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
             <Button
               variant="outline"
@@ -873,7 +720,7 @@ END:VCALENDAR`
               className="h-12 px-6 rounded-none border-border hover:border-primary text-xs font-semibold gap-2"
             >
               <CalendarPlus className="h-4 w-4 text-primary" />
-              <span>Add to calendar</span>
+              <span>Add to Calendar (.ics)</span>
             </Button>
 
             <Button
@@ -881,7 +728,7 @@ END:VCALENDAR`
               className="h-12 px-8 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
             >
               <Link href="/portal">
-                <span>View appointment</span>
+                <span>Go to Client Portal</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -893,10 +740,14 @@ END:VCALENDAR`
             >
               <Link href="/" className="flex items-center gap-1.5">
                 <Home className="h-3.5 w-3.5" />
-                <span>Back to home</span>
+                <span>Return to Home</span>
               </Link>
             </Button>
           </div>
+
+          <p className="text-xs font-mono text-muted-foreground pt-4">
+            A confirmation email with preparatory questions has been simulated to {confirmedAppointment.customer.email}.
+          </p>
 
         </div>
       )}
