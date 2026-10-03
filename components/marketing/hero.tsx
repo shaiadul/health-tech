@@ -7,29 +7,41 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import {
   ArrowRight,
+  Baby,
+  Bone,
+  Brain,
   Building,
   CalendarDays,
+  Heart,
   HeartPulse,
   PhoneCall,
   ShieldCheck,
+  Sparkles,
   Star,
-  Stethoscope,
   Video,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const DEPARTMENTS = [
-  { id: "srv_cardio_01", label: "Cardiology" },
-  { id: "srv_neuro_02", label: "Neurology" },
-  { id: "srv_pediatrics_03", label: "Pediatrics" },
-  { id: "srv_ortho_04", label: "Orthopedics" },
-  { id: "srv_exec_07", label: "Health Check-up" },
+  { id: "srv_cardio_01", label: "Cardiology", hint: "Heart & blood pressure", icon: Heart },
+  { id: "srv_neuro_02", label: "Neurology", hint: "Migraine, nerves & brain", icon: Brain },
+  { id: "srv_pediatrics_03", label: "Pediatrics", hint: "Child care & vaccines", icon: Baby },
+  { id: "srv_ortho_04", label: "Orthopedics", hint: "Joints, bones & sports injury", icon: Bone },
+  { id: "srv_exec_07", label: "Health Check-up", hint: "Full-body screening", icon: Sparkles },
 ]
 
 export function MarketingHero() {
   const router = useRouter()
   const [service, setService] = React.useState(DEPARTMENTS[0].id)
   const [format, setFormat] = React.useState<"in_person" | "video">("in_person")
+  const selectedDept = DEPARTMENTS.find((d) => d.id === service) ?? DEPARTMENTS[0]
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,25 +102,51 @@ export function MarketingHero() {
             className="rounded-xl bg-background text-foreground p-3 sm:p-4 shadow-2xl space-y-3"
           >
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
-              <label className="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5 focus-within:border-primary transition-colors">
-                <Stethoscope className="h-4 w-4 text-primary shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <span className="block text-[10px] uppercase tracking-wider font-mono text-muted-foreground">
-                    Department
-                  </span>
-                  <select
-                    value={service}
-                    onChange={(e) => setService(e.target.value)}
-                    className="w-full bg-transparent text-sm font-semibold outline-none cursor-pointer"
-                  >
-                    {DEPARTMENTS.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </label>
+              <Select value={service} onValueChange={setService}>
+                <SelectTrigger
+                  aria-label="Select department"
+                  className="h-auto min-h-14 rounded-lg border-border px-3 py-2 shadow-none hover:border-primary/60 focus:ring-2 focus:ring-primary/30 data-[state=open]:border-primary transition-colors [&>span]:line-clamp-none"
+                >
+                  <SelectValue>
+                    <span className="flex items-center gap-3 text-left">
+                      <span className="h-9 w-9 shrink-0 rounded-md bg-primary/10 text-primary flex items-center justify-center">
+                        <selectedDept.icon className="h-4.5 w-4.5" />
+                      </span>
+                      <span className="flex flex-col">
+                        <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground leading-none">
+                          Department
+                        </span>
+                        <span className="text-sm font-semibold leading-tight mt-1">
+                          {selectedDept.label}
+                        </span>
+                      </span>
+                    </span>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent
+                  position="popper"
+                  sideOffset={6}
+                  className="rounded-xl border-border p-1.5 shadow-xl"
+                >
+                  {DEPARTMENTS.map((d) => (
+                    <SelectItem
+                      key={d.id}
+                      value={d.id}
+                      className="rounded-lg py-2.5 pl-2.5 pr-9 cursor-pointer focus:bg-primary/10 focus:text-foreground data-[state=checked]:bg-primary/5"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="h-9 w-9 shrink-0 rounded-md bg-primary/10 text-primary flex items-center justify-center">
+                          <d.icon className="h-4.5 w-4.5" />
+                        </span>
+                        <span className="flex flex-col text-left">
+                          <span className="text-sm font-semibold leading-tight">{d.label}</span>
+                          <span className="text-xs text-muted-foreground">{d.hint}</span>
+                        </span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               <div className="grid grid-cols-2 rounded-lg border border-border p-1 text-xs font-semibold">
                 {(
