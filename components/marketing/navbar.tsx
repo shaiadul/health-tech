@@ -84,15 +84,6 @@ export function MarketingNavbar() {
             <span>Patient Portal</span>
           </Link>
 
-          {/* Admin link (hidden on < md screens) */}
-          <Link
-            href="/admin"
-            className="hidden md:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-primary px-2.5 py-1.5 border border-border/70 hover:border-primary transition-colors"
-          >
-            <UserCheck className="h-3.5 w-3.5 text-primary" />
-            <span>Admin</span>
-          </Link>
-
           {/* High-Conversion Booking Button (Always visible on mobile & desktop) */}
           <Button
             asChild
@@ -147,33 +138,18 @@ export function MarketingNavbar() {
                     </Link>
                   </Button>
 
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="h-10 text-xs font-mono justify-start px-3"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      <Link href="/portal" className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-primary" />
-                        <span>My Portal</span>
-                      </Link>
-                    </Button>
-
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="h-10 text-xs font-mono justify-start px-3"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      <Link href="/admin" className="flex items-center gap-1.5">
-                        <UserCheck className="h-3.5 w-3.5 text-primary" />
-                        <span>Admin Triage</span>
-                      </Link>
-                    </Button>
-                  </div>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="w-full h-10 text-xs font-mono justify-center px-3"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Link href="/portal" className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span>Patient Portal & Past Visits</span>
+                    </Link>
+                  </Button>
                 </div>
 
                 {/* Navigation Links */}

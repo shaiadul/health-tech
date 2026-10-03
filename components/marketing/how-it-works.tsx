@@ -1,85 +1,118 @@
+"use client"
+
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { motion } from "framer-motion"
+import { ArrowRight, Building2, Stethoscope, CalendarCheck, FileHeart, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function HowItWorks() {
   const steps = [
     {
       step: "01",
-      title: "Select Department or Symptom",
+      icon: Building2,
+      title: "Select Clinical Department",
       description:
-        "Choose your clinical area of concern—Cardiology, Pediatrics, Orthopedics, Neurology, Internal Medicine, or a General Health Check.",
+        "Choose your medical faculty—Cardiology, Pediatrics, Orthopedics, Neurology, Internal Medicine, or an Executive Health Check.",
     },
     {
       step: "02",
+      icon: Stethoscope,
       title: "Choose Attending Physician",
       description:
         "Review board-certified medical doctors, subspecialty fellowship credentials, experience, and verified patient reviews.",
     },
     {
       step: "03",
+      icon: CalendarCheck,
       title: "Pick In-Clinic or Telehealth Time",
       description:
-        "Select an immediate or upcoming opening for an in-person hospital suite visit or an encrypted HD video telehealth consultation.",
+        "Select your preferred slot for an in-person hospital exam room or an encrypted HD video telehealth consultation.",
     },
     {
       step: "04",
+      icon: FileHeart,
       title: "Receive Treatment & E-Prescription",
       description:
-        "Consult directly with your physician, receive your diagnostic plan, and access certified digital prescriptions in your Patient Portal.",
+        "Consult directly with your doctor, receive your diagnostic plan, and access certified digital prescriptions in your Patient Portal.",
     },
   ]
 
   return (
-    <section id="how-it-works" className="py-24 md:py-32 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section id="how-it-works" className="py-20 md:py-28 border-b border-border bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Section Header */}
-        <div className="max-w-2xl space-y-3 pb-16">
-          <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-            Patient Journey
+        <div className="max-w-2xl space-y-3">
+          <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
+            Patient Care Journey
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-tight">
-            How it works.
+            How healthcare booking works.
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             A frictionless, patient-first process designed to connect you with specialist medical care without tedious paperwork or clinic delays.
           </p>
         </div>
 
-        {/* Storytelling Layout with Large Numbers */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-y lg:divide-y-0 divide-border">
-          {steps.map((item, idx) => (
-            <div key={item.step} className={`${idx !== 0 ? "pt-8 lg:pt-0" : ""} space-y-4`}>
-              <div className="text-5xl sm:text-6xl font-bold font-mono text-primary/70 tracking-tighter">
-                {item.step}
-              </div>
+        {/* 4 Connected Step Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((item, idx) => {
+            const Icon = item.icon
+            return (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className="p-6 border border-border bg-background hover:border-primary/50 transition-all flex flex-col justify-between gap-6 hover:shadow-xs"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-3xl sm:text-4xl font-bold font-mono text-primary/80">
+                      {item.step}
+                    </span>
+                    <div className="h-9 w-9 rounded-sm bg-primary/10 text-primary flex items-center justify-center">
+                      <Icon className="h-4.5 w-4.5" />
+                    </div>
+                  </div>
 
-              <div className="space-y-2 pt-2 border-t border-border">
-                <h3 className="text-xl font-bold text-foreground tracking-tight">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
+                  <div className="space-y-2 pt-2 border-t border-border/80">
+                    <h3 className="text-lg font-bold text-foreground tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-2 text-[11px] font-mono text-primary font-semibold flex items-center gap-1">
+                  <span>Step {idx + 1} of 4</span>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
 
-        {/* Minimal inline conversion trigger */}
-        <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <span className="text-xs font-mono text-muted-foreground">
-            Emergency department & urgent trauma triage active 24/7 on hospital campus.
-          </span>
+        {/* CTA Strip */}
+        <div className="p-6 bg-primary/5 border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="space-y-0.5 text-center sm:text-left">
+            <span className="text-sm font-bold text-foreground block">
+              Ready to schedule your medical consultation?
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Average booking completion takes under 90 seconds. No advance deposit required.
+            </span>
+          </div>
+
           <Button
             asChild
-            variant="link"
-            className="p-0 h-auto text-xs font-semibold text-primary hover:text-primary/80 gap-1.5"
+            className="h-10 px-6 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shrink-0"
           >
             <Link href="/book">
-              <span>Book your medical appointment now</span>
+              <span>Start Booking Now</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </Button>

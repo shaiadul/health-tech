@@ -3,201 +3,198 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ArrowRight, ArrowUpRight, ShieldCheck, Clock, CheckCircle2, Star, Activity } from "lucide-react"
+import {
+  ArrowRight,
+  Building,
+  CalendarDays,
+  HeartPulse,
+  PhoneCall,
+  ShieldCheck,
+  Star,
+  Stethoscope,
+  Video,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+const DEPARTMENTS = [
+  { id: "srv_cardio_01", label: "Cardiology" },
+  { id: "srv_neuro_02", label: "Neurology" },
+  { id: "srv_pediatrics_03", label: "Pediatrics" },
+  { id: "srv_ortho_04", label: "Orthopedics" },
+  { id: "srv_exec_07", label: "Health Check-up" },
+]
+
 export function MarketingHero() {
+  const router = useRouter()
+  const [service, setService] = React.useState(DEPARTMENTS[0].id)
+  const [format, setFormat] = React.useState<"in_person" | "video">("in_person")
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    router.push(`/book?service=${service}&format=${format}`)
+  }
+
   return (
-    <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-32 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Column: Hospital & Clinical Value Proposition */}
-          <div className="lg:col-span-6 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-muted-foreground"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              <span>Accredited Medical Center & Hospital</span>
-              <span className="text-border">/</span>
-              <span className="text-foreground">Board-Certified Specialists</span>
-            </motion.div>
+    <section className="relative isolate overflow-hidden min-h-[640px] lg:min-h-[720px] flex items-center">
+      {/* Full-bleed background */}
+      <Image
+        src="/images/hero-consultation.jpg"
+        alt="Doctor consulting with a patient at MedPulse"
+        fill
+        priority
+        className="object-cover -z-20"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-slate-950/20" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
 
-            {/* Oversized Responsive Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.08, ease: "easeOut" }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[4.75rem] font-bold tracking-tight text-foreground leading-[1.02]"
-            >
-              Patient-first healthcare, <br />
-              <span className="text-primary font-normal italic font-serif">delivered with</span> <br />
-              clinical precision.
-            </motion.h1>
-
-            {/* Short Supporting Paragraph */}
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.16, ease: "easeOut" }}
-              className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal"
-            >
-              Connect with leading medical specialists across Cardiology, Pediatrics, Neurology, and Orthopedics. Book direct in-clinic consultations or encrypted Telehealth video in seconds.
-            </motion.p>
-
-            {/* Direct Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.22, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2"
-            >
-              <Button
-                asChild
-                size="lg"
-                className="h-13 px-8 text-sm font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-              >
-                <Link href="/book">
-                  <span>Book Doctor Appointment</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="h-13 px-6 text-sm font-medium rounded-none hover:bg-muted text-foreground transition-all group"
-              >
-                <Link href="/#departments" className="flex items-center gap-1.5">
-                  <span>Explore Clinical Departments</span>
-                  <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </Link>
-              </Button>
-            </motion.div>
-
-            {/* Micro Social Trust Metrics */}
-            <div className="pt-4 flex flex-wrap items-center gap-6 text-xs font-mono text-muted-foreground border-t border-border">
-              <span className="flex items-center gap-1.5 text-foreground font-semibold">
-                <CheckCircle2 className="h-4 w-4 text-primary" />
-                <span>Zero Wait-Time Triage</span>
-              </span>
-              <span>•</span>
-              <span>25,000+ Patients Treated</span>
-              <span>•</span>
-              <span className="text-primary font-semibold">99.4% Clinical Rating</span>
-            </div>
-          </div>
-
-          {/* Right Column: High-End Hospital Consultation Visual Frame */}
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-2xl space-y-6 text-white">
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="lg:col-span-6 w-full relative"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-3 py-1.5 text-xs font-medium"
           >
-            {/* Visual Frame */}
-            <div className="relative border border-border bg-background p-3 sm:p-4 space-y-4">
-              
-              {/* Doctor Consultation Picture */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-                <Image
-                  src="/images/hero-consultation.jpg"
-                  alt="MedPulse Doctor Patient Medical Consultation"
-                  fill
-                  priority
-                  className="object-cover transition-transform duration-700 hover:scale-103"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-
-                {/* Gradient Overlay for Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-
-                {/* Live Hospital Badge */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs font-mono">
-                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 border border-white/20">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Active Clinic Session · Room 402</span>
-                  </div>
-
-                  <span className="hidden sm:inline bg-primary text-primary-foreground px-2.5 py-1 font-semibold text-[11px]">
-                    Board Certified MD
-                  </span>
-                </div>
-              </div>
-
-              {/* Consultation Details Strip */}
-              <div className="space-y-3 pt-2">
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-border pb-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-mono text-primary font-bold block">
-                      Featured Attending Physician
-                    </span>
-                    <h3 className="text-base font-bold text-foreground">
-                      Dr. Sarah Ahmed, MD, FACC · Cardiology Lead
-                    </h3>
-                  </div>
-
-                  <div className="flex items-center gap-1 text-xs font-mono">
-                    <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-                    <span className="font-bold text-foreground">4.95 / 5.0</span>
-                    <span className="text-muted-foreground">(420 Patient Reviews)</span>
-                  </div>
-                </div>
-
-                {/* Key Metrics */}
-                <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                  <div className="p-2.5 bg-muted/40 border border-border">
-                    <span className="text-[10px] text-muted-foreground block uppercase">
-                      Care Format
-                    </span>
-                    <span className="text-sm font-bold text-foreground block mt-0.5">
-                      In-Clinic & Telehealth
-                    </span>
-                  </div>
-
-                  <div className="p-2.5 bg-muted/40 border border-border">
-                    <span className="text-[10px] text-muted-foreground block uppercase">
-                      Next Doctor Slot
-                    </span>
-                    <span className="text-sm font-bold text-primary block mt-0.5">
-                      Today, 3:30 PM
-                    </span>
-                  </div>
-                </div>
-
-                {/* Direct 1-Click Action */}
-                <div className="pt-1">
-                  <Button
-                    asChild
-                    className="w-full h-11 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-                  >
-                    <Link href="/book?service=srv_cardio_01&specialist=sp_sarah_01">
-                      <span>Schedule Consultation with Dr. Ahmed</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Decorative SVG Medical Cross Accent */}
-            <svg
-              className="absolute -top-3 -right-3 h-8 w-8 text-primary pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-            </svg>
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Doctors available today · Avg. wait 8 min</span>
           </motion.div>
 
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]"
+          >
+            See the right doctor,{" "}
+            <span className="text-teal-300 font-serif italic font-normal">today.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.16 }}
+            className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed"
+          >
+            Book board-certified specialists in under a minute. Visit us in clinic or consult by secure video, with no booking fee.
+          </motion.p>
+
+          {/* Booking search bar */}
+          <motion.form
+            onSubmit={handleSearch}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.24 }}
+            className="rounded-xl bg-background text-foreground p-3 sm:p-4 shadow-2xl space-y-3"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+              <label className="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5 focus-within:border-primary transition-colors">
+                <Stethoscope className="h-4 w-4 text-primary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <span className="block text-[10px] uppercase tracking-wider font-mono text-muted-foreground">
+                    Department
+                  </span>
+                  <select
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
+                    className="w-full bg-transparent text-sm font-semibold outline-none cursor-pointer"
+                  >
+                    {DEPARTMENTS.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </label>
+
+              <div className="grid grid-cols-2 rounded-lg border border-border p-1 text-xs font-semibold">
+                {(
+                  [
+                    { id: "in_person", label: "In-Clinic", icon: Building },
+                    { id: "video", label: "Video", icon: Video },
+                  ] as const
+                ).map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setFormat(opt.id)}
+                    className={`flex items-center justify-center gap-1.5 px-4 rounded-md transition-colors ${
+                      format === opt.id
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <opt.icon className="h-3.5 w-3.5" />
+                    <span>{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full h-12 text-sm font-semibold gap-2"
+            >
+              <CalendarDays className="h-4 w-4" />
+              <span>Find Available Appointments</span>
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </motion.form>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/75"
+          >
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="h-4 w-4 text-teal-300" /> HIPAA secure
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Star className="h-4 w-4 fill-teal-300 text-teal-300" /> 4.9 from 25,000+ patients
+            </span>
+            <Link
+              href="tel:+18004325847"
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <PhoneCall className="h-4 w-4 text-teal-300" /> +1 (800) 432-5847
+            </Link>
+          </motion.div>
         </div>
+
+        {/* Floating glass chips (desktop) */}
+        <motion.div
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="hidden lg:block absolute right-8 bottom-16 w-72 space-y-3"
+        >
+          <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 text-white">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-teal-400/20 flex items-center justify-center">
+                <HeartPulse className="h-5 w-5 text-teal-300" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Dr. Sarah Ahmed, MD</p>
+                <p className="text-xs text-white/70">Cardiology · Next slot 3:30 PM</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 text-white flex items-center justify-between">
+            <div>
+              <p className="text-2xl font-bold font-mono">40+</p>
+              <p className="text-xs text-white/70">Board-certified MDs</p>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold font-mono">99.4%</p>
+              <p className="text-xs text-white/70">Satisfaction</p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

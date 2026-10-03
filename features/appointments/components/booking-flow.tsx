@@ -76,7 +76,9 @@ export function BookingFlow({
   const [selectedSpecialistId, setSelectedSpecialistId] = React.useState<string>(
     preselectedSpecialistId || specialists[0]?.id || ""
   )
-  const [consultationType, setConsultationType] = React.useState<ConsultationType>("in_person")
+  const [consultationType, setConsultationType] = React.useState<ConsultationType>(
+    searchParams.get("format") === "video" ? "video" : "in_person"
+  )
   const [selectedDate, setSelectedDate] = React.useState<string>(
     initialDates.find((d) => d.isAvailable)?.date || ""
   )

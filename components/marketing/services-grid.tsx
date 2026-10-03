@@ -2,119 +2,143 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { motion } from "framer-motion"
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Heart,
+  Brain,
+  Baby,
+  Bone,
+  Stethoscope,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Clock,
+} from "lucide-react"
 import { FINANCIAL_SERVICES } from "@/data/services"
+import { Badge } from "@/components/ui/badge"
+
+const DEPARTMENT_ICONS: Record<string, React.ElementType> = {
+  srv_cardio_01: Heart,
+  srv_neuro_02: Brain,
+  srv_pediatrics_03: Baby,
+  srv_ortho_04: Bone,
+  srv_internal_05: Stethoscope,
+  srv_exec_07: Sparkles,
+}
 
 export function ServicesGrid() {
   const [hoveredId, setHoveredId] = React.useState<string | null>(null)
 
   return (
-    <section id="departments" className="py-24 md:py-32 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section id="departments" className="py-20 md:py-28 border-b border-border bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-16 border-b border-border">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-border">
           <div className="space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Clinical Specializations
+            <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
+              Specialized Healthcare
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-              Comprehensive medical <br className="hidden sm:inline" />
-              departments under one roof.
+              Clinical departments & medical faculties.
             </h2>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Our hospital integrates advanced diagnostics, outpatient consultation suites, and dedicated subspecialty physicians for seamless multidisciplinary patient care.
+            Our hospital center integrates comprehensive diagnostics, private outpatient consultation rooms, and subspecialty physicians for seamless clinical care.
           </p>
         </div>
 
-        {/* Large Numbered Service List (Non-Card UI) */}
-        <div className="divide-y divide-border">
+        {/* Dynamic Department Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {FINANCIAL_SERVICES.map((service, index) => {
-            const indexFormatted = String(index + 1).padStart(2, "0")
+            const Icon = DEPARTMENT_ICONS[service.id] || Stethoscope
             const isHovered = hoveredId === service.id
 
             return (
-              <div
+              <motion.div
                 key={service.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 onMouseEnter={() => setHoveredId(service.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="group relative transition-colors duration-200"
+                className={`relative p-6 sm:p-7 border transition-all duration-300 flex flex-col justify-between gap-6 ${
+                  isHovered
+                    ? "border-primary bg-primary/5 shadow-md -translate-y-1"
+                    : "border-border bg-background hover:border-primary/50"
+                }`}
               >
-                {/* Active hover left teal indicator line */}
-                <div
-                  className={`absolute left-0 top-0 bottom-0 w-1 bg-primary transition-opacity duration-200 ${
-                    isHovered ? "opacity-100" : "opacity-0"
-                  }`}
-                />
-
-                <div className="py-8 sm:py-10 px-2 sm:px-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 hover:bg-muted/30 transition-all">
-                  
-                  {/* Left: Number + Department Title + Subtitle */}
-                  <div className="flex items-start sm:items-baseline gap-6 sm:gap-10">
-                    <span className="text-lg sm:text-xl font-mono text-muted-foreground group-hover:text-primary transition-colors">
-                      {indexFormatted}
+                <div className="space-y-4">
+                  {/* Department Icon + Index */}
+                  <div className="flex items-center justify-between">
+                    <div className="h-10 w-10 rounded-sm bg-primary/10 text-primary flex items-center justify-center font-bold">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-xs font-mono text-muted-foreground">
+                      0{index + 1}
                     </span>
-
-                    <div className="space-y-2 max-w-2xl">
-                      <Link
-                        href={`/services/${service.slug}`}
-                        className="text-2xl sm:text-3xl font-bold text-foreground group-hover:text-primary transition-colors inline-flex items-center gap-2"
-                      >
-                        <span>{service.title}</span>
-                      </Link>
-                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                        {service.shortDescription}
-                      </p>
-                    </div>
                   </div>
 
-                  {/* Right: Consultation Duration & Direct Booking */}
-                  <div className="flex items-center justify-between lg:justify-end gap-6 sm:gap-10 pl-12 sm:pl-0">
-                    <div className="text-left sm:text-right font-mono text-xs text-muted-foreground space-y-1">
-                      <span className="block text-foreground font-semibold">
-                        {service.durationMinutes} min consultation
-                      </span>
-                      <span className="block text-[11px] text-primary">
-                        {service.feeDisplay}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <Link
-                        href={`/book?service=${service.id}`}
-                        className="text-xs font-semibold uppercase tracking-wider px-3.5 py-2 border border-border bg-background group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all"
-                      >
-                        Book Visit
-                      </Link>
-
-                      <Link
-                        href={`/services/${service.slug}`}
-                        className="h-9 w-9 flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all"
-                        aria-label={`View clinical details for ${service.title}`}
-                      >
-                        <ArrowRight className="h-5 w-5" />
-                      </Link>
-                    </div>
+                  {/* Title & Description */}
+                  <div className="space-y-2">
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="text-xl font-bold text-foreground hover:text-primary transition-colors block"
+                    >
+                      {service.title}
+                    </Link>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {service.shortDescription}
+                    </p>
                   </div>
 
+                  {/* Clinical Benefits / Symptoms Treated */}
+                  <div className="space-y-1.5 pt-2 border-t border-border/60">
+                    {service.benefits.slice(0, 3).map((feat) => (
+                      <div key={feat} className="flex items-center gap-2 text-xs text-foreground/85">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="truncate">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+
+                {/* Footer Strip with Duration & Action */}
+                <div className="pt-4 border-t border-border flex items-center justify-between">
+                  <div className="font-mono text-xs">
+                    <span className="text-foreground font-bold block">{service.feeDisplay}</span>
+                    <span className="text-[11px] text-muted-foreground">{service.durationMinutes}m consult</span>
+                  </div>
+
+                  <Link
+                    href={`/book?service=${service.id}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border border-border bg-background hover:border-primary hover:bg-primary hover:text-primary-foreground transition-all"
+                  >
+                    <span>Book Slot</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </motion.div>
             )
           })}
         </div>
 
-        {/* Bottom CTA bar */}
-        <div className="pt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs font-mono text-muted-foreground">
-            Require urgent triage, diagnostic lab tests, or specialized surgical second opinion?
-          </p>
+        {/* Bottom Banner */}
+        <div className="p-6 bg-muted/20 border border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="h-4 w-4 text-primary" />
+            <span>Need immediate same-day evaluation? Walk-in triage is open 24/7 on hospital campus.</span>
+          </div>
+
           <Link
             href="/services"
-            className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 group"
+            className="text-primary hover:underline font-semibold flex items-center gap-1 shrink-0"
           >
-            <span>Explore all diagnostic protocols and clinical services</span>
-            <ArrowUpRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <span>View All Department Protocols</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 

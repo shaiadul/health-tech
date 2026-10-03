@@ -16,7 +16,7 @@ export function MarketingFooter() {
       { name: "Hospital Standards & Safety", href: "/#how-it-works" },
       { name: "Medical Staff & Physicians", href: "/specialists" },
       { name: "Patient Reviews", href: "/#reviews" },
-      { name: "Hospital Admin Portal", href: "/admin" },
+      { name: "Emergency Triage Guidelines", href: "/#faq" },
     ],
     patients: [
       { name: "Medical Insights & Prevention", href: "/#insights" },
