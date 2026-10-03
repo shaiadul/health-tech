@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { motion } from "framer-motion"
-import { ShieldCheck, Award, HeartPulse, Stethoscope, CheckCircle2 } from "lucide-react"
+import { ShieldCheck, Award } from "lucide-react"
 
 export function TrustSection() {
   const metrics = [
@@ -20,7 +20,7 @@ export function TrustSection() {
   ]
 
   return (
-    <section className="py-20 md:py-24 border-b border-border bg-gradient-to-b from-background via-muted/10 to-background">
+    <section className="py-20 md:py-24 border-b border-border bg-linear-to-b from-background via-muted/10 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           
