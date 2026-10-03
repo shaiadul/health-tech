@@ -25,13 +25,13 @@ export default function HomePage() {
         <MarketingHero />
         <TrustSection />
         <ServicesGrid />
-        <FeaturedConsultation />
         <HowItWorks />
         <SpecialistsPreview />
-        <InsightsSection />
-        <LeadCaptureSection />
+        <FeaturedConsultation />
         <TestimonialsSection />
+        <InsightsSection />
         <FAQSection />
+        <LeadCaptureSection />
       </main>
       <MarketingFooter />
     </div>

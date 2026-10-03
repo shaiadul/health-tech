@@ -1,140 +1,93 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Star, HeartPulse, CheckCircle2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { motion } from "framer-motion"
+import { Quote, Star } from "lucide-react"
+import { SectionHeading } from "./section-heading"
 
-const TESTIMONIALS = [
+const REVIEWS = [
   {
-    quote: "The prompt cardiac evaluation and ECG assessment at MedPulse caught my arrhythmia early. Truly exceptional, unhurried physicians.",
+    quote:
+      "The cardiac evaluation caught my arrhythmia early. The doctor explained everything clearly and I never felt rushed.",
     author: "David Thornton",
-    title: "Cardiology Patient",
-    highlight: "Early Diagnostic Intervention & Normal Rhythm Restored",
-    service: "Cardiology & Heart Health",
-    physician: "Dr. Sarah Ahmed, MD",
-    rating: 5,
+    role: "Cardiology patient",
+    doctor: "Dr. Sarah Ahmed",
+    initials: "DT",
   },
   {
-    quote: "Compassionate, thorough pediatric care. Dr. Rostova took the time to answer all our questions with genuine patience and empathy.",
+    quote:
+      "Dr. Rostova was so patient with our daughter. Booking took a minute and we were seen the same afternoon.",
     author: "Robert Sterling",
-    title: "Pediatric Patient Parent",
-    highlight: "Vaccination & Milestone Tracking Completed",
-    service: "Pediatrics & Child Wellness",
-    physician: "Dr. Elena Rostova, MD",
-    rating: 5,
+    role: "Parent, Pediatrics",
+    doctor: "Dr. Elena Rostova",
+    initials: "RS",
   },
   {
-    quote: "The telehealth consultation was seamless. My diagnostic plan and e-prescription were at my pharmacy in 20 minutes without clinic wait times.",
+    quote:
+      "The video consultation was seamless. My prescription reached my pharmacy within 20 minutes. No waiting room at all.",
     author: "Nadia Rahman",
-    title: "Executive Health Patient",
-    highlight: "Same-Day Diagnostic Plan & Prescription Delivery",
-    service: "Internal Medicine",
-    physician: "Dr. Michael Rahman, MD",
-    rating: 5,
+    role: "Internal Medicine patient",
+    doctor: "Dr. Michael Rahman",
+    initials: "NR",
   },
 ]
 
 export function TestimonialsSection() {
-  const [index, setIndex] = React.useState(0)
-
-  const current = TESTIMONIALS[index]
-
-  const next = () => setIndex((prev) => (prev + 1) % TESTIMONIALS.length)
-  const prev = () => setIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)
-
   return (
-    <section id="reviews" className="py-20 md:py-28 border-b border-border bg-gradient-to-b from-background via-muted/10 to-background overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-border pb-6">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary font-bold">
-            <HeartPulse className="h-4 w-4" />
-            <span>Verified Patient Reviews & Clinical Outcomes</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prev}
-              className="h-9 w-9 rounded-none border-border hover:border-primary text-foreground"
-              aria-label="Previous patient story"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={next}
-              className="h-9 w-9 rounded-none border-border hover:border-primary text-foreground"
-              aria-label="Next patient story"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Large Quotation */}
-        <div className="py-10 md:py-16 min-h-[300px] flex flex-col justify-between">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-1.5 text-primary">
-                {[...Array(current.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-primary" />
+    <section id="reviews" className="py-20 md:py-28 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <SectionHeading
+            eyebrow="Patient stories"
+            title="Trusted by thousands of patients"
+            description="Real feedback from people who booked, visited and recovered with MedPulse."
+          />
+          <div className="flex items-center gap-4 rounded-2xl border border-border bg-card px-5 py-4 shrink-0">
+            <p className="text-4xl font-bold leading-none">4.9</p>
+            <div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                 ))}
-                <span className="text-xs font-mono font-semibold ml-2 text-foreground">
-                  5.0 Verified Medical Review
-                </span>
               </div>
-
-              <blockquote className="text-2xl sm:text-4xl md:text-5xl font-normal tracking-tight text-foreground leading-[1.18] font-serif">
-                “{current.quote}”
-              </blockquote>
-
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pt-6 border-t border-border">
-                <div>
-                  <p className="text-base sm:text-lg font-bold text-foreground">
-                    {current.author}
-                  </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    {current.title} · Attending: <span className="text-primary font-medium">{current.physician}</span>
-                  </p>
-                </div>
-
-                <div className="font-mono text-xs text-muted-foreground sm:text-right">
-                  <span className="block text-foreground font-semibold">Clinical Result:</span>
-                  <span className="text-emerald-600 font-medium">{current.highlight}</span>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              <p className="text-xs text-muted-foreground mt-1">from 25,000+ verified visits</p>
+            </div>
+          </div>
         </div>
 
-        {/* Dots Selector */}
-        <div className="flex justify-center gap-2 pt-4">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              className={`h-1.5 transition-all ${
-                index === i ? "w-8 bg-primary" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground"
-              }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {REVIEWS.map((r, i) => (
+            <motion.figure
+              key={r.author}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              className="relative flex flex-col rounded-2xl border border-border bg-card p-7 hover:shadow-lg hover:shadow-primary/5 transition-shadow"
+            >
+              <Quote className="h-8 w-8 text-primary/20" />
+              <div className="mt-3 flex gap-0.5">
+                {[...Array(5)].map((_, s) => (
+                  <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <blockquote className="mt-4 text-[15px] leading-relaxed text-foreground/90 flex-1">
+                &ldquo;{r.quote}&rdquo;
+              </blockquote>
+              <figcaption className="mt-6 pt-5 border-t border-border flex items-center gap-3">
+                <span className="h-10 w-10 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">
+                  {r.initials}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">{r.author}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {r.role} · seen by {r.doctor}
+                  </p>
+                </div>
+              </figcaption>
+            </motion.figure>
           ))}
         </div>
-
       </div>
     </section>
   )

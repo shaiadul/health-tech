@@ -1,20 +1,21 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ArrowRight, CheckCircle2, Loader2, PhoneCall, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { quickLeadSchema, QuickLeadFormValues } from "@/features/leads/schemas/lead.schema"
 import { LeadService } from "@/features/leads/services/lead.service"
-import { CheckCircle2, Loader2, ArrowRight } from "lucide-react"
+
+const PERKS = [
+  "Free callback from a registered nurse",
+  "Matched with the right specialist",
+  "Reply within 30 minutes in clinic hours",
+]
 
 export function LeadCaptureSection() {
   const [success, setSuccess] = React.useState(false)
@@ -44,119 +45,118 @@ export function LeadCaptureSection() {
   }
 
   return (
-    <section className="py-24 md:py-32 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          
-          {/* Left: Clinical Statement */}
-          <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Clinical Triage & Patient Guidance
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-[1.08]">
-              Quality medical care <br />
-              should never feel complicated.
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Have questions about your symptoms or medical test preparations? Leave your contact info and our clinical nursing triage team will reach out with preliminary guidance.
-            </p>
-          </div>
+    <section id="get-guidance" className="py-20 md:py-28 bg-background scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl bg-slate-950 text-white">
+          {/* decorative glow */}
+          <div
+            aria-hidden
+            className="absolute -top-32 -right-24 h-80 w-80 rounded-full bg-teal-500/25 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-cyan-500/15 blur-3xl"
+          />
 
-          {/* Right: Clean Editorial Lead Capture Form */}
-          <div className="lg:col-span-6 border-t lg:border-t-0 lg:border-l border-border pt-8 lg:pt-0 lg:pl-16 space-y-6">
-            <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground">
-                Need clinical guidance or doctor matching?
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Receive doctor recommendation and preparation guidelines.
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 p-8 sm:p-12 lg:p-16 items-center">
+            {/* Copy */}
+            <div className="space-y-6">
+              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-teal-300">
+                <span className="h-px w-6 bg-current" /> Free guidance
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
+                Not sure which doctor to see?
+              </h2>
+              <p className="text-white/70 leading-relaxed max-w-md">
+                Leave your details and our care team will call you back with a personal recommendation, at no cost.
               </p>
+
+              <ul className="space-y-3">
+                {PERKS.map((p) => (
+                  <li key={p} className="flex items-center gap-3 text-sm text-white/85">
+                    <CheckCircle2 className="h-5 w-5 text-teal-300 shrink-0" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="tel:+18004325847"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-teal-300 hover:text-teal-200 transition-colors"
+              >
+                <PhoneCall className="h-4 w-4" /> Prefer to call? +1 (800) 432-5847
+              </Link>
             </div>
 
-            {success ? (
-              <div className="py-8 space-y-4">
-                <div className="flex items-center gap-3 text-primary">
-                  <CheckCircle2 className="h-6 w-6" />
-                  <span className="font-bold text-lg text-foreground">Request received.</span>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  A triage coordinator will review your inquiry and follow up with specialist doctor recommendations.
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSuccess(false)}
-                  className="rounded-none text-xs"
-                >
-                  Submit Another Inquiry
-                </Button>
-              </div>
-            ) : (
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              placeholder="Patient full name"
-                              className="h-12 rounded-none border-border bg-background focus:border-primary text-sm"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              placeholder="Patient email address"
-                              type="email"
-                              className="h-12 rounded-none border-border bg-background focus:border-primary text-sm"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full sm:w-auto h-12 px-8 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-2"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Sending Request...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Get Clinical Guidance</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-
-                  <p className="text-[11px] font-mono text-muted-foreground">
-                    Strict HIPAA & medical confidentiality. Your information is protected by hospital clinical security protocols.
+            {/* Form card */}
+            <div className="rounded-2xl bg-background text-foreground p-6 sm:p-8 shadow-2xl">
+              {success ? (
+                <div className="py-6 text-center space-y-4">
+                  <span className="mx-auto h-14 w-14 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                    <CheckCircle2 className="h-7 w-7" />
+                  </span>
+                  <h3 className="text-xl font-bold">Request received</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    A member of our care team will contact you shortly with specialist recommendations.
                   </p>
-                </form>
-              </Form>
-            )}
-          </div>
+                  <Button variant="outline" onClick={() => setSuccess(false)}>
+                    Send another request
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-xl font-bold">Request a free callback</h3>
+                  <p className="text-sm text-muted-foreground mt-1">Takes less than 20 seconds.</p>
 
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input placeholder="Your full name" className="h-12" {...field} />
+                            </FormControl>
+                            <FormMessage className="text-xs" />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input type="email" placeholder="Email address" className="h-12" {...field} />
+                            </FormControl>
+                            <FormMessage className="text-xs" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button type="submit" disabled={loading} className="w-full h-12 gap-2 text-sm font-semibold">
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" /> Sending…
+                          </>
+                        ) : (
+                          <>
+                            Get my free callback <ArrowRight className="h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+
+                      <p className="flex items-start gap-2 text-[11px] text-muted-foreground leading-relaxed">
+                        <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                        Your information is confidential and protected under HIPAA.
+                      </p>
+                    </form>
+                  </Form>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>

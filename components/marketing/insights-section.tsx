@@ -1,71 +1,66 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowUpRight, BookOpen, Sparkles } from "lucide-react"
+import { ArrowUpRight, Clock } from "lucide-react"
 import { INSIGHTS } from "@/data/insights"
-import { Badge } from "@/components/ui/badge"
+import { SectionHeading } from "./section-heading"
+
+const TINTS = [
+  "from-teal-500/15 to-cyan-500/5",
+  "from-sky-500/15 to-indigo-500/5",
+  "from-emerald-500/15 to-teal-500/5",
+]
 
 export function InsightsSection() {
+  const posts = INSIGHTS.slice(0, 3)
+
   return (
-    <section id="insights" className="py-20 md:py-28 border-b border-border bg-background">
+    <section id="insights" className="py-20 md:py-28 bg-muted/40 border-y border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-border">
-          <div className="space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
-              Clinical Research & Patient Guidance
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-              Medical insights & preventative health.
-            </h2>
-          </div>
-          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Evidence-based preventative research, longevity protocols, and diagnostic guides written directly by our board-certified attending physicians.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Health library"
+          title="Advice from our doctors"
+          description="Practical, evidence-based guidance on staying healthy, written by our attending physicians."
+        />
 
-        {/* Dynamic Medical Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {INSIGHTS.map((insight, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {posts.map((p, i) => (
             <motion.article
-              key={insight.id}
-              initial={{ opacity: 0, y: 14 }}
+              key={p.id}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: idx * 0.08 }}
-              className="p-6 sm:p-7 border border-border bg-background hover:border-primary/50 transition-all group flex flex-col justify-between gap-6 hover:shadow-xs"
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 transition-all"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <Badge variant="outline" className="text-primary font-mono text-[10px]">
-                    {insight.category}
-                  </Badge>
-                  <span className="text-muted-foreground">{insight.readTime}</span>
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
-                  {insight.title}
-                </h3>
-
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {insight.summary}
-                </p>
+              <div className={`h-36 bg-gradient-to-br ${TINTS[i % TINTS.length]} p-5 flex items-end`}>
+                <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-primary">
+                  {p.category}
+                </span>
               </div>
 
-              <div className="pt-4 border-t border-border/80 flex items-center justify-between text-xs font-mono">
-                <span className="text-muted-foreground">{insight.date}</span>
-                <span className="text-primary font-semibold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  <span>Read Clinical Article</span>
-                  <ArrowUpRight className="h-3.5 w-3.5" />
-                </span>
+              <div className="flex flex-1 flex-col p-6">
+                <h3 className="text-lg font-bold leading-snug group-hover:text-primary transition-colors">
+                  {p.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                  {p.summary}
+                </p>
+
+                <div className="mt-auto pt-5 flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5" /> {p.readTime}
+                  </span>
+                  <span className="inline-flex items-center gap-1 font-semibold text-primary">
+                    Read article
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </div>
               </div>
             </motion.article>
           ))}
         </div>
-
       </div>
     </section>
   )

@@ -4,7 +4,7 @@ export const SPECIALISTS: Specialist[] = [
   {
     id: "sp_sarah_01",
     name: "Dr. Sarah Ahmed, MD, FACC",
-    title: "Chief Cardiologist & Heart Center Director",
+    title: "Chief Cardiologist & Heart Specialist",
     role: "Attending Cardiologist",
     avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&auto=format&fit=crop&q=80",
     experienceYears: 16,

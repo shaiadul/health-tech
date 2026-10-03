@@ -1,80 +1,74 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
-import { ShieldCheck, Award } from "lucide-react"
+import { useInView } from "framer-motion"
+import { Award, BadgeCheck, Lock, ShieldCheck } from "lucide-react"
 
-export function TrustSection() {
-  const metrics = [
-    { value: "25,000+", label: "Outpatients Treated", detail: "Comprehensive clinical care" },
-    { value: "99.4%", label: "Patient Satisfaction", detail: "Verified post-consult surveys" },
-    { value: "40+", label: "Board-Certified MDs", detail: "Fellowship-trained specialists" },
-    { value: "15+ Yrs", label: "Hospital Excellence", detail: "JCAHO & HIPAA accredited" },
-  ]
+const STATS = [
+  { to: 25000, suffix: "+", decimals: 0, label: "Patients treated", note: "Across 7 departments" },
+  { to: 99.4, suffix: "%", decimals: 1, label: "Patient satisfaction", note: "Verified post-visit surveys" },
+  { to: 40, suffix: "+", decimals: 0, label: "Board-certified doctors", note: "Fellowship-trained specialists" },
+  { to: 8, suffix: " min", decimals: 0, label: "Average wait time", note: "From check-in to consultation" },
+]
 
-  const accreditations = [
-    "Joint Commission (JCAHO) Accredited",
-    "American College of Cardiology Partner",
-    "HIPAA Encrypted Patient Records",
-    "Board of Medical Examiners Certified",
-  ]
+const BADGES = [
+  { icon: Award, text: "Joint Commission accredited" },
+  { icon: Lock, text: "HIPAA-compliant records" },
+  { icon: BadgeCheck, text: "Board-certified specialists" },
+  { icon: ShieldCheck, text: "Major insurance accepted" },
+]
+
+function CountUp({ to, suffix, decimals }: { to: number; suffix: string; decimals: number }) {
+  const ref = React.useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: "-60px" })
+  const [value, setValue] = React.useState(0)
+
+  React.useEffect(() => {
+    if (!inView) return
+    const start = performance.now()
+    const duration = 1400
+    let raf = 0
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1)
+      setValue(to * (1 - Math.pow(1 - p, 3)))
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [inView, to])
 
   return (
-    <section className="py-20 md:py-24 border-b border-border bg-linear-to-b from-background via-muted/10 to-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
-          {/* Editorial Headline */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary font-bold">
-              <Award className="h-4 w-4" />
-              <span>Hospital Accreditation & Trust</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
-              Hospital-grade care, <br />
-              built around patient comfort.
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Every physician at MedPulse is board-certified and holds active clinical hospital privileges. We eliminate bureaucratic waiting rooms with prompt, unhurried, patient-centered appointments.
-            </p>
-          </div>
+    <span ref={ref}>
+      {value.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
+    </span>
+  )
+}
 
-          {/* Metric Cards */}
-          <div className="lg:col-span-7">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {metrics.map((metric, idx) => (
-                <motion.div
-                  key={metric.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.08 }}
-                  className="p-5 border border-border bg-background hover:border-primary/50 transition-colors flex flex-col justify-between"
-                >
-                  <p className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground font-mono">
-                    {metric.value}
-                  </p>
-                  <div className="pt-3">
-                    <p className="text-xs uppercase font-mono font-semibold text-primary">
-                      {metric.label}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {metric.detail}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+export function TrustSection() {
+  return (
+    <section className="bg-slate-950 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 lg:divide-x lg:divide-white/10">
+          {STATS.map((s, i) => (
+            <div key={s.label} className={`px-2 lg:px-8 ${i === 0 ? "lg:pl-0" : ""}`}>
+              <p className="text-4xl sm:text-5xl font-bold tracking-tight text-white">
+                <CountUp to={s.to} suffix={s.suffix} decimals={s.decimals} />
+              </p>
+              <p className="mt-2 text-sm font-semibold text-teal-300">{s.label}</p>
+              <p className="text-xs text-white/55 mt-0.5">{s.note}</p>
             </div>
-          </div>
-
+          ))}
         </div>
 
-        {/* Accreditation Badges Strip */}
-        <div className="pt-8 border-t border-border/80 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-muted-foreground">
-          {accreditations.map((acc) => (
-            <div key={acc} className="flex items-center gap-2 text-foreground font-medium">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>{acc}</span>
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center justify-center lg:justify-between gap-x-8 gap-y-4">
+          {BADGES.map((b) => (
+            <div key={b.text} className="flex items-center gap-2 text-sm text-white/75">
+              <b.icon className="h-4 w-4 text-teal-300" />
+              <span>{b.text}</span>
             </div>
           ))}
         </div>

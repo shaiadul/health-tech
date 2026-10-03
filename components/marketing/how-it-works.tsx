@@ -3,121 +3,83 @@
 import * as React from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, Building2, Stethoscope, CalendarCheck, FileHeart, Sparkles } from "lucide-react"
+import { ArrowRight, CalendarCheck, FileHeart, Stethoscope, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SectionHeading } from "./section-heading"
+
+const STEPS = [
+  {
+    icon: Building2,
+    title: "Choose a department",
+    description: "Tell us what you need help with, from heart health to a child's check-up.",
+  },
+  {
+    icon: Stethoscope,
+    title: "Pick your doctor",
+    description: "Compare ratings, experience and next available times.",
+  },
+  {
+    icon: CalendarCheck,
+    title: "Book a time",
+    description: "Visit in clinic or join by secure video. Confirmed instantly.",
+  },
+  {
+    icon: FileHeart,
+    title: "Get care & follow-up",
+    description: "See your doctor, then get your plan and prescriptions in your portal.",
+  },
+]
 
 export function HowItWorks() {
-  const steps = [
-    {
-      step: "01",
-      icon: Building2,
-      title: "Select Clinical Department",
-      description:
-        "Choose your medical faculty—Cardiology, Pediatrics, Orthopedics, Neurology, Internal Medicine, or an Executive Health Check.",
-    },
-    {
-      step: "02",
-      icon: Stethoscope,
-      title: "Choose Attending Physician",
-      description:
-        "Review board-certified medical doctors, subspecialty fellowship credentials, experience, and verified patient reviews.",
-    },
-    {
-      step: "03",
-      icon: CalendarCheck,
-      title: "Pick In-Clinic or Telehealth Time",
-      description:
-        "Select your preferred slot for an in-person hospital exam room or an encrypted HD video telehealth consultation.",
-    },
-    {
-      step: "04",
-      icon: FileHeart,
-      title: "Receive Treatment & E-Prescription",
-      description:
-        "Consult directly with your doctor, receive your diagnostic plan, and access certified digital prescriptions in your Patient Portal.",
-    },
-  ]
-
   return (
-    <section id="how-it-works" className="py-20 md:py-28 border-b border-border bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        {/* Section Header */}
-        <div className="max-w-2xl space-y-3">
-          <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
-            Patient Care Journey
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-tight">
-            How healthcare booking works.
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            A frictionless, patient-first process designed to connect you with specialist medical care without tedious paperwork or clinic delays.
-          </p>
+    <section id="how-it-works" className="py-20 md:py-28 bg-muted/40 border-y border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+        <SectionHeading
+          align="center"
+          eyebrow="How it works"
+          title="Book in under 90 seconds"
+          description="No paperwork, no phone queues, no payment today."
+        />
+
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+          {/* connector line (desktop) */}
+          <div
+            aria-hidden
+            className="hidden lg:block absolute top-7 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+          />
+
+          {STEPS.map((s, i) => (
+            <motion.div
+              key={s.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              className="relative flex flex-col items-center text-center px-2"
+            >
+              <div className="relative">
+                <span className="h-14 w-14 rounded-2xl bg-background border border-border shadow-sm text-primary flex items-center justify-center">
+                  <s.icon className="h-6 w-6" />
+                </span>
+                <span className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+              </div>
+              <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed max-w-[16rem]">
+                {s.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
 
-        {/* 4 Connected Step Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((item, idx) => {
-            const Icon = item.icon
-            return (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="p-6 border border-border bg-background hover:border-primary/50 transition-all flex flex-col justify-between gap-6 hover:shadow-xs"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl sm:text-4xl font-bold font-mono text-primary/80">
-                      {item.step}
-                    </span>
-                    <div className="h-9 w-9 rounded-sm bg-primary/10 text-primary flex items-center justify-center">
-                      <Icon className="h-4.5 w-4.5" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 pt-2 border-t border-border/80">
-                    <h3 className="text-lg font-bold text-foreground tracking-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-2 text-[11px] font-mono text-primary font-semibold flex items-center gap-1">
-                  <span>Step {idx + 1} of 4</span>
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
-
-        {/* CTA Strip */}
-        <div className="p-6 bg-primary/5 border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-0.5 text-center sm:text-left">
-            <span className="text-sm font-bold text-foreground block">
-              Ready to schedule your medical consultation?
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Average booking completion takes under 90 seconds. No advance deposit required.
-            </span>
-          </div>
-
-          <Button
-            asChild
-            className="h-10 px-6 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shrink-0"
-          >
+        <div className="flex justify-center">
+          <Button asChild size="lg" className="h-12 px-8 gap-2">
             <Link href="/book">
-              <span>Start Booking Now</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              Start booking <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>
-
       </div>
     </section>
   )

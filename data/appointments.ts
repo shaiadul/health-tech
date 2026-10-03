@@ -8,7 +8,7 @@ export const INITIAL_USER_APPOINTMENTS: Appointment[] = [
     serviceTitle: "Cardiology & Heart Health",
     specialistId: "sp_sarah_01",
     specialistName: "Dr. Sarah Ahmed, MD, FACC",
-    specialistTitle: "Chief Cardiologist & Heart Center Director",
+    specialistTitle: "Chief Cardiologist & Heart Specialist",
     specialistAvatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&auto=format&fit=crop&q=80",
     date: "2026-10-12",
     dateFormatted: "October 12, 2026",
