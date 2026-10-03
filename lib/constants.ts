@@ -1,67 +1,78 @@
 /**
- * Application Constants
+ * Application Constants — MedPulse Hospital & Healthcare Clinic
  */
 
-export const APP_NAME = "Aegis Financial"
-export const APP_DESCRIPTION = "Next-generation institutional and personal financial operations platform."
+export const APP_NAME = "MedPulse Clinic"
+export const APP_DESCRIPTION = "Hospital outpatient triage, patient doctor appointments, and clinical operations management."
 
 export const NAVIGATION_ITEMS = [
   {
-    title: "Dashboard",
+    title: "Clinic Operations",
     href: "/dashboard",
     icon: "LayoutDashboard",
     badge: null,
   },
   {
-    title: "Transactions",
+    title: "Appointment Queue",
     href: "/transactions",
-    icon: "Receipt",
-    badge: null,
+    icon: "Calendar",
+    badge: "Live",
   },
   {
-    title: "Accounts",
+    title: "Physician Staff",
     href: "/accounts",
-    icon: "WalletCards",
+    icon: "UserCheck",
     badge: null,
   },
   {
-    title: "Payments & Transfer",
+    title: "Patient Admissions",
     href: "/payments",
-    icon: "ArrowLeftRight",
-    badge: "Fast",
+    icon: "Activity",
+    badge: null,
   },
   {
-    title: "Analytics",
+    title: "Clinical Analytics",
     href: "/analytics",
     icon: "LineChart",
     badge: null,
   },
   {
-    title: "Settings",
+    title: "Facility Settings",
     href: "/settings",
     icon: "Settings",
     badge: null,
   },
 ] as const
 
-export const TRANSACTION_CATEGORIES = [
-  "All Categories",
-  "Technology & Software",
-  "Payroll & Income",
-  "Office & Infrastructure",
-  "Travel & Entertainment",
-  "Cloud & Hosting",
-  "Professional Services",
-  "Food & Dining",
-  "Utilities & Telecommunications",
-  "Investment & Dividends",
+export const CLINICAL_DEPARTMENTS = [
+  "All Departments",
+  "Cardiology & Heart Health",
+  "Neurology & Brain Health",
+  "Pediatrics & Child Wellness",
+  "Orthopedics & Sports Medicine",
+  "Internal & General Medicine",
+  "Dermatology & Skin Center",
+  "Executive Health Screenings",
 ] as const
 
-export const ACCOUNT_TYPES = [
-  { id: "checking", label: "Business Checking", description: "Primary operational treasury" },
-  { id: "savings", label: "High-Yield Reserve", description: "Interest bearing capital vault" },
-  { id: "credit", label: "Corporate Credit", description: "Revolving expense line" },
-  { id: "investment", label: "Yield & Treasury", description: "Fixed income & short-term notes" },
+export const APPOINTMENT_STATUS_VARIANTS: Record<
+  "confirmed" | "completed" | "cancelled" | "in_consultation",
+  { label: string; variant: "success" | "secondary" | "destructive" | "warning" }
+> = {
+  confirmed: { label: "Confirmed", variant: "warning" },
+  in_consultation: { label: "In Consultation", variant: "success" },
+  completed: { label: "Completed", variant: "secondary" },
+  cancelled: { label: "Cancelled", variant: "destructive" },
+}
+
+export const TRANSACTION_CATEGORIES = [
+  "All Categories",
+  "Cardiology & Diagnostics",
+  "Neurological Evaluation",
+  "Pediatric Wellness",
+  "Orthopedic Consultation",
+  "Prescription & Pharmacy",
+  "Laboratory Tests",
 ] as const
 
 export const TRANSACTION_STATUS_VARIANTS: Record<

@@ -1,46 +1,51 @@
-import { FAQItem } from "@/types/lead"
+export interface FAQItem {
+  id: string
+  question: string
+  answer: string
+  category: "booking" | "telehealth" | "clinic" | "records"
+}
 
 export const FAQS: FAQItem[] = [
   {
     id: "faq_01",
-    question: "How does a consultation work?",
+    question: "How do I schedule an appointment with a doctor?",
     answer:
-      "After selecting your service and specialist, you choose a date and time that fits your calendar. You will receive an immediate calendar invitation with a secure HD video meeting link (or phone dial-in). During the 30–45 minute session, your specialist reviews your financial goals, models customized scenarios, and delivers actionable recommendations.",
+      "Select your required medical department or symptom, choose your physician, pick a convenient date and time, and confirm your patient details. You will receive an instant SMS and calendar invitation with room and link details.",
     category: "booking",
   },
   {
     id: "faq_02",
-    question: "Can I reschedule or cancel my appointment?",
+    question: "Can I attend via Telehealth video or do I need an in-person hospital visit?",
     answer:
-      "Yes, completely hassle-free. You can reschedule to any available slot or cancel up to 2 hours before your scheduled time directly from your Customer Portal with zero cancellation fees.",
-    category: "booking",
+      "Both options are available. For routine consultations, prescription refills, and lab follow-ups, encrypted HD Telehealth is supported. Physical examinations, diagnostic imaging, and ECG require in-person clinic visits.",
+    category: "telehealth",
   },
   {
     id: "faq_03",
-    question: "Can I meet remotely from anywhere?",
+    question: "Can I reschedule or cancel my doctor consultation?",
     answer:
-      "Yes! All consultations support secure end-to-end encrypted video calls and phone conferences accessible from any desktop, tablet, or smartphone without downloading proprietary software.",
+      "Yes. You can reschedule or cancel directly from your Patient Portal up to 2 hours before your scheduled time slot with zero penalty fees.",
     category: "booking",
   },
   {
     id: "faq_04",
-    question: "How long is a consultation?",
+    question: "How do I receive my diagnostic reports and digital prescriptions?",
     answer:
-      "Standard advisory sessions range between 30 and 45 minutes depending on the service selected. This allows ample time for in-depth analysis and interactive Q&A without feeling rushed.",
-    category: "booking",
+      "All physician notes, lab findings, and certified digital e-prescriptions are automatically uploaded to your secure Patient Portal and can be downloaded as PDF or sent to your pharmacy.",
+    category: "records",
   },
   {
     id: "faq_05",
-    question: "Is my personal and financial information secure?",
+    question: "What should I bring to my clinic appointment?",
     answer:
-      "We adhere to bank-grade security protocols. All data transmissions are encrypted with AES-256 and TLS 1.3. We operate under strict fiduciary standards, meaning your data is never sold, shared, or leveraged for third-party advertising.",
-    category: "security",
+      "Please bring your photo ID, insurance card, a list of current daily medications, and any prior medical diagnostic records or lab reports relevant to your visit.",
+    category: "clinic",
   },
   {
     id: "faq_06",
-    question: "What should I prepare before my appointment?",
+    question: "Are your physicians board-certified and available for emergency triage?",
     answer:
-      "Preparation is simple: have a general idea of your monthly income, recurring expenses, existing investment/retirement balances, and any specific questions or financial decisions you are currently weighing. No complex paperwork is required.",
-    category: "specialists",
+      "All physicians at MedPulse are board-certified MDs with specialized hospital fellowship training. Our hospital emergency triage team is active 24/7.",
+    category: "clinic",
   },
 ]

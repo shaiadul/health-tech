@@ -1,8 +1,8 @@
 import { LoginForm } from "@/features/auth/components/login-form"
 
 export const metadata = {
-  title: "Sign In | Aegis Financial",
-  description: "Authenticate to your enterprise treasury terminal.",
+  title: "Sign In | MedPulse Health",
+  description: "Authenticate to your clinical staff & patient portal.",
 }
 
 export default function LoginPage() {

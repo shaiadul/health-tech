@@ -1,34 +1,34 @@
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Activity } from "lucide-react"
 
 export function MarketingFooter() {
   const footerLinks = {
-    solutions: [
-      { name: "Investment Planning", href: "/services/investment-planning" },
-      { name: "Personal Finance", href: "/services/personal-finance" },
-      { name: "Business Finance", href: "/services/business-finance" },
-      { name: "Tax Consultation", href: "/services/tax-consultation" },
-      { name: "Retirement Planning", href: "/services/retirement-planning" },
-      { name: "Financial Health Check", href: "/services/financial-health-check" },
+    departments: [
+      { name: "Cardiology & Heart Health", href: "/services/cardiology" },
+      { name: "Neurology & Brain Health", href: "/services/neurology" },
+      { name: "Pediatrics & Child Wellness", href: "/services/pediatrics" },
+      { name: "Orthopedics & Sports Medicine", href: "/services/orthopedics" },
+      { name: "General & Internal Medicine", href: "/services/internal-medicine" },
+      { name: "Comprehensive Health Checkup", href: "/services/executive-health-check" },
     ],
-    company: [
-      { name: "Fiduciary Standards", href: "/#how-it-works" },
-      { name: "Advisory Specialists", href: "/specialists" },
-      { name: "Client Stories", href: "/#reviews" },
-      { name: "Institutional Treasury", href: "/dashboard" },
+    hospital: [
+      { name: "Hospital Standards & Safety", href: "/#how-it-works" },
+      { name: "Medical Staff & Physicians", href: "/specialists" },
+      { name: "Patient Reviews", href: "/#reviews" },
+      { name: "Hospital Admin Portal", href: "/admin" },
     ],
-    resources: [
-      { name: "Perspectives & Insights", href: "/#insights" },
-      { name: "FAQ", href: "/#faq" },
-      { name: "Client Portal", href: "/portal" },
-      { name: "Book Consultation", href: "/book" },
+    patients: [
+      { name: "Medical Insights & Prevention", href: "/#insights" },
+      { name: "Patient FAQs", href: "/#faq" },
+      { name: "Patient Portal", href: "/portal" },
+      { name: "Book Doctor Appointment", href: "/book" },
     ],
     legal: [
-      { name: "Privacy Policy", href: "#" },
-      { name: "Terms of Engagement", href: "#" },
-      { name: "Form ADV Part 2A", href: "#" },
-      { name: "Fiduciary Disclosure", href: "#" },
+      { name: "HIPAA Patient Privacy", href: "#" },
+      { name: "Patient Bill of Rights", href: "#" },
+      { name: "Clinical Informed Consent", href: "#" },
+      { name: "Medical Ethics Policy", href: "#" },
     ],
   }
 
@@ -39,11 +39,11 @@ export function MarketingFooter() {
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 md:py-28 flex flex-col lg:flex-row lg:items-end justify-between gap-10">
           <div className="space-y-4 max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Begin Your Engagement
+              Prioritize Your Health Today
             </span>
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.05]">
-              Let’s make your next <br />
-              <span className="text-primary italic font-serif font-normal">financial decision</span> clearer.
+              Experience medical care <br />
+              <span className="text-primary italic font-serif font-normal">centered around you</span>.
             </h2>
           </div>
 
@@ -52,40 +52,42 @@ export function MarketingFooter() {
               href="/book"
               className="inline-flex items-center gap-3 text-lg sm:text-xl font-bold tracking-tight text-foreground hover:text-primary transition-colors pb-2 border-b-2 border-foreground hover:border-primary group"
             >
-              <span>Book a consultation</span>
+              <span>Schedule Doctor Visit</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Directory Links (Spacious Editorial Grid) */}
+      {/* Directory Links */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-12">
           
           {/* Brand Intro */}
           <div className="col-span-2 lg:col-span-1 space-y-4">
-            <Link href="/" className="flex items-baseline gap-2">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-sm bg-primary text-primary-foreground flex items-center justify-center font-bold">
+                <Activity className="h-3.5 w-3.5" />
+              </div>
               <span className="text-xl font-bold tracking-tight text-foreground">
-                Finora
+                MedPulse
               </span>
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Independent fiduciary advisory and financial consultations. Unbiased guidance designed around your lifecycle objectives.
+              Accredited hospital medical center and clinical consultation suites. Providing multidisciplinary healthcare excellence.
             </p>
-            <p className="text-[11px] font-mono text-muted-foreground">
-              Member Fiduciary Advisory Alliance.
+            <p className="text-[11px] font-mono text-primary font-semibold">
+              Emergency Triage: 24/7 On Hospital Campus
             </p>
           </div>
 
-          {/* Solutions */}
+          {/* Departments */}
           <div className="space-y-4">
             <h4 className="text-xs font-mono uppercase tracking-wider text-foreground font-semibold">
-              Solutions
+              Departments
             </h4>
             <ul className="space-y-2.5 text-xs text-muted-foreground">
-              {footerLinks.solutions.map((item) => (
+              {footerLinks.departments.map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="hover:text-foreground transition-colors">
                     {item.name}
@@ -95,13 +97,13 @@ export function MarketingFooter() {
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Hospital */}
           <div className="space-y-4">
             <h4 className="text-xs font-mono uppercase tracking-wider text-foreground font-semibold">
-              Company
+              Hospital
             </h4>
             <ul className="space-y-2.5 text-xs text-muted-foreground">
-              {footerLinks.company.map((item) => (
+              {footerLinks.hospital.map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="hover:text-foreground transition-colors">
                     {item.name}
@@ -111,13 +113,13 @@ export function MarketingFooter() {
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Patients */}
           <div className="space-y-4">
             <h4 className="text-xs font-mono uppercase tracking-wider text-foreground font-semibold">
-              Resources
+              Patients
             </h4>
             <ul className="space-y-2.5 text-xs text-muted-foreground">
-              {footerLinks.resources.map((item) => (
+              {footerLinks.patients.map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="hover:text-foreground transition-colors">
                     {item.name}
@@ -130,7 +132,7 @@ export function MarketingFooter() {
           {/* Legal */}
           <div className="space-y-4">
             <h4 className="text-xs font-mono uppercase tracking-wider text-foreground font-semibold">
-              Legal
+              Compliance
             </h4>
             <ul className="space-y-2.5 text-xs text-muted-foreground">
               {footerLinks.legal.map((item) => (
@@ -147,8 +149,8 @@ export function MarketingFooter() {
 
         {/* Bottom Disclaimers */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono text-muted-foreground">
-          <p>© 2026 Finora Advisory Platform. Fictional demo environment.</p>
-          <p>Strictly informational. Does not constitute real financial or banking services.</p>
+          <p>© 2026 MedPulse Clinic & Hospital System. All rights reserved.</p>
+          <p>For immediate life-threatening medical emergencies, dial your local emergency services (911) immediately.</p>
         </div>
       </div>
     </footer>

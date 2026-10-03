@@ -7,27 +7,27 @@ export function HowItWorks() {
   const steps = [
     {
       step: "01",
-      title: "Tell us what you need",
+      title: "Select Department or Symptom",
       description:
-        "Select your specific financial objective—whether retirement readiness, tax drag mitigation, founder liquidity, or general portfolio audit.",
+        "Choose your clinical area of concern—Cardiology, Pediatrics, Orthopedics, Neurology, Internal Medicine, or a General Health Check.",
     },
     {
       step: "02",
-      title: "Choose your specialist",
+      title: "Choose Attending Physician",
       description:
-        "Review background-checked fiduciary advisors with CFA®, CFP®, CPA credentials tailored to your asset bracket and industry.",
+        "Review board-certified medical doctors, subspecialty fellowship credentials, experience, and verified patient reviews.",
     },
     {
       step: "03",
-      title: "Pick a convenient time",
+      title: "Pick In-Clinic or Telehealth Time",
       description:
-        "Select an immediate or upcoming opening across private encrypted video, direct phone call, or executive in-person consultation.",
+        "Select an immediate or upcoming opening for an in-person hospital suite visit or an encrypted HD video telehealth consultation.",
     },
     {
       step: "04",
-      title: "Start your consultation",
+      title: "Receive Treatment & E-Prescription",
       description:
-        "Receive your tailored diagnostic deck and step-by-step fiduciary action plan with zero sales pitches or product pressure.",
+        "Consult directly with your physician, receive your diagnostic plan, and access certified digital prescriptions in your Patient Portal.",
     },
   ]
 
@@ -38,21 +38,20 @@ export function HowItWorks() {
         {/* Section Header */}
         <div className="max-w-2xl space-y-3 pb-16">
           <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-            The Consultation Process
+            Patient Journey
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground leading-tight">
             How it works.
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            A frictionless, transparent workflow engineered to get you expert clarity in minutes, not weeks.
+            A frictionless, patient-first process designed to connect you with specialist medical care without tedious paperwork or clinic delays.
           </p>
         </div>
 
-        {/* Storytelling Layout with Large Numbers (No Cards) */}
+        {/* Storytelling Layout with Large Numbers */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-y lg:divide-y-0 divide-border">
           {steps.map((item, idx) => (
             <div key={item.step} className={`${idx !== 0 ? "pt-8 lg:pt-0" : ""} space-y-4`}>
-              {/* Large Editorial Number */}
               <div className="text-5xl sm:text-6xl font-bold font-mono text-primary/70 tracking-tighter">
                 {item.step}
               </div>
@@ -72,7 +71,7 @@ export function HowItWorks() {
         {/* Minimal inline conversion trigger */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <span className="text-xs font-mono text-muted-foreground">
-            Zero preparation required. Bring your high-level questions and goals.
+            Emergency department & urgent trauma triage active 24/7 on hospital campus.
           </span>
           <Button
             asChild
@@ -80,7 +79,7 @@ export function HowItWorks() {
             className="p-0 h-auto text-xs font-semibold text-primary hover:text-primary/80 gap-1.5"
           >
             <Link href="/book">
-              <span>Schedule your consultation now</span>
+              <span>Book your medical appointment now</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </Button>

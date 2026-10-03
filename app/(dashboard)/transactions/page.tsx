@@ -1,18 +1,24 @@
-import { TransactionService } from "@/features/transactions/services/transaction.service"
-import { TransactionManagementView } from "@/features/transactions/components/transaction-management-view"
+import { AppointmentService } from "@/features/appointments/services/appointment.service"
+import { SpecialistService } from "@/features/specialists/services/specialist.service"
+import { ClinicAdminView } from "@/features/admin/components/clinic-admin-view"
 
 export const metadata = {
-  title: "Transactions | Aegis Financial",
-  description: "Search, filter, inspect and download verified transaction receipts.",
+  title: "Outpatient Appointment Queue | MedPulse Hospital Admin",
+  description: "Live outpatient consultation records, patient triage ledger, and room scheduling.",
 }
 
 export default async function TransactionsPage() {
-  const initialResult = await TransactionService.getAll({}, 1, 8)
+  const [{ upcoming, past }, doctors] = await Promise.all([
+    AppointmentService.getUserAppointments(),
+    SpecialistService.getAll(),
+  ])
 
   return (
-    <TransactionManagementView
-      initialData={initialResult.data}
-      initialPagination={initialResult.pagination}
-    />
+    <div className="space-y-6">
+      <ClinicAdminView
+        initialAppointments={[...upcoming, ...past]}
+        doctors={doctors}
+      />
+    </div>
   )
 }

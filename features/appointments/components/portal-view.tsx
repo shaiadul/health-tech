@@ -15,6 +15,10 @@ import {
   ExternalLink,
   RotateCcw,
   X,
+  Building,
+  CheckCircle2,
+  FileText,
+  Activity,
 } from "lucide-react"
 
 interface PortalViewProps {
@@ -48,154 +52,87 @@ export function PortalView({
 
   const nextAppointment = upcoming[0]
 
-  // Timeline events representing appointment lifecycle
-  const timelineEvents = [
-    {
-      title: "Investment Planning Scheduled",
-      subtitle: "With Sarah Ahmed, CFA · Video Consultation",
-      date: "Oct 12, 2026",
-      status: "active",
-      type: "booked",
-    },
-    {
-      title: "Preliminary Risk Profile Audited",
-      subtitle: "Benchmark model calibrated to 72% portfolio progress",
-      date: "Oct 03, 2026",
-      status: "completed",
-      type: "audit",
-    },
-    {
-      title: "Tax Drag Consultation Completed",
-      subtitle: "With Elena Rostova, CPA · Action items executed",
-      date: "Sep 28, 2026",
-      status: "completed",
-      type: "completed",
-    },
-    {
-      title: "Retirement Cashflow Strategy Session",
-      subtitle: "Priya Patel, RICP® · Roth conversion timeline delivered",
-      date: "Aug 14, 2026",
-      status: "completed",
-      type: "completed",
-    },
-  ]
-
   return (
-    <div className="space-y-16">
+    <div className="space-y-12 max-w-4xl mx-auto py-8">
       
-      {/* Editorial Header & Large Greeting */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8">
-        <div className="space-y-2">
-          <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-            Client Portal · Fiduciary Overview
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-            Good morning, Alex.
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Account ID: <span className="font-mono text-foreground font-semibold">FN-89241</span> · Fiduciary Officer: Sarah Ahmed, CFA
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button
-            asChild
-            className="h-10 px-6 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
-          >
-            <Link href="/book">
-              <PlusCircle className="h-4 w-4" />
-              <span>Book consultation</span>
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Large Balance & Metric Typography Strip (No Boxed Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 border-b border-border pb-12">
+      {/* Simple Patient Greeting */}
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 border-b border-border pb-6">
         <div className="space-y-1">
-          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            Monitored Portfolio
-          </span>
-          <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-foreground">
-            $482,500
-          </p>
-          <span className="text-xs font-mono text-primary font-semibold block pt-1">
-            +12.8% YTD Alpha
-          </span>
-        </div>
-
-        <div className="space-y-1 sm:border-l sm:border-border sm:pl-10">
-          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            Monthly Savings Yield
-          </span>
-          <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-foreground">
-            ৳42,500
-          </p>
-          <span className="text-xs font-mono text-muted-foreground block pt-1">
-            4.95% annualized automated sweep
-          </span>
-        </div>
-
-        <div className="space-y-1 sm:border-l sm:border-border sm:pl-10">
-          <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            Financial Health
-          </span>
-          <div className="flex items-baseline gap-2">
-            <p className="text-4xl sm:text-5xl font-bold font-mono tracking-tight text-primary">
-              94
-            </p>
-            <span className="text-xs font-mono text-muted-foreground">/ 100</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-primary font-semibold">
+            <Activity className="h-4 w-4" />
+            <span>MedPulse Patient Portal</span>
           </div>
-          <span className="text-xs font-mono text-foreground font-medium block pt-1">
-            Excellent Tier (Top 5% Cohort)
-          </span>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Welcome, Alex
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-mono">
+            Patient ID: <strong className="text-foreground">PT-89241</strong> · Assigned Doctor: <strong className="text-foreground">Dr. Sarah Ahmed, MD</strong>
+          </p>
         </div>
+
+        <Button
+          asChild
+          className="h-10 px-5 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2 self-start sm:self-auto"
+        >
+          <Link href="/book">
+            <PlusCircle className="h-4 w-4" />
+            <span>Book New Appointment</span>
+          </Link>
+        </Button>
       </div>
 
-      {/* Your Next Consultation (Editorial Layout, No Shadow Cards) */}
-      <section className="space-y-6">
-        <div className="flex items-baseline justify-between border-b border-border pb-4">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Your next consultation
+      {/* Primary Focus: Next Doctor Appointment */}
+      <section className="space-y-4">
+        <div className="flex items-baseline justify-between border-b border-border pb-3">
+          <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <span>Upcoming Doctor Visit</span>
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 bg-primary/10 text-primary">
+              Confirmed
+            </span>
           </h2>
-          <span className="text-xs font-mono text-primary font-semibold">
-            Confirmed Slot
+          <span className="text-xs font-mono text-muted-foreground">
+            {upcoming.length} scheduled
           </span>
         </div>
 
         {nextAppointment ? (
-          <div className="py-8 border-b border-border space-y-6">
-            <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-6">
-              <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-foreground">
+          <div className="p-6 sm:p-8 border border-border bg-background space-y-6">
+            <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+              <div className="space-y-1.5">
+                <span className="text-xs font-mono uppercase tracking-wider text-primary font-semibold block">
                   {nextAppointment.serviceTitle}
+                </span>
+                <h3 className="text-2xl font-bold text-foreground">
+                  {nextAppointment.specialistName}
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  with <strong className="text-foreground">{nextAppointment.specialistName}</strong> · {nextAppointment.specialistTitle}
+                <p className="text-xs text-muted-foreground">
+                  {nextAppointment.specialistTitle}
                 </p>
               </div>
 
-              <div className="text-left md:text-right font-mono text-xs space-y-1">
-                <p className="text-xl font-bold text-foreground">
-                  {nextAppointment.dateFormatted} · {nextAppointment.time}
+              <div className="font-mono text-xs text-left md:text-right space-y-1">
+                <p className="text-lg font-bold text-foreground">
+                  {nextAppointment.dateFormatted}
                 </p>
-                <p className="text-muted-foreground capitalize flex items-center md:justify-end gap-1.5">
-                  <Video className="h-3.5 w-3.5 text-primary" />
-                  <span>{nextAppointment.consultationType} Consultation ({nextAppointment.durationMinutes} min)</span>
+                <p className="text-primary font-semibold">
+                  {nextAppointment.time} ({nextAppointment.durationMinutes} mins)
+                </p>
+                <p className="text-muted-foreground text-[11px]">
+                  {nextAppointment.consultationType === "video" ? "Telehealth Video Consultation" : nextAppointment.locationAddress}
                 </p>
               </div>
             </div>
 
-            {/* Quick Actions for Next Consultation */}
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-border/60">
-              {nextAppointment.meetingLink && (
+            {/* Direct Actions Strip */}
+            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border">
+              {nextAppointment.meetingLink && nextAppointment.consultationType === "video" && (
                 <Button
                   asChild
-                  className="h-10 px-6 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
+                  className="h-10 px-5 rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold gap-2"
                 >
                   <a href={nextAppointment.meetingLink} target="_blank" rel="noreferrer">
-                    <Video className="h-3.5 w-3.5" />
-                    <span>Join video consultation</span>
+                    <Video className="h-4 w-4" />
+                    <span>Join Video Room</span>
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </Button>
@@ -204,7 +141,7 @@ export function PortalView({
               <Button
                 variant="outline"
                 onClick={() => setActiveRescheduleApt(nextAppointment)}
-                className="h-10 px-6 rounded-none border-border hover:border-primary text-xs font-semibold gap-1.5"
+                className="h-10 px-5 rounded-none border-border hover:border-primary text-xs font-semibold gap-1.5"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Reschedule</span>
@@ -221,164 +158,62 @@ export function PortalView({
             </div>
           </div>
         ) : (
-          <div className="py-10 border-b border-border text-center space-y-3">
-            <p className="text-sm text-muted-foreground">No upcoming consultations scheduled.</p>
+          <div className="p-8 border border-dashed border-border text-center space-y-3">
+            <p className="text-sm text-muted-foreground">You have no upcoming doctor appointments scheduled.</p>
             <Button asChild size="sm" className="rounded-none text-xs">
-              <Link href="/book">Schedule a Consultation</Link>
+              <Link href="/book">Book an Appointment Now</Link>
             </Button>
           </div>
         )}
       </section>
 
-      {/* Two Column Layout: Upcoming List & Appointment Timeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        
-        {/* Left Column: Upcoming Consultations List */}
-        <section className="lg:col-span-7 space-y-6">
-          <div className="border-b border-border pb-4 flex items-baseline justify-between">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              All upcoming sessions
-            </h2>
-            <span className="text-xs font-mono text-muted-foreground">
-              {upcoming.length} active
-            </span>
-          </div>
-
-          <div className="divide-y divide-border">
-            {upcoming.map((apt) => (
-              <div key={apt.id} className="py-6 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground">
-                      {apt.serviceTitle}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Advisor: {apt.specialistName}
-                    </p>
-                  </div>
-                  <span className="font-mono text-xs text-primary font-semibold">
-                    {apt.dateFormatted} · {apt.time}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 text-xs font-mono">
-                  <button
-                    type="button"
-                    onClick={() => setActiveRescheduleApt(apt)}
-                    className="text-primary hover:underline"
-                  >
-                    Reschedule →
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveCancelApt(apt)}
-                    className="text-muted-foreground hover:text-destructive"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Right Column: Appointment Timeline (Section 18) */}
-        <section className="lg:col-span-5 space-y-6">
-          <div className="border-b border-border pb-4">
-            <h2 className="text-xl font-bold tracking-tight text-foreground">
-              Advisory timeline
-            </h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Complete history of your consultations and milestones.
-            </p>
-          </div>
-
-          <div className="relative pl-6 space-y-8 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-            {timelineEvents.map((event, idx) => {
-              const isTeal = event.status === "active" || event.status === "completed"
-
-              return (
-                <div key={idx} className="relative">
-                  {/* Timeline Node (Teal for active / completed) */}
-                  <span
-                    className={`absolute -left-6 top-1 h-4 w-4 rounded-full border-2 bg-background flex items-center justify-center ${
-                      isTeal
-                        ? "border-primary text-primary"
-                        : "border-border text-muted-foreground"
-                    }`}
-                  >
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        isTeal ? "bg-primary" : "bg-muted-foreground"
-                      }`}
-                    />
-                  </span>
-
-                  <div className="space-y-1">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <h4 className="text-sm font-bold text-foreground">
-                        {event.title}
-                      </h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {event.subtitle}
-                    </p>
-                    <span className="text-[11px] font-mono text-muted-foreground/80 block pt-0.5">
-                      {event.date}
-                    </span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-
-      </div>
-
-      {/* Previous Consultations History Table */}
-      <section className="space-y-6 pt-6 border-t border-border">
-        <div className="border-b border-border pb-4 flex items-baseline justify-between">
+      {/* Patient Past Consultations History */}
+      <section className="space-y-4">
+        <div className="border-b border-border pb-3 flex items-baseline justify-between">
           <h2 className="text-xl font-bold tracking-tight text-foreground">
-            Previous consultations
+            Consultation History & Records
           </h2>
           <span className="text-xs font-mono text-muted-foreground">
-            {past.length} archived
+            {past.length} previous visits
           </span>
         </div>
 
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-border border border-border">
           {past.map((apt) => (
             <div
               key={apt.id}
-              className="py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono"
+              className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono hover:bg-muted/20 transition-colors"
             >
               <div className="space-y-1">
                 <span className="font-bold text-foreground text-sm block">
                   {apt.serviceTitle}
                 </span>
                 <span className="text-muted-foreground">
-                  Specialist: {apt.specialistName} · {apt.dateFormatted}
+                  Attending Doctor: <strong className="text-foreground">{apt.specialistName}</strong> · {apt.dateFormatted}
+                </span>
+                <span className="text-[11px] text-muted-foreground/80 block">
+                  Ref: {apt.referenceNumber} · {apt.consultationType === "video" ? "Telehealth Call" : "In-Clinic Visit"}
                 </span>
               </div>
 
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 sm:self-center">
                 <span
-                  className={`capitalize font-semibold ${
+                  className={`px-2 py-0.5 text-[11px] font-semibold uppercase ${
                     apt.status === "completed"
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  ● {apt.status}
+                  {apt.status}
                 </span>
 
                 <Button
                   asChild
                   variant="outline"
                   size="sm"
-                  className="rounded-none text-xs h-8 px-4 border-border hover:border-primary text-foreground"
+                  className="rounded-none text-xs h-8 px-3 border-border hover:border-primary text-foreground"
                 >
-                  <Link href={`/book?service=${apt.serviceId}`}>
+                  <Link href={`/book?service=${apt.serviceId}&specialist=${apt.specialistId}`}>
                     Rebook Follow-up
                   </Link>
                 </Button>

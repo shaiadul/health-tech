@@ -4,8 +4,8 @@ import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
 
 export const metadata = {
-  title: "Customer Advisory Portal | Finora",
-  description: "View upcoming fiduciary consultations, join meeting rooms, reschedule, and manage advisory history.",
+  title: "Patient Care Portal | MedPulse Hospital & Clinic",
+  description: "View upcoming medical consultations, access telehealth video rooms, reschedule appointments, and view clinical history.",
 }
 
 export default async function CustomerPortalPage() {

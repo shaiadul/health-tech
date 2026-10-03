@@ -1,26 +1,14 @@
-import { AnalyticsService } from "@/features/analytics/services/analytics.service"
-import { AnalyticsView } from "@/features/analytics/components/analytics-view"
+import { ClinicAnalyticsView } from "@/features/admin/components/clinic-analytics-view"
 
 export const metadata = {
-  title: "Analytics | Aegis Financial",
-  description: "Audited financial trends, cashflow velocity, and cost attribution analytics.",
+  title: "Clinical Department Analytics | MedPulse Admin",
+  description: "Audited patient throughput trends, tele-consultation ratios, wait times, and clinical quality metrics.",
 }
 
 export default async function AnalyticsPage() {
-  const [monthlyComparison, categorySpending, cashflowTrends, summary] =
-    await Promise.all([
-      AnalyticsService.getMonthlyComparison(),
-      AnalyticsService.getCategorySpending(),
-      AnalyticsService.getCashflowTrends(),
-      AnalyticsService.getSummary(),
-    ])
-
   return (
-    <AnalyticsView
-      monthlyComparison={monthlyComparison}
-      categorySpending={categorySpending}
-      cashflowTrends={cashflowTrends}
-      summary={summary}
-    />
+    <div className="space-y-6">
+      <ClinicAnalyticsView />
+    </div>
   )
 }

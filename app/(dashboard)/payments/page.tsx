@@ -1,17 +1,14 @@
-import { AccountService } from "@/features/accounts/services/account.service"
-import { PaymentService } from "@/features/payments/services/payment.service"
-import { PaymentsView } from "@/features/payments/components/payments-view"
+import { PatientAdmissionsView } from "@/features/admin/components/patient-admissions-view"
 
 export const metadata = {
-  title: "Payments & Transfers | Aegis Financial",
-  description: "Execute wire, ACH and instant treasury payments with dual authorization.",
+  title: "Patient Admissions & Consultation Billing | MedPulse Admin",
+  description: "Real-time outpatient reception, insurance pre-authorization, triage urgency, and consultation invoices.",
 }
 
 export default async function PaymentsPage() {
-  const [accounts, recipients] = await Promise.all([
-    AccountService.getAll(),
-    PaymentService.getRecipients(),
-  ])
-
-  return <PaymentsView accounts={accounts} recipients={recipients} />
+  return (
+    <div className="space-y-6">
+      <PatientAdmissionsView />
+    </div>
+  )
 }

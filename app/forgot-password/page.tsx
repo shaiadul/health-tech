@@ -1,8 +1,8 @@
 import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form"
 
 export const metadata = {
-  title: "Recover Credential | Aegis Financial",
-  description: "Initiate hardware cryptographic challenge recovery.",
+  title: "Recover Credential | MedPulse Health",
+  description: "Recover access to your clinical account credentials.",
 }
 
 export default function ForgotPasswordPage() {

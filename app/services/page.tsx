@@ -2,11 +2,11 @@ import Link from "next/link"
 import { ServiceService } from "@/features/services/services/service.service"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
-import { ArrowRight, ArrowUpRight, Clock, ShieldCheck } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Clock, ShieldCheck, Activity } from "lucide-react"
 
 export const metadata = {
-  title: "Financial Advisory Services | Finora",
-  description: "Explore all fiduciary consultation services: Investment, Tax, Retirement, and Business Treasury.",
+  title: "Clinical Medical Departments | MedPulse Hospital",
+  description: "Browse specialized hospital departments: Cardiology, Pediatrics, Neurology, Orthopedics, Internal Medicine, and Dermatology.",
 }
 
 export default async function ServicesPage() {
@@ -21,14 +21,14 @@ export default async function ServicesPage() {
           {/* Editorial Catalog Header */}
           <div className="max-w-3xl space-y-4 border-b border-border pb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Advisory Curriculum
+              Medical Specializations
             </span>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.05]">
-              Comprehensive <br />
-              <span className="text-primary italic font-serif font-normal">financial services</span>.
+              Hospital departments & <br />
+              <span className="text-primary italic font-serif font-normal">clinical care</span>.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Every consultation is led by credentialed CFA, CFP®, or CPA practitioners operating strictly under fiduciary care. No product quotas, no commissions.
+              Every outpatient clinic is staffed by board-certified attending medical doctors providing comprehensive diagnostic assessments, advanced treatments, and compassionate patient care.
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export default async function ServicesPage() {
                       <span className="block text-foreground font-semibold">
                         {srv.durationMinutes} min consultation
                       </span>
-                      <span className="block text-muted-foreground">
+                      <span className="block text-primary">
                         {srv.feeDisplay}
                       </span>
                     </div>
@@ -90,14 +90,14 @@ export default async function ServicesPage() {
                         href={`/services/${srv.slug}`}
                         className="text-xs font-semibold text-muted-foreground hover:text-foreground underline underline-offset-4"
                       >
-                        Explore curriculum
+                        Clinical details
                       </Link>
 
                       <Link
                         href={`/book?service=${srv.id}`}
                         className="text-xs font-semibold uppercase tracking-wider px-5 py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
                       >
-                        Book Time →
+                        Book Visit →
                       </Link>
                     </div>
                   </div>
@@ -110,9 +110,9 @@ export default async function ServicesPage() {
           <div className="py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-muted-foreground border-b border-border">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>100% Fiduciary Standard of Care guaranteed in writing</span>
+              <span>Full accreditation by Joint Commission on Healthcare Accreditation</span>
             </div>
-            <span>Need institutional custom mandates? Contact advisory@finora.io</span>
+            <span>24/7 Hospital Emergency Triage Active On Campus</span>
           </div>
 
         </div>

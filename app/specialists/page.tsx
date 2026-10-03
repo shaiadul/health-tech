@@ -2,11 +2,11 @@ import Link from "next/link"
 import { SpecialistService } from "@/features/specialists/services/specialist.service"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
-import { Star, ArrowRight } from "lucide-react"
+import { Star, ArrowRight, Activity } from "lucide-react"
 
 export const metadata = {
-  title: "Fiduciary Specialists Directory | Finora",
-  description: "Browse certified CFA®, CFP®, and CPA financial advisors with verified ratings and instant availability.",
+  title: "Physicians & Medical Staff Directory | MedPulse Hospital",
+  description: "Browse board-certified medical doctors across Cardiology, Pediatrics, Neurology, Orthopedics, and Internal Medicine.",
 }
 
 export default async function SpecialistsPage() {
@@ -21,14 +21,14 @@ export default async function SpecialistsPage() {
           {/* Editorial Header */}
           <div className="max-w-3xl space-y-4 border-b border-border pb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Practitioner Directory
+              Medical Faculty Directory
             </span>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.05]">
-              Fiduciary specialists. <br />
-              <span className="text-primary italic font-serif font-normal">Direct access</span> to expertise.
+              Attending physicians. <br />
+              <span className="text-primary italic font-serif font-normal">Dedicated specialists</span> in every practice.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Every advisor on our platform is legally bound to act in your best interest. Browse by practice area, credentials, and schedule private advisory sessions.
+              Every doctor at MedPulse holds board certification and subspecialty fellowship training from top teaching hospitals. Browse our clinical staff and book direct consultation slots.
             </p>
           </div>
 
@@ -39,14 +39,14 @@ export default async function SpecialistsPage() {
                 key={sp.id}
                 className="py-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 hover:bg-muted/20 px-2 sm:px-4 transition-colors group"
               >
-                {/* Advisor Info */}
+                {/* Doctor Info */}
                 <div className="space-y-3 max-w-2xl">
                   <div>
                     <h2 className="text-2xl sm:text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
                       {sp.name}
                     </h2>
                     <p className="text-sm font-medium text-foreground/85 mt-0.5">
-                      {sp.title} · <span className="text-muted-foreground">{sp.role}</span>
+                      {sp.title} · <span className="text-primary">{sp.role}</span>
                     </p>
                   </div>
 
@@ -74,7 +74,7 @@ export default async function SpecialistsPage() {
                       <span className="block text-foreground font-semibold text-sm">
                         {sp.experienceYears} years
                       </span>
-                      <span className="text-muted-foreground">experience</span>
+                      <span className="text-muted-foreground">clinical practice</span>
                     </div>
 
                     <div>
@@ -82,7 +82,7 @@ export default async function SpecialistsPage() {
                         <Star className="h-3.5 w-3.5 fill-primary text-primary" />
                         <span>{sp.rating}</span>
                       </div>
-                      <span className="text-muted-foreground">({sp.reviewCount} reviews)</span>
+                      <span className="text-muted-foreground">({sp.reviewCount} patients)</span>
                     </div>
                   </div>
 

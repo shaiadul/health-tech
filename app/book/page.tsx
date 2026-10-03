@@ -8,8 +8,8 @@ import { MarketingFooter } from "@/components/marketing/footer"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export const metadata = {
-  title: "Book a Consultation | Finora",
-  description: "Schedule a 1-on-1 private advisory consultation with a verified fiduciary specialist.",
+  title: "Book a Doctor Appointment | MedPulse Hospital & Clinic",
+  description: "Schedule an outpatient clinical consultation with board-certified physicians in Cardiology, Neurology, Pediatrics, Orthopedics, and more.",
 }
 
 function BookingSkeleton() {

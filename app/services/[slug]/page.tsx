@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!service) return { title: "Service Not Found" }
 
   return {
-    title: `${service.title} | Finora Consultation`,
+    title: `${service.title} | MedPulse Hospital Clinic`,
     description: service.shortDescription,
   }
 }

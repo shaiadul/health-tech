@@ -12,9 +12,9 @@ import { FAQSection } from "@/components/marketing/faq-section"
 import { MarketingFooter } from "@/components/marketing/footer"
 
 export const metadata = {
-  title: "Finora — Financial Decisions, Made Simpler | Fiduciary Consultations",
+  title: "MedPulse — Hospital & Healthcare Clinic | Outpatient Triage & Doctor Appointments",
   description:
-    "Personalized financial guidance, portfolio audit, tax optimization and appointment booking with certified fiduciary specialists.",
+    "Multidisciplinary hospital center and outpatient clinic. Schedule consultations with board-certified physicians, access 24/7 triage, and manage patient care.",
 }
 
 export default function HomePage() {

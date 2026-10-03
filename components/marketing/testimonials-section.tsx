@@ -7,25 +7,25 @@ import { Button } from "@/components/ui/button"
 
 const TESTIMONIALS = [
   {
-    quote: "Financial planning finally started to feel understandable.",
+    quote: "The prompt cardiac evaluation and ECG assessment at MedPulse caught my arrhythmia early. Truly exceptional physicians.",
     author: "David Thornton",
-    title: "VP of Engineering at CloudScale",
-    highlight: "+14.2% Net Portfolio Alpha",
-    service: "Investment Planning",
+    title: "Cardiology Outpatient",
+    highlight: "Early Diagnostic Intervention",
+    service: "Cardiology & Heart Health",
   },
   {
-    quote: "Clear, non-salesy fiduciary advice is rare. Finora gave our family total peace of mind.",
+    quote: "Compassionate, thorough pediatric care. Dr. Rostova took the time to answer all our questions with genuine patience.",
     author: "Robert Sterling",
-    title: "Senior Medical Consultant",
-    highlight: "Early Retirement Roadmap Delivered",
-    service: "Retirement Planning",
+    title: "Pediatric Patient Parent",
+    highlight: "Comprehensive Wellness Verified",
+    service: "Pediatrics & Child Wellness",
   },
   {
-    quote: "They restructured our idle company checking funds and added $3,500 monthly risk-free yield.",
+    quote: "The telehealth consultation was seamless. My diagnostic plan and e-prescription were at my pharmacy in 20 minutes.",
     author: "Nadia Rahman",
-    title: "Founder & CEO, Studio Bloom",
-    highlight: "৳42,500/mo Treasury Yield",
-    service: "Business Finance",
+    title: "Executive Health Patient",
+    highlight: "Same-Day Diagnostic Plan",
+    service: "Internal Medicine",
   },
 ]
 

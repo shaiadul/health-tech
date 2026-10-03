@@ -21,7 +21,7 @@ export function FAQSection() {
             Frequently asked questions.
           </h2>
           <p className="text-sm text-muted-foreground max-w-lg leading-relaxed">
-            Everything you need to know about our fiduciary standard, scheduling flexibility, and meeting preparations.
+            Everything you need to know about our clinical standards, health insurance coverage, and appointment scheduling.
           </p>
         </div>
 

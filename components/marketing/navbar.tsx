@@ -3,133 +3,249 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, ArrowUpRight, Calendar } from "lucide-react"
+import {
+  Menu,
+  ArrowUpRight,
+  Calendar,
+  Activity,
+  UserCheck,
+  PhoneCall,
+  ChevronRight,
+  Stethoscope,
+  Building2,
+  Clock,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 export function MarketingNavbar() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const navLinks = [
-    { name: "Solutions", href: "/#solutions" },
-    { name: "How it works", href: "/#how-it-works" },
-    { name: "Experts", href: "/#experts" },
-    { name: "Insights", href: "/#insights" },
+    { name: "Departments", href: "/services" },
+    { name: "Doctors", href: "/specialists" },
+    { name: "How It Works", href: "/#how-it-works" },
+    { name: "Medical FAQs", href: "/#faq" },
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur-md transition-all">
-      <div className="max-w-7xl mx-auto flex h-18 items-center justify-between px-6 sm:px-8 lg:px-12">
-        {/* Brand - Editorial & Minimal */}
-        <Link href="/" className="flex items-baseline gap-2 group">
-          <span className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
-            Finora
-          </span>
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md transition-all">
+      <div className="max-w-7xl mx-auto flex h-16 sm:h-18 items-center justify-between px-4 sm:px-6 lg:px-8">
+        
+        {/* Hospital Brand */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="h-9 w-9 rounded-sm bg-primary text-primary-foreground flex items-center justify-center font-bold shadow-xs group-hover:bg-primary/90 transition-colors">
+            <Activity className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors leading-tight">
+              MedPulse
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-primary font-semibold leading-tight">
+              Hospital & Clinic
+            </span>
+          </div>
         </Link>
 
-        {/* Minimal Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-tight text-muted-foreground">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="hover:text-foreground transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
+        {/* Desktop Navigation (Visible on lg+ screens, 1024px+) */}
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium tracking-tight text-muted-foreground">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`transition-colors hover:text-foreground ${
+                  isActive ? "text-primary font-semibold" : ""
+                }`}
+              >
+                {link.name}
+              </Link>
+            )
+          })}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden sm:flex items-center gap-6">
+        {/* Desktop / Tablet Actions */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          
+          {/* Patient Portal link (hidden on small mobile) */}
           <Link
             href="/portal"
-            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
           >
             <Calendar className="h-3.5 w-3.5 text-primary" />
-            <span>Client Portal</span>
+            <span>Patient Portal</span>
           </Link>
 
+          {/* Admin link (hidden on < md screens) */}
+          <Link
+            href="/admin"
+            className="hidden md:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-primary px-2.5 py-1.5 border border-border/70 hover:border-primary transition-colors"
+          >
+            <UserCheck className="h-3.5 w-3.5 text-primary" />
+            <span>Admin</span>
+          </Link>
+
+          {/* High-Conversion Booking Button (Always visible on mobile & desktop) */}
           <Button
             asChild
             size="sm"
-            className="h-9 px-4 text-xs font-semibold rounded-none border border-primary bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5"
+            className="h-9 px-3.5 sm:px-4 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shadow-xs"
           >
             <Link href="/book">
-              <span>Book a consultation</span>
-              <ArrowUpRight className="h-3.5 w-3.5 opacity-90" />
+              <span>Book Appointment</span>
+              <ArrowUpRight className="h-3.5 w-3.5 opacity-90 hidden xs:inline" />
             </Link>
           </Button>
-        </div>
 
-        {/* Mobile Nav */}
-        <div className="flex sm:hidden items-center gap-3">
-          <Button asChild variant="ghost" size="sm" className="text-xs h-8 px-2 font-medium">
-            <Link href="/portal">Portal</Link>
-          </Button>
-
+          {/* Mobile & Tablet Drawer Trigger (Visible below lg, < 1024px) */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-9 w-9 text-foreground">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden h-9 w-9 text-foreground ml-1"
+                aria-label="Open Navigation Menu"
+              >
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] p-8 flex flex-col justify-between border-l border-border bg-background">
-              <div>
-                <SheetHeader className="text-left pb-6 border-b border-border">
-                  <SheetTitle className="text-lg font-bold flex items-baseline gap-1.5">
-                    <span>Finora</span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+
+            <SheetContent
+              side="right"
+              className="w-full sm:max-w-sm p-6 flex flex-col justify-between border-l border-border bg-background"
+            >
+              <div className="space-y-6">
+                <SheetHeader className="text-left pb-4 border-b border-border">
+                  <SheetTitle className="text-base font-bold flex items-center gap-2">
+                    <Activity className="h-4.5 w-4.5 text-primary" />
+                    <span>MedPulse Clinic & Hospital</span>
                   </SheetTitle>
+                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground mt-1">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Outpatient Triage & Emergency Open 24/7</span>
+                  </div>
                 </SheetHeader>
 
-                <div className="flex flex-col gap-4 py-8">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors py-1"
-                    >
-                      {link.name}
+                {/* Primary Action Buttons in Mobile */}
+                <div className="space-y-2">
+                  <Button
+                    asChild
+                    className="w-full h-11 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Link href="/book" className="flex items-center justify-center gap-1.5">
+                      <span>Book Doctor Appointment</span>
+                      <ArrowUpRight className="h-4 w-4" />
                     </Link>
-                  ))}
+                  </Button>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="h-10 text-xs font-mono justify-start px-3"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Link href="/portal" className="flex items-center gap-1.5">
+                        <Calendar className="h-3.5 w-3.5 text-primary" />
+                        <span>My Portal</span>
+                      </Link>
+                    </Button>
+
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="h-10 text-xs font-mono justify-start px-3"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Link href="/admin" className="flex items-center gap-1.5">
+                        <UserCheck className="h-3.5 w-3.5 text-primary" />
+                        <span>Admin Triage</span>
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Navigation Links */}
+                <div className="py-2 border-t border-border space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block py-2">
+                    Hospital Navigation
+                  </span>
+
                   <Link
                     href="/services"
                     onClick={() => setMobileOpen(false)}
-                    className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors py-1"
+                    className="flex items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
                   >
-                    All Services
+                    <div className="flex items-center gap-2">
+                      <Building2 className="h-4 w-4 text-primary" />
+                      <span>Clinical Departments</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
+
                   <Link
-                    href="/portal"
+                    href="/specialists"
                     onClick={() => setMobileOpen(false)}
-                    className="text-base font-medium text-primary hover:underline transition-colors py-1 pt-3 border-t border-border flex items-center gap-2"
+                    className="flex items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
                   >
-                    <Calendar className="h-4 w-4" />
-                    <span>Client Portal</span>
+                    <div className="flex items-center gap-2">
+                      <Stethoscope className="h-4 w-4 text-primary" />
+                      <span>Doctors & Specialists</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+
+                  <Link
+                    href="/#how-it-works"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <span>How Booking Works</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+
+                  <Link
+                    href="/#faq"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    <span>Insurance & Patient FAQs</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-border">
-                <Button
-                  asChild
-                  className="w-full h-11 text-xs font-semibold rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Link href="/book" className="flex items-center justify-center gap-1.5">
-                    <span>Book a consultation</span>
-                    <ArrowUpRight className="h-4 w-4" />
-                  </Link>
-                </Button>
+              {/* Emergency Hotline Contact Footer */}
+              <div className="pt-4 border-t border-border space-y-2">
+                <div className="p-3 bg-muted/40 border border-border flex items-center justify-between text-xs font-mono">
+                  <div>
+                    <span className="text-muted-foreground block text-[10px]">Hospital Hotline</span>
+                    <span className="font-bold text-foreground">+1 (800) 432-5847</span>
+                  </div>
+                  <PhoneCall className="h-4 w-4 text-primary" />
+                </div>
+                <p className="text-[10px] text-muted-foreground text-center">
+                  For immediate acute emergencies, please dial 911 immediately.
+                </p>
               </div>
             </SheetContent>
           </Sheet>
         </div>
+
       </div>
     </header>
   )

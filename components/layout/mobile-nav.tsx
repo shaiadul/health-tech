@@ -5,15 +5,16 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
-  Receipt,
-  WalletCards,
-  ArrowLeftRight,
+  Calendar,
+  UserCheck,
+  Activity,
   LineChart,
   Settings,
-  ShieldCheck,
+  HeartPulse,
   Building2,
   LogOut,
   User,
+  ShieldCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/constants"
@@ -23,12 +24,12 @@ import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 const NAV_LINKS = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Transactions", href: "/transactions", icon: Receipt },
-  { name: "Accounts", href: "/accounts", icon: WalletCards },
-  { name: "Payments & Transfer", href: "/payments", icon: ArrowLeftRight },
-  { name: "Analytics", href: "/analytics", icon: LineChart },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Clinic Operations", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Appointment Queue", href: "/transactions", icon: Calendar },
+  { name: "Physician Roster", href: "/accounts", icon: UserCheck },
+  { name: "Patient Admissions", href: "/payments", icon: Activity },
+  { name: "Clinical Analytics", href: "/analytics", icon: LineChart },
+  { name: "Facility Settings", href: "/settings", icon: Settings },
 ]
 
 export function MobileNav({
@@ -47,28 +48,28 @@ export function MobileNav({
           <SheetHeader className="p-4 border-b border-border text-left">
             <div className="flex items-center gap-2.5">
               <div className="h-9 w-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                <ShieldCheck className="h-5 w-5" />
+                <HeartPulse className="h-5 w-5" />
               </div>
               <div>
                 <SheetTitle className="text-sm font-semibold tracking-tight">
                   {APP_NAME}
                 </SheetTitle>
-                <p className="text-[11px] text-muted-foreground">Treasury & Ops</p>
+                <p className="text-[11px] text-muted-foreground">Hospital Operations</p>
               </div>
             </div>
           </SheetHeader>
 
-          {/* Org preview */}
+          {/* Unit preview */}
           <div className="p-3 border-b border-border/50">
             <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
               <div className="flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-foreground">
-                  {MOCK_USER.organization}
+                  Main Clinic Center
                 </span>
               </div>
-              <Badge variant="outline" className="text-[10px]">
-                {MOCK_USER.tier}
+              <Badge variant="outline" className="text-[10px] text-emerald-600 bg-emerald-500/10">
+                Active
               </Badge>
             </div>
           </div>
@@ -99,40 +100,28 @@ export function MobileNav({
           </nav>
         </div>
 
-        {/* User Info footer */}
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-3 mb-3">
-            <Avatar className="h-9 w-9">
+        {/* User Footer Profile */}
+        <div className="p-3 border-t border-border flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Avatar className="h-8 w-8 rounded-full border border-border">
               <AvatarImage src={MOCK_USER.avatarUrl} alt={MOCK_USER.name} />
-              <AvatarFallback>AV</AvatarFallback>
+              <AvatarFallback>DR</AvatarFallback>
             </Avatar>
-            <div className="overflow-hidden">
-              <p className="text-xs font-semibold text-foreground truncate">
+            <div className="text-left">
+              <p className="text-xs font-medium text-foreground truncate max-w-[140px]">
                 {MOCK_USER.name}
               </p>
-              <p className="text-[11px] text-muted-foreground truncate">
-                {MOCK_USER.email}
-              </p>
+              <p className="text-[10px] text-muted-foreground">{MOCK_USER.role}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border">
-            <Link
-              href="/settings"
-              onClick={() => onOpenChange(false)}
-              className="flex items-center justify-center gap-1.5 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded-md"
-            >
-              <User className="h-3.5 w-3.5" />
-              <span>Profile</span>
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => onOpenChange(false)}
-              className="flex items-center justify-center gap-1.5 py-1.5 text-xs text-destructive hover:bg-destructive/10 border border-destructive/20 rounded-md"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              <span>Logout</span>
-            </Link>
-          </div>
+          <Link
+            href="/"
+            onClick={() => onOpenChange(false)}
+            className="p-1.5 text-muted-foreground hover:text-destructive"
+            title="Exit Admin"
+          >
+            <LogOut className="h-4 w-4" />
+          </Link>
         </div>
       </SheetContent>
     </Sheet>

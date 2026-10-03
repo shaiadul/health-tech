@@ -1,8 +1,8 @@
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form"
 
 export const metadata = {
-  title: "Reset Credential | Aegis Financial",
-  description: "Configure new terminal password.",
+  title: "Reset Credential | MedPulse Health",
+  description: "Configure new clinical account password.",
 }
 
 export default function ResetPasswordPage() {

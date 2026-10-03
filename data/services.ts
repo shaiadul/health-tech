@@ -1,373 +1,373 @@
 import { FinancialService } from "@/types/service"
 
-export const FINANCIAL_SERVICES: FinancialService[] = [
+export const CLINICAL_SERVICES: FinancialService[] = [
   {
-    id: "srv_invest_01",
-    slug: "investment-planning",
-    title: "Investment Planning",
+    id: "srv_cardio_01",
+    slug: "cardiology",
+    title: "Cardiology & Heart Health",
     shortDescription:
-      "Build a tailored wealth generation strategy aligned with your risk tolerance, liquidity horizon, and goals.",
+      "Comprehensive cardiovascular assessments, ECG diagnostics, heart failure management, and preventive risk mitigation.",
     fullDescription:
-      "Our fiduciary investment advisors conduct a holistic portfolio audit to optimize capital allocation across equities, fixed income, treasury notes, and alternative assets. We emphasize tax-advantaged compounding, downside protection, and automated rebalancing.",
-    category: "wealth",
+      "Our cardiology practice provides advanced cardiovascular diagnostics, stress testing, blood pressure optimization, and personalized rehabilitation plans led by board-certified heart specialists.",
+    category: "wealth" as any,
     durationMinutes: 45,
-    feeDisplay: "Free Initial Audit",
-    iconName: "TrendingUp",
-    popular: true,
-    badge: "Most Popular",
-    benefits: [
-      "Customized asset allocation tailored to personal risk profile",
-      "Fee-only fiduciary guidance with zero product sales pressure",
-      "Downside volatility mitigation and hedging strategies",
-      "Quarterly performance reporting and automated rebalancing models",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Capital & Risk Profiling",
-        description: "Review current holdings, debt obligations, and liquidity timelines.",
-      },
-      {
-        step: "02",
-        title: "Asset Allocation Model",
-        description: "Formulate a personalized multi-asset portfolio blueprint.",
-      },
-      {
-        step: "03",
-        title: "Implementation Plan",
-        description: "Streamline fund execution across tax-sheltered and brokerage accounts.",
-      },
-      {
-        step: "04",
-        title: "Ongoing Monitoring",
-        description: "Periodic reviews with your dedicated senior investment advisor.",
-      },
-    ],
-    requirements: [
-      "Recent brokerage or investment account statements (optional)",
-      "Outline of major upcoming liquidity milestones (1–5 years)",
-      "Estimated risk tolerance questionnaire (provided before call)",
-    ],
-    faqs: [
-      {
-        question: "How is Finora different from a robo-advisor?",
-        answer:
-          "Finora pairs algorithmic portfolio analytics with human fiduciary specialists who understand tax nuances, career changes, and unique personal situations.",
-      },
-      {
-        question: "Is the initial 45-minute consultation really free?",
-        answer:
-          "Yes. Your initial consultation includes a comprehensive portfolio health check and personalized strategic roadmap at no cost.",
-      },
-    ],
-  },
-  {
-    id: "srv_personal_02",
-    slug: "personal-finance",
-    title: "Personal Finance & Cashflow",
-    shortDescription:
-      "Master your cashflow velocity, eliminate high-interest liabilities, and build automated emergency liquidity.",
-    fullDescription:
-      "Gain full command over your monthly disposable income. We analyze spending leaks, structure high-yield savings reserves, and install automated behavioral money management systems that safeguard your peace of mind.",
-    category: "planning",
-    durationMinutes: 30,
-    feeDisplay: "Complimentary",
-    iconName: "Wallet",
-    popular: true,
-    benefits: [
-      "Zero-based cashflow blueprint customized to your lifestyle",
-      "High-interest debt elimination avalanche/snowball planning",
-      "Automated savings rules that sweep idle checking capital",
-      "Credit score enhancement and optimization protocols",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Income & Outflow Audit",
-        description: "Categorize historical spending and identify optimization zones.",
-      },
-      {
-        step: "02",
-        title: "Emergency Vault Sizing",
-        description: "Calibrate 3–6 months of essential liquidity in high-yield reserves.",
-      },
-      {
-        step: "03",
-        title: "Automated Rules Setup",
-        description: "Configure direct deposits, split accounts, and automated investments.",
-      },
-      {
-        step: "04",
-        title: "Quarterly Check-In",
-        description: "Track progress and adjust parameters as income expands.",
-      },
-    ],
-    requirements: [
-      "Summary of monthly recurring expenses",
-      "List of outstanding consumer liabilities or loans",
-    ],
-    faqs: [
-      {
-        question: "Do I need to disclose all my bank passwords?",
-        answer:
-          "Never. We never ask for banking credentials or account passwords. We operate strictly on aggregate numbers and statements you choose to share.",
-      },
-    ],
-  },
-  {
-    id: "srv_retire_03",
-    slug: "retirement-planning",
-    title: "Retirement Planning",
-    shortDescription:
-      "Engineer your financial independence timeline with tax-efficient withdrawal and pension strategies.",
-    fullDescription:
-      "Whether you are targeting early retirement (FIRE) or planning traditional pension distributions, our retirement specialists project your portfolio longevity under Monte Carlo stress simulations and health-cost contingencies.",
-    category: "retirement",
-    durationMinutes: 45,
-    feeDisplay: "Free Consultation",
-    iconName: "ShieldAlert",
-    benefits: [
-      "Monte Carlo simulations modeling 1,000+ market cycles",
-      "Roth conversion ladder and tax-bracket arbitrage strategies",
-      "Social Security and pension claim timing optimization",
-      "Healthcare, Medicare, and long-term care contingency reserves",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Retirement Vision Definition",
-        description: "Clarify expected retirement age, annual spend, and lifestyle goals.",
-      },
-      {
-        step: "02",
-        title: "Projection & Gap Analysis",
-        description: "Evaluate current compounding rates against retirement target capital.",
-      },
-      {
-        step: "03",
-        title: "Tax Optimization Strategy",
-        description: "Minimize lifetime taxation across pre-tax, Roth, and taxable buckets.",
-      },
-      {
-        step: "04",
-        title: "Distribution Scheduling",
-        description: "Set up sustainable annual withdrawal rate protocols.",
-      },
-    ],
-    requirements: [
-      "Current balances in 401(k), IRA, pensions, or provident funds",
-      "Estimated target retirement age and annual living budget",
-    ],
-    faqs: [
-      {
-        question: "Can you help if I want to retire in my 40s or 50s?",
-        answer:
-          "Yes. We specialize in early retirement structuring, including early penalty-free withdrawal strategies and bridge funding models.",
-      },
-    ],
-  },
-  {
-    id: "srv_tax_04",
-    slug: "tax-consultation",
-    title: "Tax Strategy & Optimization",
-    shortDescription:
-      "Legally minimize your income, capital gains, and business tax burden through proactive structuring.",
-    fullDescription:
-      "Taxes are the single largest drag on lifetime wealth creation. Our licensed tax strategists identify deductions, entity classifications, cross-border considerations, and tax-loss harvesting opportunities before year-end.",
-    category: "tax",
-    durationMinutes: 40,
-    feeDisplay: "Complimentary Strategy",
-    iconName: "Receipt",
-    badge: "High Impact",
-    benefits: [
-      "Proactive year-end tax loss and gain harvesting plans",
-      "Entity structuring (LLC, S-Corp, Holding) for self-employed and founders",
-      "Stock option and equity compensation (RSU, ISO, NSO) tax mitigation",
-      "Charitable giving and donor-advised fund tax shelters",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Prior Return Review",
-        description: "Analyze previous tax filings for missed deductions and carryforwards.",
-      },
-      {
-        step: "02",
-        title: "Income Timing Strategy",
-        description: "Structure salary, distributions, and bonuses to manage brackets.",
-      },
-      {
-        step: "03",
-        title: "Deduction Maximization",
-        description: "Implement retirement, HSA, business, and real estate write-offs.",
-      },
-      {
-        step: "04",
-        title: "Filing Roadmap",
-        description: "Coordinate with your CPA for seamless compliance execution.",
-      },
-    ],
-    requirements: [
-      "Previous year's tax return summary",
-      "Overview of all active income sources and corporate entities",
-    ],
-    faqs: [
-      {
-        question: "Do you prepare and file my tax return?",
-        answer:
-          "We specialize in strategic tax advisory and optimization roadmaps. We provide turnkey instructions you or your CPA can execute directly.",
-      },
-    ],
-  },
-  {
-    id: "srv_biz_05",
-    slug: "business-finance",
-    title: "Business Finance & Treasury",
-    shortDescription:
-      "Optimize enterprise working capital, debt structures, runway management, and commercial credit lines.",
-    fullDescription:
-      "Designed for startup founders, small-medium business owners, and corporate executives. We help optimize treasury cash yield, model burn runways, prepare financing packages, and establish corporate governance.",
-    category: "business",
-    durationMinutes: 45,
-    feeDisplay: "Free Discovery Session",
-    iconName: "Briefcase",
-    benefits: [
-      "Treasury cash management earning top institutional yields",
-      "Working capital optimization and vendor payment term negotiation",
-      "Debt vs equity financing evaluation and debt-service coverage modeling",
-      "Fractional CFO insights without enterprise overhead",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Cashflow & Runway Audit",
-        description: "Model historical burn rate, unit economics, and liquidity cushions.",
-      },
-      {
-        step: "02",
-        title: "Treasury Allocation",
-        description: "Deploy operating reserves into insured short-term yield instruments.",
-      },
-      {
-        step: "03",
-        title: "Capital Structure Optimization",
-        description: "Calibrate revolving credit, equipment leases, or venture facilities.",
-      },
-      {
-        step: "04",
-        title: "Executive Reporting",
-        description: "Automate investor and board financial dashboard metrics.",
-      },
-    ],
-    requirements: [
-      "Estimated monthly revenue and burn run-rate",
-      "Overview of current banking relationships and credit facilities",
-    ],
-    faqs: [
-      {
-        question: "What company stages do you support?",
-        answer:
-          "We consult with businesses ranging from early-stage bootstrapped teams to venture-backed startups and established operating companies.",
-      },
-    ],
-  },
-  {
-    id: "srv_insure_06",
-    slug: "insurance-planning",
-    title: "Asset & Insurance Planning",
-    shortDescription:
-      "Safeguard your family and enterprise balance sheet against catastrophic health, disability, and liability risks.",
-    fullDescription:
-      "Comprehensive wealth preservation requires robust defensive perimeter planning. We review your existing coverage to eliminate duplicate premiums while closing critical coverage blind spots in umbrella, life, and key-person policies.",
-    category: "insurance",
-    durationMinutes: 30,
-    feeDisplay: "Free Policy Audit",
-    iconName: "ShieldCheck",
-    benefits: [
-      "Independent audit of existing term, disability, and umbrella policies",
-      "Identification of expensive, low-value whole-life riders to eliminate",
-      "Key-person and buy-sell agreement insurance for business partners",
-      "Estate asset insulation through irrevocable protective structures",
-    ],
-    process: [
-      {
-        step: "01",
-        title: "Vulnerability Scan",
-        description: "Assess exposure across liability, disability, health, and mortality.",
-      },
-      {
-        step: "02",
-        title: "Policy Benchmarking",
-        description: "Compare your current premium costs against competitive market tiers.",
-      },
-      {
-        step: "03",
-        title: "Coverage Rationalization",
-        description: "Drop unnecessary riders and expand high-limit umbrella shields.",
-      },
-      {
-        step: "04",
-        title: "Annual Protection Review",
-        description: "Recalibrate limits as family net worth and asset bases expand.",
-      },
-    ],
-    requirements: [
-      "Summary of existing insurance policies and death/disability benefit amounts",
-    ],
-    faqs: [
-      {
-        question: "Do you earn commissions on insurance policies you recommend?",
-        answer:
-          "No. Our specialists provide independent fiduciary analysis. We do not sell proprietary policies or accept hidden carrier kickbacks.",
-      },
-    ],
-  },
-  {
-    id: "srv_health_07",
-    slug: "financial-health-check",
-    title: "Financial Health Diagnostic",
-    shortDescription:
-      "A fast, 360-degree diagnostic benchmarking your savings rate, debt ratio, and net worth trajectory.",
-    fullDescription:
-      "Ideal for anyone wanting clarity on where they stand financially. In a focused 30-minute session, we evaluate your financial vital signs, assign an actionable health score, and deliver 3 high-impact immediate moves.",
-    category: "planning",
-    durationMinutes: 30,
-    feeDisplay: "100% Free",
+    feeDisplay: "Insurance Covered / Free Checkup",
     iconName: "Activity",
     popular: true,
-    badge: "Quick Start",
+    badge: "Specialized Center",
     benefits: [
-      "Comprehensive 20-point financial diagnostic score",
-      "Comparison against peer benchmarks for your age and income cohort",
-      "Identification of the top 3 high-leverage immediate financial moves",
-      "Customized 1-page Financial Vital Signs scorecard",
+      "Advanced 12-lead digital ECG and echocardiogram diagnostics",
+      "Hypertension and cholesterol management protocols",
+      "Coronary artery disease and stroke risk reduction",
+      "Immediate prescription dispatch and lifestyle rehabilitation",
     ],
     process: [
       {
-        step: "01",
-        title: "Quick 5-Min Pre-Quiz",
-        description: "Submit basic income, debt, and savings estimates.",
+        step: "1",
+        title: "Triage & Vitals Assessment",
+        description: "Blood pressure, oxygen saturation, resting heart rate, and cardiovascular history review.",
       },
       {
-        step: "02",
-        title: "Diagnostic Session",
-        description: "Review your Financial Health Score live with a specialist.",
+        step: "2",
+        title: "Physical & Clinical Examination",
+        description: "Detailed stethoscope heart-sound analysis and peripheral vascular check.",
       },
       {
-        step: "03",
-        title: "Action Roadmap",
-        description: "Walk away with 3 high-impact action steps for the next 30 days.",
+        step: "3",
+        title: "Diagnostic Imaging / ECG",
+        description: "Instant in-clinic electro-cardiac tracing or ultrasound evaluation.",
+      },
+      {
+        step: "4",
+        title: "Treatment Plan & Follow-up",
+        description: "Written prescription, digital monitoring guidelines, and scheduled follow-up.",
       },
     ],
     requirements: [
-      "No paperwork required! Just rough estimates of your monthly finances.",
+      "List of current medications and previous ECG/echo reports if available",
+      "Recent blood work (lipid panel, fasting blood glucose)",
+      "National ID or health insurance card",
     ],
     faqs: [
       {
-        question: "Is this suitable for beginners?",
-        answer:
-          "Absolutely. It is specifically designed to be friendly, jargon-free, and actionable regardless of your current net worth.",
+        question: "Do I need to fast before my cardiology appointment?",
+        answer: "Fasting for 8-12 hours is recommended only if your physician ordered lipid panel or fasting blood sugar tests.",
+      },
+      {
+        question: "Can I choose between an in-clinic visit and telehealth?",
+        answer: "Yes. Routine follow-ups and medication adjustments can be done via encrypted Telehealth HD video. Initial diagnostics require an in-person clinic visit.",
+      },
+    ],
+  },
+  {
+    id: "srv_neuro_02",
+    slug: "neurology",
+    title: "Neurology & Brain Health",
+    shortDescription:
+      "Specialized diagnosis and care for migraines, neuropathy, memory disorders, tremors, and nervous system conditions.",
+    fullDescription:
+      "Our neurology clinic delivers evidence-based diagnostics and compassionate treatment for chronic headaches, seizures, nerve pain, and degenerative neurological disorders using state-of-the-art neuro-imaging.",
+    category: "planning" as any,
+    durationMinutes: 45,
+    feeDisplay: "Consultation & Triage",
+    iconName: "TrendingUp",
+    popular: true,
+    benefits: [
+      "In-depth motor, sensory, and cognitive reflex examinations",
+      "Migraine and chronic cluster headache intervention programs",
+      "Neuropathy, spine nerve compression, and tremor diagnostics",
+      "Collaborative physical and occupational therapy referral",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Symptom Timeline",
+        description: "Mapping onset, triggers, pain severity, and cognitive changes.",
+      },
+      {
+        step: "2",
+        title: "Cranial Nerve & Reflex Check",
+        description: "Physical testing of vision, balance, coordination, and reflex responses.",
+      },
+      {
+        step: "3",
+        title: "Neuro-Diagnostic Workup",
+        description: "Order MRI/CT scans or nerve conduction velocity studies if indicated.",
+      },
+      {
+        step: "4",
+        title: "Targeted Medical Therapy",
+        description: "Neuromodulation prescription, preventative therapy, and lifestyle guidance.",
+      },
+    ],
+    requirements: [
+      "Symptom diary documenting headache or seizure frequency",
+      "Prior MRI or CT scan discs/reports if previously conducted",
+    ],
+    faqs: [
+      {
+        question: "How long does a neurological evaluation take?",
+        answer: "A comprehensive initial neurological assessment typically takes 40-50 minutes to thoroughly evaluate reflex, cognitive, and sensory pathways.",
+      },
+    ],
+  },
+  {
+    id: "srv_pediatrics_03",
+    slug: "pediatrics",
+    title: "Pediatrics & Child Wellness",
+    shortDescription:
+      "Compassionate healthcare for infants, children, and adolescents, including developmental milestones and immunizations.",
+    fullDescription:
+      "Our pediatric center is designed to make children and parents feel safe. From routine growth checkups and vaccinations to acute pediatric illness triage, our pediatricians offer warm, round-the-clock care.",
+    category: "tax" as any,
+    durationMinutes: 30,
+    feeDisplay: "Pediatric Wellness Program",
+    iconName: "ShieldCheck",
+    popular: true,
+    benefits: [
+      "Comprehensive growth, nutrition, and milestone development tracking",
+      "WHO/CDC-compliant childhood immunization schedules",
+      "Acute pediatric fever, asthma, allergy, and infection care",
+      "Gentle, stress-free clinical environment tailored for children",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Child Vitals & Growth Metrics",
+        description: "Height, weight, head circumference, and temperature charting.",
+      },
+      {
+        step: "2",
+        title: "Developmental Check",
+        description: "Motor skills, vision, hearing, and behavioral milestones check.",
+      },
+      {
+        step: "3",
+        title: "Pediatric Examination",
+        description: "Ear, throat, chest, and abdominal examination in a calm setting.",
+      },
+      {
+        step: "4",
+        title: "Vaccination & Nutrition",
+        description: "Scheduled immunizations, dietary guidance, and growth certification.",
+      },
+    ],
+    requirements: [
+      "Child's vaccination card and birth record book",
+      "List of known food or drug allergies",
+    ],
+    faqs: [
+      {
+        question: "Can I get pediatric emergency triage on weekends?",
+        answer: "Yes, our pediatric on-call clinic operates 7 days a week with dedicated emergency pediatricians.",
+      },
+    ],
+  },
+  {
+    id: "srv_ortho_04",
+    slug: "orthopedics",
+    title: "Orthopedics & Sports Medicine",
+    shortDescription:
+      "Advanced care for joints, bones, sports injuries, arthritis, back pain, and physical rehabilitation.",
+    fullDescription:
+      "Led by orthopedic surgeons and sports medicine physicians, our department specializes in non-invasive joint restoration, fracture repair, spine health, and accelerated athletic recovery.",
+    category: "business" as any,
+    durationMinutes: 40,
+    feeDisplay: "Clinical Assessment",
+    iconName: "Briefcase",
+    benefits: [
+      "On-site digital X-ray and ultrasound-guided joint evaluations",
+      "Minimally invasive therapy for knees, shoulders, and hips",
+      "Spine and posture alignment therapy for chronic back pain",
+      "Personalized physical therapy and return-to-sport protocols",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Mobility & Range-of-Motion",
+        description: "Gait analysis and joint biomechanical assessment.",
+      },
+      {
+        step: "2",
+        title: "On-Site Digital X-Ray",
+        description: "Instant high-resolution musculoskeletal radiographic evaluation.",
+      },
+      {
+        step: "3",
+        title: "Surgeon Consultation",
+        description: "Review of structural integrity, cartilage wear, and ligament health.",
+      },
+      {
+        step: "4",
+        title: "Recovery Roadmap",
+        description: "Bracing, rehabilitation exercises, and non-surgical therapy options.",
+      },
+    ],
+    requirements: [
+      "Wear comfortable clothing suitable for joint examination",
+      "Bring prior X-rays or orthopedic diagnostic records",
+    ],
+    faqs: [
+      {
+        question: "Do you offer non-surgical alternatives for joint pain?",
+        answer: "Yes, over 85% of our patients are successfully treated with physical therapy, targeted injections, and lifestyle modification without surgery.",
+      },
+    ],
+  },
+  {
+    id: "srv_internal_05",
+    slug: "internal-medicine",
+    title: "General & Internal Medicine",
+    shortDescription:
+      "Primary care diagnostics, chronic illness management (diabetes, thyroid), and preventative health assessments.",
+    fullDescription:
+      "Our internal medicine clinic serves as your healthcare home. We specialize in diagnosing complex multi-system symptoms, managing chronic illnesses, and providing preventive medical wellness checks.",
+    category: "retirement" as any,
+    durationMinutes: 30,
+    feeDisplay: "Primary Care Visit",
+    iconName: "Receipt",
+    popular: true,
+    benefits: [
+      "Personalized preventive health audits and disease screening",
+      "Comprehensive management of diabetes, hypertension, and thyroid disorders",
+      "Immediate blood work and lab diagnostic interpretations",
+      "Coordinated referrals to hospital sub-specialists when required",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Comprehensive Health History",
+        description: "Review of family risk factors, medications, and lifestyle patterns.",
+      },
+      {
+        step: "2",
+        title: "Full Physical Exam",
+        description: "Examination of vital signs, lungs, abdomen, throat, and skin.",
+      },
+      {
+        step: "3",
+        title: "Diagnostic Lab Testing",
+        description: "On-site blood, urine, or metabolic panel collection.",
+      },
+      {
+        step: "4",
+        title: "Care Management Plan",
+        description: "Clear medication prescriptions, lifestyle goals, and follow-up timeline.",
+      },
+    ],
+    requirements: [
+      "Complete list of all daily prescription medications and supplements",
+      "Details of any previous hospitalizations or surgeries",
+    ],
+    faqs: [
+      {
+        question: "Can I get my prescription refilled during this consultation?",
+        answer: "Yes, our licensed physicians provide digital and physical e-prescriptions valid at all licensed pharmacies.",
+      },
+    ],
+  },
+  {
+    id: "srv_dermatology_06",
+    slug: "dermatology",
+    title: "Dermatology & Skin Health",
+    shortDescription:
+      "Medical dermatology, skin cancer screening, acne & eczema treatment, and clinical dermatological care.",
+    fullDescription:
+      "Our board-certified dermatologists diagnose and treat a complete spectrum of skin, hair, and nail disorders with dermatoscopy, biopsy diagnostics, and tailored therapeutic skin regimens.",
+    category: "insurance" as any,
+    durationMinutes: 30,
+    feeDisplay: "Skin Clinic Visit",
+    iconName: "ShieldAlert",
+    benefits: [
+      "High-precision digital dermatoscope mole and skin cancer screening",
+      "Advanced treatment for severe acne, rosacea, and psoriasis",
+      "Patch testing for chronic contact dermatitis and skin allergies",
+      "In-clinic minor surgical excisions and cryotherapy",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Dermatological Exam",
+        description: "Visual inspection and polarized dermatoscope examination.",
+      },
+      {
+        step: "2",
+        title: "Targeted Skin Assessment",
+        description: "Evaluation of lesions, rashes, pigmentation, or hair follicle health.",
+      },
+      {
+        step: "3",
+        title: "Therapeutic Plan",
+        description: "Topical prescription formulations and procedural options.",
+      },
+      {
+        step: "4",
+        title: "Skin Barrier Care",
+        description: "Maintenance guidelines to prevent recurrence and protect skin barrier.",
+      },
+    ],
+    requirements: [
+      "Avoid wearing heavy makeup or nail polish on areas to be examined",
+      "List of current skincare products and topical creams",
+    ],
+    faqs: [
+      {
+        question: "Can I show skin rashes over telehealth video?",
+        answer: "Yes, for many rashes and follow-up checks, high-definition telehealth photo/video consultations provide accurate initial guidance.",
+      },
+    ],
+  },
+  {
+    id: "srv_checkup_07",
+    slug: "executive-health-check",
+    title: "Comprehensive Health Checkup",
+    shortDescription:
+      "Full-body health diagnostic package including blood panels, organ function, ECG, ultrasound, and physician debrief.",
+    fullDescription:
+      "A complete executive health screening designed to detect silent risk factors before symptoms arise. Includes 40+ biometric markers, cardio-pulmonary screening, and a 1-on-1 physician consultation.",
+    category: "wealth" as any,
+    durationMinutes: 60,
+    feeDisplay: "Full Diagnostic Package",
+    iconName: "Activity",
+    benefits: [
+      "40+ diagnostic biomarkers (CBC, lipid, liver, renal, HbA1c, thyroid)",
+      "Resting ECG, chest radiography, and abdominal ultrasound",
+      "Comprehensive biological risk score and organ health matrix",
+      "1-on-1 60-minute physician debrief with written wellness roadmap",
+    ],
+    process: [
+      {
+        step: "1",
+        title: "Morning Fasting Labs",
+        description: "Blood and urine biomarker sample collection in private executive lounge.",
+      },
+      {
+        step: "2",
+        title: "Diagnostic Imaging & ECG",
+        description: "Rapid cardiovascular and ultrasound scans performed by licensed technicians.",
+      },
+      {
+        step: "3",
+        title: "Doctor Review & Debrief",
+        description: "In-depth review of every lab result with your assigned attending physician.",
+      },
+      {
+        step: "4",
+        title: "Personalized Health Blueprint",
+        description: "Full printed and digital diagnostic report with actionable preventative guidance.",
+      },
+    ],
+    requirements: [
+      "Fasting for 10-12 hours prior to your morning appointment (water is permitted)",
+      "Bring comfortable clothing for physical examination and ECG",
+    ],
+    faqs: [
+      {
+        question: "When are the health checkup results available?",
+        answer: "Routine blood panels are available within 3 hours. Complete imaging reports and the doctor's final executive blueprint are provided the same day.",
       },
     ],
   },
 ]
+
+export const FINANCIAL_SERVICES = CLINICAL_SERVICES

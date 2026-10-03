@@ -1,21 +1,17 @@
-import { AccountService } from "@/features/accounts/services/account.service"
-import { AccountsView } from "@/features/accounts/components/accounts-view"
+import { SpecialistService } from "@/features/specialists/services/specialist.service"
+import { PhysiciansRosterView } from "@/features/admin/components/physicians-roster-view"
 
 export const metadata = {
-  title: "Accounts & Vaults | Aegis Financial",
-  description: "Manage institutional bank accounts, cash reserves, and corporate lines.",
+  title: "Physician Staff & Specialists Roster | MedPulse Admin",
+  description: "Board-certified medical specialists, duty shift statuses, and clinic room allocation.",
 }
 
 export default async function AccountsPage() {
-  const [accounts, totalBalances] = await Promise.all([
-    AccountService.getAll(),
-    AccountService.getTotalBalances(),
-  ])
+  const doctors = await SpecialistService.getAll()
 
   return (
-    <AccountsView
-      initialAccounts={accounts}
-      initialBalances={totalBalances}
-    />
+    <div className="space-y-6">
+      <PhysiciansRosterView doctors={doctors} />
+    </div>
   )
 }

@@ -2,10 +2,10 @@ import * as React from "react"
 
 export function TrustSection() {
   const metrics = [
-    { value: "25K+", label: "Customers" },
-    { value: "98%", label: "Satisfaction" },
-    { value: "15K+", label: "Consultations" },
-    { value: "10+", label: "Years of Experience" },
+    { value: "25K+", label: "Patients Treated" },
+    { value: "99.4%", label: "Clinical Satisfaction" },
+    { value: "40+", label: "Board-Certified MDs" },
+    { value: "15+", label: "Years Hospital Excellence" },
   ]
 
   return (
@@ -16,14 +16,14 @@ export function TrustSection() {
           {/* Editorial Headline */}
           <div className="lg:col-span-5 space-y-3">
             <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
-              Proven Track Record
+              Clinical Excellence & Accreditation
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-snug">
-              Trusted by people <br />
-              who take their financial future seriously.
+              Trusted by patients <br />
+              who demand uncompromised medical care.
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We operate exclusively under strict fiduciary duty. No product quotas, no hidden affiliate commissions—just direct expertise.
+              Every doctor at MedPulse holds board certification and subspecialty fellowship credentials. From acute care to preventive wellness, your health is our sole priority.
             </p>
           </div>
 
