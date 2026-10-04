@@ -7,3 +7,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Project Coding Rules
+
+## TypeScript & Type Safety
+- **Allow `any` Types**: The use of `any` in TypeScript is permitted across the codebase. Do not reject, prohibit, or throw errors/warnings for explicit or implicit `any` types when flexibility or speed is needed.
+- `@typescript-eslint/no-explicit-any` rule is set to `"off"`.

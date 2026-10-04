@@ -1,7 +1,7 @@
 import { LeadSubmission, NewsletterSubmission } from "@/types/lead"
 
 let leadsStore: LeadSubmission[] = []
-let newsletterStore: NewsletterSubmission[] = []
+const newsletterStore: NewsletterSubmission[] = []
 
 export const LeadService = {
   async submitLead(

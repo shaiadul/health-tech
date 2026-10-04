@@ -65,28 +65,29 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined)
 
 const STORAGE_KEY = "medpulse_auth_session"
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [role, setRole] = React.useState<UserRole>("patient")
-  const [user, setUser] = React.useState<AuthUser | null>(DEMO_USERS.patient)
-  const [isInitialized, setIsInitialized] = React.useState(false)
-
-  // Initialize from localStorage safely
-  React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        if (parsed?.role && DEMO_USERS[parsed.role as UserRole]) {
-          setRole(parsed.role)
-          setUser(parsed.user || DEMO_USERS[parsed.role as UserRole])
+function getInitialAuth(): { role: UserRole; user: AuthUser } {
+  if (typeof window === "undefined") {
+    return { role: "patient", user: DEMO_USERS.patient }
+  }
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (parsed?.role && DEMO_USERS[parsed.role as UserRole]) {
+        return {
+          role: parsed.role,
+          user: parsed.user || DEMO_USERS[parsed.role as UserRole],
         }
       }
-    } catch {
-      // Fallback to default demo user
-    } finally {
-      setIsInitialized(true)
     }
-  }, [])
+  } catch {}
+  return { role: "patient", user: DEMO_USERS.patient }
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [authData, setAuthData] = React.useState<{ role: UserRole; user: AuthUser }>(getInitialAuth)
+  const role = authData.role
+  const user = authData.user
 
   const loginAs = React.useCallback(
     (newRole: UserRole, customEmail?: string, customName?: string) => {
@@ -96,8 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: customEmail || base.email,
         name: customName || base.name,
       }
-      setRole(newRole)
-      setUser(updatedUser)
+      setAuthData({ role: newRole, user: updatedUser })
       try {
         localStorage.setItem(
           STORAGE_KEY,
@@ -116,8 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   const logout = React.useCallback(() => {
-    setUser(null)
-    setRole("patient")
+    setAuthData({ role: "patient", user: DEMO_USERS.patient })
     try {
       localStorage.removeItem(STORAGE_KEY)
     } catch {}
