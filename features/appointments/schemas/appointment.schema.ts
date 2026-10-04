@@ -8,6 +8,9 @@ export const customerInfoSchema = z.object({
   contactMethod: z.enum(["video", "phone", "in_person", "email"]),
   reason: z.string().min(3, "Please briefly summarize your consultation objective"),
   additionalNotes: z.string().max(500, "Notes cannot exceed 500 characters").optional(),
+  bookingFor: z.enum(["self", "dependent"]).optional(),
+  insuranceType: z.enum(["commercial", "medicare", "self_pay"]).optional(),
+  preferredLanguage: z.string().optional(),
 })
 
 export type CustomerInfoFormValues = z.infer<typeof customerInfoSchema>

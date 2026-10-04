@@ -72,7 +72,7 @@ export const AppointmentService = {
     const service = FINANCIAL_SERVICES.find((s) => s.id === draft.serviceId) || FINANCIAL_SERVICES[0]
     const specialist = SPECIALISTS.find((sp) => sp.id === draft.specialistId) || SPECIALISTS[0]
 
-    const ref = `FIN-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+    const ref = `MED-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
     const aptId = `apt_${Date.now().toString(36)}`
 
     const dateObj = draft.date ? new Date(draft.date) : new Date()
@@ -97,7 +97,8 @@ export const AppointmentService = {
       durationMinutes: service.durationMinutes,
       consultationType: draft.consultationType || "video",
       status: "confirmed",
-      meetingLink: `https://meet.finora.io/room/${ref.toLowerCase()}?auth=token_${Date.now()}`,
+      meetingLink: `https://telehealth.medpulse.health/room/${ref.toLowerCase()}?auth=token_${Date.now()}`,
+      locationAddress: "MedPulse Hospital Main Campus · 742 Healthcare Ave, Floor 4",
       createdAt: new Date().toISOString(),
       customer: draft.customer || {
         firstName: "Alex",
@@ -105,7 +106,7 @@ export const AppointmentService = {
         email: "alex.mercer@gmail.com",
         phone: "+1 (555) 389-9921",
         contactMethod: draft.consultationType || "video",
-        reason: "Comprehensive portfolio review",
+        reason: "Clinical medical consultation",
       },
     }
 

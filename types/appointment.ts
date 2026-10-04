@@ -29,6 +29,8 @@ export interface CustomerInfo {
   contactMethod: "video" | "phone" | "in_person" | "email"
   reason: string
   additionalNotes?: string
+  bookingFor?: "self" | "dependent"
+  insuranceType?: "commercial" | "medicare" | "self_pay"
 }
 
 export interface Appointment {
