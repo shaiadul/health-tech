@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ServiceService } from "@/features/services/services/service.service"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
+import { PageContainer } from "@/components/layout/page-container"
 import { ArrowRight, ArrowUpRight, Clock, ShieldCheck, Activity } from "lucide-react"
 
 export const metadata = {
@@ -15,8 +16,8 @@ export default async function ServicesPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
-      <main className="flex-1 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 space-y-16">
+      <main className="flex-1">
+        <PageContainer maxWidth="7xl" paddingY="default" className="space-y-16">
           
           {/* Editorial Catalog Header */}
           <div className="max-w-3xl space-y-4 border-b border-border pb-12">
@@ -115,7 +116,7 @@ export default async function ServicesPage() {
             <span>24/7 Hospital Emergency Triage Active On Campus</span>
           </div>
 
-        </div>
+        </PageContainer>
       </main>
       <MarketingFooter />
     </div>

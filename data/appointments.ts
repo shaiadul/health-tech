@@ -16,7 +16,7 @@ export const INITIAL_USER_APPOINTMENTS: Appointment[] = [
     durationMinutes: 45,
     consultationType: "video",
     status: "confirmed",
-    meetingLink: "https://telehealth.medpulse.health/room/cardio-9041?token=clinical_secure",
+    meetingLink: "/consultation/med-2026-9041",
     locationAddress: "Building A, Suite 402 - Heart & Vascular Center",
     createdAt: "2026-10-01T14:20:00Z",
     customer: {

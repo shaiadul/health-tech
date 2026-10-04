@@ -23,6 +23,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { RoleSwitcher } from "@/components/layout/role-switcher"
 
 export function MarketingNavbar() {
   const pathname = usePathname()
@@ -31,6 +32,7 @@ export function MarketingNavbar() {
   const navLinks = [
     { name: "Departments", href: "/services" },
     { name: "Doctors", href: "/specialists" },
+    { name: "Telehealth Room", href: "/consultation" },
     { name: "How It Works", href: "/#how-it-works" },
     { name: "Medical FAQs", href: "/#faq" },
   ]
@@ -55,7 +57,7 @@ export function MarketingNavbar() {
         </Link>
 
         {/* Desktop Navigation (Visible on lg+ screens, 1024px+) */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium tracking-tight text-muted-foreground">
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium tracking-tight text-muted-foreground">
           {navLinks.map((link) => {
             const isActive = pathname === link.href
             return (
@@ -75,13 +77,16 @@ export function MarketingNavbar() {
         {/* Desktop / Tablet Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* Patient Portal link (hidden on small mobile) */}
+          {/* Active Platform Role Switcher */}
+          <RoleSwitcher className="hidden sm:inline-flex" />
+
+          {/* Patient Portal link */}
           <Link
             href="/portal"
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
+            className="hidden xl:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
           >
             <Calendar className="h-3.5 w-3.5 text-primary" />
-            <span>Patient Portal</span>
+            <span>Portal</span>
           </Link>
 
           {/* High-Conversion Booking Button (Always visible on mobile & desktop) */}

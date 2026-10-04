@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants"
+import { AuthProvider } from "@/lib/auth-context"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: `%s | ${APP_NAME}`,
-    default: `${APP_NAME} — Enterprise Treasury & Financial Platform`,
+    default: `${APP_NAME} — Hospital, Doctor Consultations & Healthcare Clinic`,
   },
   description: APP_DESCRIPTION,
 }
@@ -32,7 +33,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )

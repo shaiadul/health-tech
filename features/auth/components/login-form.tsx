@@ -3,179 +3,234 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useAuth, UserRole, DEMO_USERS } from "@/lib/auth-context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { loginSchema, LoginFormValues } from "../schemas/auth.schema"
-import { APP_NAME } from "@/lib/constants"
-import { ShieldCheck, Eye, EyeOff, Loader2, KeyRound } from "lucide-react"
+  ShieldCheck,
+  User,
+  Stethoscope,
+  Building2,
+  Lock,
+  ArrowRight,
+  CheckCircle2,
+  Activity,
+  KeyRound,
+  Eye,
+  EyeOff,
+  Loader2,
+} from "lucide-react"
 
 export function LoginForm() {
   const router = useRouter()
+  const { loginAs } = useAuth()
+
+  const [activeTab, setActiveTab] = React.useState<UserRole>("patient")
+  const [email, setEmail] = React.useState(DEMO_USERS.patient.email)
+  const [password, setPassword] = React.useState("MedPulsePatient2026!")
   const [showPassword, setShowPassword] = React.useState(false)
-  const [authError, setAuthError] = React.useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "a.vance@vanguard-cap.io",
-      password: "EnterpriseMaster2026!",
-      rememberMe: true,
-    },
-  })
+  // When tab changes, update demo credentials
+  const handleTabChange = (role: UserRole) => {
+    setActiveTab(role)
+    const demo = DEMO_USERS[role]
+    setEmail(demo.email)
+    if (role === "patient") setPassword("MedPulsePatient2026!")
+    if (role === "doctor") setPassword("DoctorClinicalMD2026!")
+    if (role === "organizer") setPassword("HospitalAdminOps2026!")
+  }
 
-  const onSubmit = async (values: LoginFormValues) => {
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
     setIsSubmitting(true)
-    setAuthError(null)
 
-    // Simulate authentication delay
-    await new Promise((r) => setTimeout(r, 600))
+    // Simulate clinical auth check
+    await new Promise((r) => setTimeout(r, 450))
 
-    if (!values.email.includes("@")) {
-      setAuthError("Invalid credentials. Please verify your institutional email.")
-      setIsSubmitting(false)
-      return
+    loginAs(activeTab, email)
+
+    if (activeTab === "organizer") {
+      router.push("/dashboard")
+    } else if (activeTab === "doctor") {
+      router.push("/portal?role=doctor")
+    } else {
+      router.push("/portal")
     }
-
-    // Direct to dashboard
-    router.push("/dashboard")
   }
 
-  const handleFillDemo = () => {
-    form.setValue("email", "a.vance@vanguard-cap.io")
-    form.setValue("password", "EnterpriseMaster2026!")
+  const roleMeta = {
+    patient: {
+      title: "Patient Care Portal",
+      desc: "View upcoming appointments, enter video consult rooms, and check prescriptions.",
+      icon: User,
+      color: "text-emerald-500",
+      target: "/portal",
+    },
+    doctor: {
+      title: "Physician Workstation",
+      desc: "Manage patient queues, launch telehealth video visits, and write clinical notes.",
+      icon: Stethoscope,
+      color: "text-primary",
+      target: "/portal?role=doctor",
+    },
+    organizer: {
+      title: "Clinic Organizer & Admin",
+      desc: "Hospital operations command, physician roster, triage queue & admissions.",
+      icon: Building2,
+      color: "text-amber-500",
+      target: "/dashboard",
+    },
   }
+
+  const currentMeta = roleMeta[activeTab]
 
   return (
-    <Card className="w-full max-w-[420px] border border-border shadow-lg bg-card">
-      <CardHeader className="space-y-1 text-center pb-4">
-        <div className="mx-auto h-12 w-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold mb-2 shadow-xs">
-          <ShieldCheck className="h-6 w-6" />
-        </div>
-        <CardTitle className="text-xl font-bold tracking-tight">
-          Sign In to {APP_NAME}
+    <Card className="w-full max-w-lg border border-border shadow-2xl bg-card rounded-3xl overflow-hidden">
+      {/* Brand Header */}
+      <CardHeader className="text-center pb-4 pt-6 sm:pt-8 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent border-b border-border">
+        <Link href="/" className="inline-flex items-center gap-2 mx-auto mb-2 group">
+          <div className="h-10 w-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center font-bold shadow-xs">
+            <Activity className="h-6 w-6" />
+          </div>
+          <span className="text-xl font-bold tracking-tight text-foreground">
+            MedPulse Health
+          </span>
+        </Link>
+        <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+          Sign In by Platform Role
         </CardTitle>
-        <CardDescription className="text-xs">
-          Enter your institutional credentials to access treasury terminal
+        <CardDescription className="text-xs text-muted-foreground max-w-sm mx-auto">
+          Select your portal role to authenticate into MedPulse clinical services.
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
-        {authError && (
-          <Alert variant="destructive" className="mb-4 text-xs">
-            <AlertTitle>Authentication Failed</AlertTitle>
-            <AlertDescription>{authError}</AlertDescription>
-          </Alert>
-        )}
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs">Work Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="name@company.com"
-                      className="h-9 text-xs"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel className="text-xs">Password</FormLabel>
-                    <Link
-                      href="/forgot-password"
-                      className="text-[11px] text-primary hover:underline font-medium"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        className="h-9 text-xs pr-9"
-                        {...field}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full text-xs h-9 bg-primary text-primary-foreground font-medium shadow-xs"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Verifying Session...
-                </>
-              ) : (
-                "Authenticate Terminal"
-              )}
-            </Button>
-          </form>
-        </Form>
-
-        {/* Quick Demo Fill button */}
-        <div className="mt-4 pt-4 border-t border-border/60 text-center">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleFillDemo}
-            className="w-full text-xs h-8 border-dashed text-muted-foreground hover:text-foreground"
-          >
-            <KeyRound className="h-3 w-3 mr-1.5" />
-            <span>Fill Demo Credentials (Alexandra Vance)</span>
-          </Button>
+      <CardContent className="p-6 space-y-6">
+        {/* Role Selector Tabs */}
+        <div className="grid grid-cols-3 gap-2 p-1.5 rounded-2xl bg-muted/40 border border-border">
+          {[
+            { id: "patient", label: "Patient", icon: User },
+            { id: "doctor", label: "Physician", icon: Stethoscope },
+            { id: "organizer", label: "Organizer", icon: Building2 },
+          ].map((tab) => {
+            const Icon = tab.icon
+            const isSelected = activeTab === tab.id
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleTabChange(tab.id as UserRole)}
+                className={`py-2.5 px-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-card text-foreground shadow-sm border border-border font-bold scale-101"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon className={`h-4 w-4 ${isSelected ? "text-primary" : ""}`} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
+
+        {/* Selected Role Info Card */}
+        <div className="p-4 rounded-2xl bg-muted/20 border border-border/80 flex items-start gap-3.5">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <currentMeta.icon className="h-5 w-5" />
+          </div>
+          <div className="space-y-0.5 min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-bold text-sm text-foreground">
+                {currentMeta.title}
+              </h3>
+              <Badge variant="outline" className="text-[10px] font-mono capitalize border-primary/30 text-primary">
+                {activeTab}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {currentMeta.desc}
+            </p>
+          </div>
+        </div>
+
+        {/* Credentials Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono uppercase text-muted-foreground font-semibold">
+              {activeTab === "patient" ? "Patient Email" : "Institutional Staff ID / Email"}
+            </label>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-11 rounded-xl bg-card border-border shadow-xs text-xs font-mono"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-mono uppercase text-muted-foreground font-semibold">
+                Password
+              </label>
+              <span className="text-[11px] text-muted-foreground">Demo protected</span>
+            </div>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11 rounded-xl bg-card border-border shadow-xs text-xs pr-10 font-mono"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Primary Submit Button */}
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full h-11 text-xs font-semibold rounded-xl gap-2 shadow-md"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" /> Authenticating Session…
+              </>
+            ) : (
+              <>
+                <span>Sign In to {currentMeta.title}</span>
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </Button>
+
+          {/* 1-Click Instant Demo Login shortcut */}
+          <button
+            type="button"
+            onClick={() => handleLogin()}
+            className="w-full py-2.5 px-4 rounded-xl border border-dashed border-border text-xs font-mono text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <KeyRound className="h-3.5 w-3.5 text-primary" />
+            <span>1-Click Instant Demo Login as {DEMO_USERS[activeTab].name}</span>
+          </button>
+        </form>
       </CardContent>
 
-      <CardFooter className="pt-0 text-center justify-center">
-        <p className="text-[11px] text-muted-foreground">
-          Protected by AES-256 Bit Hardware Security Module.
-        </p>
+      <CardFooter className="py-4 border-t border-border bg-muted/10 text-center justify-center flex-col gap-1 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-1.5 font-mono text-emerald-600">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          <span>HIPAA & SOC-2 Type II Certified Healthcare Portal</span>
+        </div>
+        <p>Zero unencrypted personal health data stored on client devices.</p>
       </CardFooter>
     </Card>
   )

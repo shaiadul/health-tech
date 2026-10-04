@@ -3,6 +3,7 @@ import { SpecialistService } from "@/features/specialists/services/specialist.se
 import { SpecialistDirectory } from "@/features/specialists/components/specialist-directory"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
+import { PageContainer } from "@/components/layout/page-container"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Star, ShieldCheck, Clock, Award, Users } from "lucide-react"
 
@@ -55,8 +56,8 @@ export default async function SpecialistsPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
 
-      <main className="flex-1 py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <main className="flex-1">
+        <PageContainer maxWidth="7xl" paddingY="default" className="space-y-12">
           {/* Header Section */}
           <div className="space-y-6 border-b border-border pb-10">
             <div className="flex items-center gap-2">
@@ -125,7 +126,7 @@ export default async function SpecialistsPage() {
               specialties={specialties}
             />
           </React.Suspense>
-        </div>
+        </PageContainer>
       </main>
 
       <MarketingFooter />

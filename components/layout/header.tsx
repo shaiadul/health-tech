@@ -26,6 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { RoleSwitcher } from "@/components/layout/role-switcher"
 import { MobileNav } from "./mobile-nav"
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
@@ -121,16 +122,7 @@ export function Header({
               </Link>
             </Button>
 
-            <Button
-              asChild
-              size="sm"
-              className="text-xs h-9 gap-1.5 bg-primary text-primary-foreground font-medium shadow-xs"
-            >
-              <Link href="/book">
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span>New Booking</span>
-              </Link>
-            </Button>
+            <RoleSwitcher />
           </div>
 
           {/* Clinical Notifications Dropdown */}

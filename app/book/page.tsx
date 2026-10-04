@@ -6,6 +6,7 @@ import { AppointmentService } from "@/features/appointments/services/appointment
 import { BookingFlow } from "@/features/appointments/components/booking-flow"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
+import { PageContainer } from "@/components/layout/page-container"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ShieldCheck, Clock, Award, ChevronRight, Stethoscope } from "lucide-react"
 
@@ -57,8 +58,8 @@ export default async function BookAppointmentPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
 
-      <main className="flex-1 py-8 md:py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <main className="flex-1">
+        <PageContainer maxWidth="6xl" paddingY="compact" className="space-y-6">
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -96,7 +97,7 @@ export default async function BookAppointmentPage() {
               initialDates={initialDates}
             />
           </React.Suspense>
-        </div>
+        </PageContainer>
       </main>
 
       <MarketingFooter />

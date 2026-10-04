@@ -4,6 +4,7 @@ import { ServiceService } from "@/features/services/services/service.service"
 import { SpecialistService } from "@/features/specialists/services/specialist.service"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
+import { PageContainer } from "@/components/layout/page-container"
 import { Button } from "@/components/ui/button"
 import {
   Accordion,
@@ -53,9 +54,8 @@ export default async function ServiceDetailPage({
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
 
-      <main className="flex-1 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 space-y-20">
-          
+      <main className="flex-1">
+        <PageContainer maxWidth="7xl" paddingY="default" className="space-y-16">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
             <Link href="/" className="hover:text-foreground">Home</Link>
@@ -284,7 +284,7 @@ export default async function ServiceDetailPage({
             </section>
           )}
 
-        </div>
+        </PageContainer>
       </main>
 
       <MarketingFooter />

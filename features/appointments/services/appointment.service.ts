@@ -97,7 +97,7 @@ export const AppointmentService = {
       durationMinutes: service.durationMinutes,
       consultationType: draft.consultationType || "video",
       status: "confirmed",
-      meetingLink: `https://telehealth.medpulse.health/room/${ref.toLowerCase()}?auth=token_${Date.now()}`,
+      meetingLink: `/consultation/${ref.toLowerCase()}`,
       locationAddress: "MedPulse Hospital Main Campus · 742 Healthcare Ave, Floor 4",
       createdAt: new Date().toISOString(),
       customer: draft.customer || {
