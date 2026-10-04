@@ -8,7 +8,6 @@ import {
   ArrowUpRight,
   Calendar,
   Activity,
-  UserCheck,
   PhoneCall,
   ChevronRight,
   Stethoscope,
@@ -23,10 +22,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { RoleSwitcher } from "@/components/layout/role-switcher"
+import { useAuth } from "@/lib/auth-context"
 
 export function MarketingNavbar() {
   const pathname = usePathname()
+  const { isAuthenticated, user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
   const navLinks = [
@@ -76,14 +76,10 @@ export function MarketingNavbar() {
 
         {/* Desktop / Tablet Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          
-          {/* Active Platform Role Switcher */}
-          <RoleSwitcher className="hidden sm:inline-flex" />
-
           {/* Patient Portal link */}
           <Link
             href="/portal"
-            className="hidden xl:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
+            className="hidden md:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
           >
             <Calendar className="h-3.5 w-3.5 text-primary" />
             <span>Portal</span>
@@ -152,9 +148,22 @@ export function MarketingNavbar() {
                   >
                     <Link href="/portal" className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>Patient Portal & Past Visits</span>
+                      <span>Clinical Portal</span>
                     </Link>
                   </Button>
+
+                  {isAuthenticated && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout()
+                        setMobileOpen(false)
+                      }}
+                      className="w-full flex items-center justify-center gap-2 p-2.5 rounded-none text-xs font-semibold text-rose-500 hover:bg-rose-500/10 border border-border transition-colors cursor-pointer"
+                    >
+                      <span>Sign Out ({user?.name?.split(" ")[0]})</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Navigation Links */}

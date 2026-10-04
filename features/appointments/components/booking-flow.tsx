@@ -26,6 +26,7 @@ import { AppointmentService } from "../services/appointment.service"
 import { FinancialService } from "@/types/service"
 import { Specialist, ConsultationType } from "@/types/specialist"
 import { DayAvailability, Appointment } from "@/types/appointment"
+import { useAuth } from "@/lib/auth-context"
 import {
   ArrowLeft,
   ArrowRight,
@@ -136,6 +137,7 @@ export function BookingFlow({
   initialDates,
 }: BookingFlowProps) {
   const searchParams = useSearchParams()
+  const { isAuthenticated, user, loginAs } = useAuth()
 
   const specialistParam = searchParams.get("specialist")
   const serviceParam = searchParams.get("service")
@@ -370,7 +372,7 @@ END:VCALENDAR`
   /* ───────────────────────── Confirmation Screen ───────────────────────── */
   if (step === "confirmed" && confirmed) {
     return (
-      <div className="max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -561,6 +563,74 @@ END:VCALENDAR`
             </div>
           </div>
 
+          {/* Post-Booking Authentication Requirement */}
+          {!isAuthenticated ? (
+            <div className="p-6 rounded-3xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-card to-card space-y-4 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <div className="h-10 w-10 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 font-bold shadow-xs">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="border-primary/40 text-primary text-[10px] font-mono">
+                        Action Required
+                      </Badge>
+                      <span className="text-xs font-mono text-muted-foreground">
+                        Customer Portal Security
+                      </span>
+                    </div>
+                    <h4 className="text-base font-bold text-foreground">
+                      Sign In to Activate Your Patient Portal
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
+                      Your appointment has been reserved! To access your live digital boarding pass, receive appointment updates, and enter the telehealth room, please sign in.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <Button
+                    onClick={() => {
+                      loginAs(
+                        "patient",
+                        confirmed.customer.email,
+                        `${confirmed.customer.firstName} ${confirmed.customer.lastName}`
+                      )
+                    }}
+                    className="h-11 px-5 text-xs font-semibold rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shadow-sm"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>Log In as {confirmed.customer.firstName}</span>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-11 px-4 text-xs font-semibold rounded-xl border-border gap-2"
+                  >
+                    <Link href={`/login?redirect=/portal`}>
+                      <User className="h-4 w-4" />
+                      <span>Existing Account</span>
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                <span>
+                  Signed in as <strong className="font-semibold">{user?.name}</strong>. This appointment is synced to your Customer Care Portal.
+                </span>
+              </div>
+              <Button asChild size="sm" className="h-8 text-xs rounded-xl shrink-0">
+                <Link href="/portal">Go to Portal</Link>
+              </Button>
+            </div>
+          )}
+
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
             <a
@@ -604,7 +674,7 @@ END:VCALENDAR`
 
   /* ───────────────────────── Interactive Wizard ───────────────────────── */
   return (
-    <div className="max-w-6xl mx-auto py-4 sm:py-6 space-y-8">
+    <div className="space-y-8">
       {/* Pre-selected Doctor Alert (if arriving from doctor directory) */}
       {initial.doctor && step === 3 && (
         <motion.div

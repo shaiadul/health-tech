@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   ])
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="space-y-6">
       <ClinicAdminView
         initialAppointments={[...upcoming, ...past]}
         doctors={doctors}

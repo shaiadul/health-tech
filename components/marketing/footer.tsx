@@ -36,7 +36,7 @@ export function MarketingFooter() {
     <footer className="border-t border-border bg-background text-foreground">
       {/* Large Spacious CTA Header */}
       <div className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 md:py-28 flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 flex flex-col lg:flex-row lg:items-end justify-between gap-10">
           <div className="space-y-4 max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-widest text-primary font-semibold">
               Prioritize Your Health Today
@@ -60,7 +60,7 @@ export function MarketingFooter() {
       </div>
 
       {/* Directory Links */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-12">
           
           {/* Brand Intro */}

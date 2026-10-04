@@ -55,7 +55,7 @@ export function LoginForm() {
     if (activeTab === "organizer") {
       router.push("/dashboard")
     } else if (activeTab === "doctor") {
-      router.push("/portal?role=doctor")
+      router.push("/consultation")
     } else {
       router.push("/portal")
     }
@@ -74,7 +74,7 @@ export function LoginForm() {
       desc: "Manage patient queues, launch telehealth video visits, and write clinical notes.",
       icon: Stethoscope,
       color: "text-primary",
-      target: "/portal?role=doctor",
+      target: "/consultation",
     },
     organizer: {
       title: "Clinic Organizer & Admin",
@@ -100,10 +100,10 @@ export function LoginForm() {
           </span>
         </Link>
         <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
-          Sign In by Platform Role
+          Sign In to MedPulse
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground max-w-sm mx-auto">
-          Select your portal role to authenticate into MedPulse clinical services.
+          Choose your account type and sign in to access clinical services.
         </CardDescription>
       </CardHeader>
 
