@@ -29,7 +29,7 @@ export default async function CustomerPortalPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
       <main className="flex-1">
-        <PageContainer maxWidth="6xl" paddingY="compact">
+        <PageContainer maxWidth="7xl" paddingY="compact">
           <React.Suspense fallback={<PortalSkeleton />}>
             <PortalView initialUpcoming={upcoming} initialPast={past} />
           </React.Suspense>

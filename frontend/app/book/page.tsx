@@ -18,7 +18,7 @@ export const metadata = {
 
 function BookingSkeleton() {
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-pulse">
+    <div className="w-full space-y-8 animate-pulse">
       <div className="space-y-3">
         <Skeleton className="h-9 w-64" />
         <Skeleton className="h-4 w-96" />
@@ -59,7 +59,7 @@ export default async function BookAppointmentPage() {
       <MarketingNavbar />
 
       <main className="flex-1">
-        <PageContainer maxWidth="6xl" paddingY="compact" className="space-y-6">
+        <PageContainer maxWidth="7xl" paddingY="compact" className="space-y-6">
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
             <Link href="/" className="hover:text-foreground transition-colors">

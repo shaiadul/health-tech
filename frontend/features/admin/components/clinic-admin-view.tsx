@@ -150,7 +150,7 @@ export function ClinicAdminView({
   const cancelledCount = appointments.filter((a) => a.status === "cancelled").length
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto py-8">
+    <div className="space-y-8">
       
       {/* Admin Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8">
