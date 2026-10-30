@@ -3,14 +3,10 @@
 import * as React from "react"
 import {
   Activity,
-  Calendar,
   Users,
   Clock,
-  CheckCircle2,
   TrendingUp,
   Video,
-  Building,
-  HeartPulse,
   Star,
 } from "lucide-react"
 

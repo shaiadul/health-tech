@@ -9,15 +9,7 @@ import {
   Search,
   Activity,
   CheckCircle2,
-  Clock,
-  AlertTriangle,
-  Receipt,
-  Building,
-  UserCheck,
   PlusCircle,
-  FileText,
-  DollarSign,
-  ArrowUpRight,
 } from "lucide-react"
 
 interface PatientAdmission {
@@ -246,35 +238,26 @@ export function PatientAdmissionsView() {
         </div>
       </div>
 
-      {/* Admissions Table */}
-      <div className="border border-border overflow-x-auto bg-background">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-muted/30 border-b border-border text-[11px] font-mono uppercase text-muted-foreground">
-            <tr>
-              <th className="p-3.5 pl-4">Patient & MRN</th>
-              <th className="p-3.5">Department & Doctor</th>
-              <th className="p-3.5">Urgency</th>
-              <th className="p-3.5">Insurance / Billing</th>
-              <th className="p-3.5">Time & Room</th>
-              <th className="p-3.5 pr-4 text-right">Fee Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {filtered.map((adm) => (
-              <tr key={adm.id} className="hover:bg-muted/10 transition-colors">
-                <td className="p-3.5 pl-4">
-                  <div className="font-bold text-foreground">{adm.patientName}</div>
-                  <div className="text-[11px] font-mono text-muted-foreground">
-                    {adm.mrn} · {adm.age}yo ({adm.gender})
+      {/* Admissions Table (Desktop) & Card List (Mobile) */}
+      <div className="border border-border bg-background">
+        {/* Mobile View: High-density touch cards */}
+        <div className="md:hidden divide-y divide-border">
+          {filtered.length === 0 ? (
+            <div className="p-6 text-center text-xs text-muted-foreground">
+              No admissions matching criteria.
+            </div>
+          ) : (
+            filtered.map((adm) => (
+              <div key={adm.id} className="p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="font-bold text-sm text-foreground block">
+                      {adm.patientName}
+                    </span>
+                    <span className="text-[11px] font-mono text-muted-foreground">
+                      {adm.mrn} · {adm.age}yo ({adm.gender})
+                    </span>
                   </div>
-                </td>
-
-                <td className="p-3.5">
-                  <div className="font-medium text-foreground">{adm.department}</div>
-                  <div className="text-[11px] text-muted-foreground">{adm.doctor}</div>
-                </td>
-
-                <td className="p-3.5">
                   <Badge
                     variant="outline"
                     className={`text-[10px] font-mono uppercase ${
@@ -285,39 +268,119 @@ export function PatientAdmissionsView() {
                   >
                     {adm.urgency}
                   </Badge>
-                </td>
+                </div>
 
-                <td className="p-3.5">
-                  <div className="font-medium text-foreground">{adm.insurance}</div>
-                  <div className="text-[11px] font-mono text-primary font-semibold">
-                    ${adm.fee}.00 Standard
+                <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-border/50">
+                  <div>
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase block">Clinical Dept</span>
+                    <span className="font-medium text-foreground">{adm.department}</span>
+                    <span className="text-[11px] text-muted-foreground block truncate">{adm.doctor}</span>
                   </div>
-                </td>
+                  <div>
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase block">Admission / Room</span>
+                    <span className="font-mono text-foreground font-semibold">{adm.admissionTime}</span>
+                    <span className="text-[11px] text-muted-foreground block">{adm.room}</span>
+                  </div>
+                </div>
 
-                <td className="p-3.5">
-                  <div className="font-mono text-foreground font-semibold">{adm.admissionTime}</div>
-                  <div className="text-[11px] text-muted-foreground">{adm.room}</div>
-                </td>
+                <div className="flex items-center justify-between pt-2 border-t border-border/60">
+                  <div>
+                    <span className="text-[11px] text-muted-foreground block">{adm.insurance}</span>
+                    <span className="text-xs font-mono font-bold text-foreground">${adm.fee}.00</span>
+                  </div>
 
-                <td className="p-3.5 pr-4 text-right">
                   <button
                     type="button"
                     onClick={() => togglePayment(adm.id)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded border transition-colors ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded border transition-colors cursor-pointer ${
                       adm.paymentStatus === "Verified" || adm.paymentStatus === "Self-Pay Settled"
                         ? "border-emerald-500/40 text-emerald-600 bg-emerald-500/10"
                         : "border-amber-500/40 text-amber-600 bg-amber-500/10 hover:bg-emerald-500/20"
                     }`}
                     title="Click to resolve co-pay"
                   >
-                    <CheckCircle2 className="h-3 w-3" />
+                    <CheckCircle2 className="h-3.5 w-3.5" />
                     <span>{adm.paymentStatus}</span>
                   </button>
-                </td>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop View: Full Data Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-muted/30 border-b border-border text-[11px] font-mono uppercase text-muted-foreground">
+              <tr>
+                <th className="p-3.5 pl-4">Patient & MRN</th>
+                <th className="p-3.5">Department & Doctor</th>
+                <th className="p-3.5">Urgency</th>
+                <th className="p-3.5">Insurance / Billing</th>
+                <th className="p-3.5">Time & Room</th>
+                <th className="p-3.5 pr-4 text-right">Fee Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {filtered.map((adm) => (
+                <tr key={adm.id} className="hover:bg-muted/10 transition-colors">
+                  <td className="p-3.5 pl-4">
+                    <div className="font-bold text-foreground">{adm.patientName}</div>
+                    <div className="text-[11px] font-mono text-muted-foreground">
+                      {adm.mrn} · {adm.age}yo ({adm.gender})
+                    </div>
+                  </td>
+
+                  <td className="p-3.5">
+                    <div className="font-medium text-foreground">{adm.department}</div>
+                    <div className="text-[11px] text-muted-foreground">{adm.doctor}</div>
+                  </td>
+
+                  <td className="p-3.5">
+                    <Badge
+                      variant="outline"
+                      className={`text-[10px] font-mono uppercase ${
+                        adm.urgency === "Urgent"
+                          ? "border-amber-500/40 text-amber-600 bg-amber-500/10"
+                          : "border-border text-muted-foreground"
+                      }`}
+                    >
+                      {adm.urgency}
+                    </Badge>
+                  </td>
+
+                  <td className="p-3.5">
+                    <div className="font-medium text-foreground">{adm.insurance}</div>
+                    <div className="text-[11px] font-mono text-primary font-semibold">
+                      ${adm.fee}.00 Standard
+                    </div>
+                  </td>
+
+                  <td className="p-3.5">
+                    <div className="font-mono text-foreground font-semibold">{adm.admissionTime}</div>
+                    <div className="text-[11px] text-muted-foreground">{adm.room}</div>
+                  </td>
+
+                  <td className="p-3.5 pr-4 text-right">
+                    <button
+                      type="button"
+                      onClick={() => togglePayment(adm.id)}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded border transition-colors cursor-pointer ${
+                        adm.paymentStatus === "Verified" || adm.paymentStatus === "Self-Pay Settled"
+                          ? "border-emerald-500/40 text-emerald-600 bg-emerald-500/10"
+                          : "border-amber-500/40 text-amber-600 bg-amber-500/10 hover:bg-emerald-500/20"
+                      }`}
+                      title="Click to resolve co-pay"
+                    >
+                      <CheckCircle2 className="h-3 w-3" />
+                      <span>{adm.paymentStatus}</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

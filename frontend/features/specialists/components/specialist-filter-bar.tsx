@@ -1,10 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { SpecialistFilter, ConsultationType } from "@/types/specialist"
+import { SpecialistFilter } from "@/types/specialist"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import {
   Select,
   SelectContent,
@@ -19,7 +18,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet"
 import {
@@ -32,8 +30,6 @@ import {
   Building2,
   Phone,
   RotateCcw,
-  Star,
-  Calendar,
   CheckCircle2,
 } from "lucide-react"
 

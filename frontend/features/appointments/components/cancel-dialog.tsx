@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Appointment } from "@/types/appointment"
 import { AppointmentService } from "../services/appointment.service"
-import { AlertCircle, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 
 interface CancelDialogProps {
   appointment: Appointment | null

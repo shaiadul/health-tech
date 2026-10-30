@@ -45,7 +45,6 @@ import {
   ExternalLink,
   FileText,
   Heart,
-  Home,
   Info,
   Loader2,
   Lock,
@@ -198,7 +197,6 @@ export function BookingFlow({
   const [copiedRef, setCopiedRef] = React.useState(false)
 
   // Step 1 Category Filter & Search
-  const [departmentCategory, setDepartmentCategory] = React.useState<string>("all")
   const [departmentSearch, setDepartmentSearch] = React.useState("")
 
   // Step 2 Doctor Filter & Search
@@ -786,7 +784,7 @@ END:VCALENDAR`
       </div>
 
       {/* Main Grid: Wizard Steps (Col 8) + Live Summary (Col 4) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pb-20 lg:pb-0">
         {/* Step Content */}
         <div className="lg:col-span-8 min-w-0">
           <AnimatePresence mode="wait">
@@ -1621,6 +1619,74 @@ END:VCALENDAR`
           </div>
         </aside>
       </div>
+
+      {/* Mobile-Only Sticky Floating Action Bar (Responsive UX for Steps 3 & 4) */}
+      {(step === 3 || step === 4) && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-t border-border p-3.5 shadow-2xl lg:hidden flex items-center justify-between gap-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+          <div className="min-w-0 flex-1">
+            {step === 3 ? (
+              <div>
+                <span className="text-[10px] font-mono uppercase text-muted-foreground block">
+                  {selectedDate && selectedTime ? "Selected Opening" : "Consultation Slot"}
+                </span>
+                <p className="text-xs font-bold text-foreground truncate">
+                  {selectedTime ? `${selectedTime} · ${formatDay(selectedDate)}` : "Pick a time slot above"}
+                </p>
+                <span className="text-[10px] text-emerald-600 font-mono font-semibold block">
+                  $0 Due Today · Pre-authorized
+                </span>
+              </div>
+            ) : (
+              <div>
+                <span className="text-[10px] font-mono uppercase text-muted-foreground block">
+                  Consultation Reservation
+                </span>
+                <p className="text-xs font-bold text-foreground truncate">
+                  {doctor.name} · {service.title}
+                </p>
+                <span className="text-[10px] text-emerald-600 font-mono font-semibold block">
+                  $0 Due Today · Free Reservation
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="shrink-0">
+            {step === 3 && (
+              <Button
+                type="button"
+                disabled={!canContinue}
+                onClick={() => goTo(4)}
+                className="h-10 px-5 text-xs font-semibold rounded-xl shadow-xs gap-1.5 cursor-pointer"
+              >
+                <span>Continue</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            )}
+
+            {step === 4 && (
+              <Button
+                type="submit"
+                form="booking-form"
+                disabled={isSubmitting}
+                className="h-10 px-5 text-xs font-semibold rounded-xl shadow-md gap-1.5 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Securing…</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Confirm</span>
+                    <Check className="h-3.5 w-3.5" />
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

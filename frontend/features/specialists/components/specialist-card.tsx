@@ -5,7 +5,6 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Specialist } from "@/types/specialist"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import {
   Star,
   Clock,
@@ -13,9 +12,7 @@ import {
   Phone,
   Building2,
   ArrowRight,
-  UserCheck,
   Eye,
-  CheckCircle2,
 } from "lucide-react"
 
 interface SpecialistCardProps {

@@ -1,4 +1,4 @@
-import { Appointment, DayAvailability, TimeSlot } from "@/types/appointment"
+import { Appointment } from "@/types/appointment"
 
 export const INITIAL_USER_APPOINTMENTS: Appointment[] = [
   {

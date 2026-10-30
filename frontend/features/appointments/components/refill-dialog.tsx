@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Pill, CheckCircle2, Building, ShieldCheck, Clock, AlertCircle } from "lucide-react"
+import { Pill, CheckCircle2, Building, ShieldCheck, Clock } from "lucide-react"
 
 export interface MedicationItem {
   id: string

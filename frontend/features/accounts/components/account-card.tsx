@@ -7,7 +7,6 @@ import { formatCurrency, maskAccountNumber } from "@/lib/formatters"
 import {
   CreditCard,
   Landmark,
-  ShieldCheck,
   TrendingUp,
   ArrowUpRight,
   Info,
@@ -25,7 +24,6 @@ export function AccountCard({
   onTransfer,
 }: AccountCardProps) {
   const isCredit = account.accountType === "credit"
-  const isSavings = account.accountType === "savings"
 
   // Card theme styling
   const themeClasses: Record<string, string> = {

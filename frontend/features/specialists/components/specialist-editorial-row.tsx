@@ -8,9 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
   Star,
   ArrowRight,
-  Video,
-  Phone,
-  Building2,
   Eye,
   Clock,
 } from "lucide-react"

@@ -21,7 +21,6 @@ import {
   Check,
   Download,
   ShieldCheck,
-  FileText,
 } from "lucide-react"
 
 interface TransactionDetailDialogProps {

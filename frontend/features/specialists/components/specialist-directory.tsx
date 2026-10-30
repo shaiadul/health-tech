@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useSearchParams, usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { Specialist, SpecialistFilter } from "@/types/specialist"
 import { SpecialistFilterBar } from "./specialist-filter-bar"
@@ -12,11 +12,9 @@ import { Button } from "@/components/ui/button"
 import {
   SearchX,
   RotateCcw,
-  Sparkles,
   ShieldCheck,
   Award,
   Clock,
-  CheckCircle,
 } from "lucide-react"
 
 interface SpecialistDirectoryProps {
@@ -28,7 +26,6 @@ export function SpecialistDirectory({
   initialSpecialists,
   specialties,
 }: SpecialistDirectoryProps) {
-  const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
