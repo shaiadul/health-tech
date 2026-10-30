@@ -13,7 +13,6 @@ import { PortalAuthGate } from "@/features/auth/components/portal-auth-gate"
 import { Appointment } from "@/types/appointment"
 import {
   Calendar,
-  Clock,
   Video,
   PlusCircle,
   ArrowRight,
@@ -73,7 +72,7 @@ export function PortalView({
 
   const [upcoming, setUpcoming] = React.useState<Appointment[]>(initialUpcoming)
   const [past, setPast] = React.useState<Appointment[]>(initialPast)
-  const [medications, setMedications] = React.useState<MedicationItem[]>(INITIAL_MEDICATIONS)
+  const [medications] = React.useState<MedicationItem[]>(INITIAL_MEDICATIONS)
 
   const [activeRescheduleApt, setActiveRescheduleApt] = React.useState<Appointment | null>(null)
   const [activeCancelApt, setActiveCancelApt] = React.useState<Appointment | null>(null)
@@ -264,11 +263,11 @@ export function PortalView({
               </div>
 
               {/* Direct Action Strip */}
-              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-4 border-t border-border">
                 {nextAppointment.consultationType === "video" && (
                   <Button
                     asChild
-                    className="h-11 px-6 rounded-xl font-semibold gap-2 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="h-11 px-6 rounded-xl font-semibold gap-2 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
                   >
                     <Link href={nextAppointment.meetingLink || `/consultation/${nextAppointment.referenceNumber.toLowerCase()}`}>
                       <Video className="h-4 w-4" />
@@ -278,25 +277,27 @@ export function PortalView({
                   </Button>
                 )}
 
-                <Button
-                  variant="outline"
-                  onClick={() => setActiveRescheduleApt(nextAppointment)}
-                  className="h-11 px-4 text-xs font-semibold rounded-xl gap-2"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Reschedule</span>
-                </Button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveRescheduleApt(nextAppointment)}
+                    className="h-11 px-4 text-xs font-semibold rounded-xl gap-2 flex-1 sm:flex-initial"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    <span>Reschedule</span>
+                  </Button>
 
-                <Button
-                  variant="ghost"
-                  onClick={() => setActiveCancelApt(nextAppointment)}
-                  className="h-11 px-4 text-xs text-muted-foreground hover:text-destructive rounded-xl gap-2"
-                >
-                  <X className="h-3.5 w-3.5" />
-                  <span>Cancel</span>
-                </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setActiveCancelApt(nextAppointment)}
+                    className="h-11 px-4 text-xs text-muted-foreground hover:text-destructive rounded-xl gap-2 flex-1 sm:flex-initial"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                    <span>Cancel</span>
+                  </Button>
+                </div>
 
-                <Button asChild variant="outline" className="h-11 px-4 text-xs ml-auto rounded-xl">
+                <Button asChild variant="outline" className="h-11 px-4 text-xs sm:ml-auto rounded-xl w-full sm:w-auto">
                   <Link href="/book">
                     <PlusCircle className="h-4 w-4 mr-1.5" />
                     <span>Book Another Visit</span>

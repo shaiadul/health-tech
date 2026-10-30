@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { CategorySpending } from "@/types/analytics"
 import { formatCurrency } from "@/lib/formatters"
-import { PieChart, TrendingDown, ArrowUpRight } from "lucide-react"
+import { PieChart, TrendingDown } from "lucide-react"
 
 interface TopCategoriesBreakdownProps {
   categories: CategorySpending[]

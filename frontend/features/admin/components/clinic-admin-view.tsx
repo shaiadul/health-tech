@@ -4,24 +4,15 @@ import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Appointment, AppointmentStatus } from "@/types/appointment"
 import { Specialist } from "@/types/specialist"
 import {
   Activity,
-  Users,
-  Calendar,
-  Clock,
   CheckCircle2,
-  AlertCircle,
   Search,
-  Filter,
   ArrowUpRight,
-  UserCheck,
   Building,
   Video,
-  Phone,
-  RefreshCw,
 } from "lucide-react"
 
 interface ClinicAdminViewProps {
@@ -117,7 +108,7 @@ export function ClinicAdminView({
   ])
 
   const [searchQuery, setSearchQuery] = React.useState("")
-  const [selectedDepartment, setSelectedDepartment] = React.useState("all")
+  const [selectedDepartment] = React.useState("all")
   const [selectedStatus, setSelectedStatus] = React.useState<string>("all")
 
   // Status transitions: confirmed -> completed or cancelled
@@ -147,7 +138,6 @@ export function ClinicAdminView({
   // Quick statistics
   const confirmedCount = appointments.filter((a) => a.status === "confirmed").length
   const completedCount = appointments.filter((a) => a.status === "completed").length
-  const cancelledCount = appointments.filter((a) => a.status === "cancelled").length
 
   return (
     <div className="space-y-8">

@@ -13,8 +13,6 @@ import {
   HeartPulse,
   Building2,
   LogOut,
-  User,
-  ShieldCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/constants"

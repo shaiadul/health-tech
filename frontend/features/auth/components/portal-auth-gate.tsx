@@ -1,25 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { useAuth, UserRole, DEMO_USERS } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   ShieldCheck,
-  User,
-  Stethoscope,
-  Building2,
   Lock,
-  ArrowRight,
   CheckCircle2,
   Activity,
-  Video,
-  FileText,
-  Pill,
-  Sparkles,
-  KeyRound,
   Eye,
   EyeOff,
   Clock,
@@ -27,7 +16,7 @@ import {
 } from "lucide-react";
 
 export function PortalAuthGate() {
-  const { login, loginAs, signup } = useAuth();
+  const { login, signup } = useAuth();
   const [activeTab, setActiveTab] = React.useState<"signin" | "register">(
     "signin",
   );

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Appointment, DayAvailability } from "@/types/appointment"
 import { AppointmentService } from "../services/appointment.service"
 import { AVAILABLE_SLOT_TIMES } from "@/data/appointments"
-import { Calendar, Clock, Loader2, Check, ArrowRight, ShieldCheck } from "lucide-react"
+import { Loader2, ArrowRight, ShieldCheck } from "lucide-react"
 
 interface RescheduleDialogProps {
   appointment: Appointment | null

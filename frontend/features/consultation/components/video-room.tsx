@@ -2,8 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,24 +16,15 @@ import {
   PhoneOff,
   ScreenShare,
   MessageSquare,
-  FileText,
   Activity,
-  ShieldCheck,
   Clock,
-  Sparkles,
   Send,
   Plus,
+  X,
   CheckCircle2,
-  Settings,
-  Maximize2,
-  Minimize2,
   Pill,
   Lock,
-  Stethoscope,
-  User,
   ArrowRight,
-  Download,
-  AlertCircle,
 } from "lucide-react"
 
 interface ChatMessage {
@@ -67,10 +57,8 @@ export function VideoRoom({
   specialistAvatar = "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&auto=format&fit=crop&q=80",
   patientName = "Alex Mercer",
 }: VideoRoomProps) {
-  const router = useRouter()
-  const { role, user } = useAuth()
+  const { role } = useAuth()
 
-  // Hardware states
   const [isMicOn, setIsMicOn] = React.useState(true)
   const [isVideoOn, setIsVideoOn] = React.useState(true)
   const [isScreenSharing, setIsScreenSharing] = React.useState(false)
@@ -80,7 +68,6 @@ export function VideoRoom({
   const [callEnded, setCallEnded] = React.useState(false)
   const [audioLevel, setAudioLevel] = React.useState(45)
 
-  // Chat state
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       id: "m_1",
@@ -99,13 +86,10 @@ export function VideoRoom({
   ])
   const [chatInput, setChatInput] = React.useState("")
 
-  // Clinical SOAP Notes (for doctor role)
   const [soapNotes, setSoapNotes] = React.useState(
     "Subjective: Patient reports intermittent chest tightness during mild cardiovascular exercise over past 2 weeks.\nObjective: Blood Pressure 118/78 mmHg, Resting HR 72 bpm. SpO2 99%.\nAssessment: Mild exertional dyspnea, rule out angina. Likely stress-associated.\nPlan: Continue monitoring. Prescribing preventative low-dose medication. Order resting 12-lead ECG follow-up."
   )
-  const [savedNotes, setSavedNotes] = React.useState(true)
 
-  // Prescriptions state
   const [prescriptions, setPrescriptions] = React.useState<PrescriptionItem[]>([
     {
       name: "Metoprolol Succinate ER",
@@ -116,7 +100,6 @@ export function VideoRoom({
   ])
   const [newMedName, setNewMedName] = React.useState("")
   const [newMedDosage, setNewMedDosage] = React.useState("")
-  const [newMedFrequency, setNewMedFrequency] = React.useState("Once daily")
   const [isAddingMed, setIsAddingMed] = React.useState(false)
 
   // Timer counter
@@ -176,7 +159,7 @@ export function VideoRoom({
       {
         name: newMedName.trim(),
         dosage: newMedDosage.trim() || "Standard Dose",
-        frequency: newMedFrequency,
+        frequency: "Once daily",
         duration: "30 days",
       },
     ])
@@ -426,7 +409,23 @@ export function VideoRoom({
 
         {/* Collapsible Clinical Sidebar */}
         {isSidebarOpen && (
-          <aside className="w-80 sm:w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0 z-10 transition-all">
+          <aside className="absolute md:relative inset-y-0 right-0 w-full sm:w-96 bg-slate-900 border-l border-slate-800 flex flex-col h-full shrink-0 z-30 md:z-10 shadow-2xl md:shadow-none transition-all">
+            {/* Mobile Close Bar */}
+            <div className="flex md:hidden items-center justify-between p-3 border-b border-slate-800 bg-slate-950">
+              <span className="text-xs font-mono font-semibold text-slate-200 flex items-center gap-2">
+                <Activity className="h-3.5 w-3.5 text-primary" />
+                <span>Clinical Workstation & Chat</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 cursor-pointer"
+                aria-label="Close Panel"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
             {/* Sidebar Tab Switcher */}
             <div className="p-2 border-b border-slate-800 grid grid-cols-3 gap-1 bg-slate-950/40">
               <button

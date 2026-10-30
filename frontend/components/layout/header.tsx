@@ -7,13 +7,10 @@ import {
   Menu,
   Bell,
   Search,
-  PlusCircle,
   Calendar,
   CheckCircle2,
   Clock,
   Activity,
-  UserCheck,
-  Stethoscope,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,9 +18,6 @@ import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MobileNav } from "./mobile-nav"
@@ -59,7 +53,7 @@ export function Header({
   onOpenQuickAction,
 }: {
   onOpenQuickAction?: (action: "triage" | "schedule") => void
-}) {
+} = {}) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -109,6 +103,17 @@ export function Header({
 
           {/* Quick Actions Buttons */}
           <div className="flex items-center gap-1.5">
+            {onOpenQuickAction && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onOpenQuickAction("schedule")}
+                className="hidden lg:flex text-xs h-9 gap-1.5 border-border"
+              >
+                <Calendar className="h-3.5 w-3.5 text-primary" />
+                <span>Quick Schedule</span>
+              </Button>
+            )}
             <Button
               asChild
               variant="outline"

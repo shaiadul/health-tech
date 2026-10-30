@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { BankAccount } from "@/types/account"
 import { Recipient } from "@/types/payment"
 import { formatCurrency } from "@/lib/formatters"
-import { Clock, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react"
+import { Clock, ShieldCheck, CheckCircle2 } from "lucide-react"
 
 interface PaymentsViewProps {
   accounts: BankAccount[]

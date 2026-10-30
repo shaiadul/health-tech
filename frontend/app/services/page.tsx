@@ -3,7 +3,7 @@ import { ServiceService } from "@/features/services/services/service.service"
 import { MarketingNavbar } from "@/components/marketing/navbar"
 import { MarketingFooter } from "@/components/marketing/footer"
 import { PageContainer } from "@/components/layout/page-container"
-import { ArrowRight, ArrowUpRight, Clock, ShieldCheck, Activity } from "lucide-react"
+import { ArrowUpRight, ShieldCheck } from "lucide-react"
 
 export const metadata = {
   title: "Clinical Medical Departments | MedPulse Hospital",

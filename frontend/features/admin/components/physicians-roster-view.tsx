@@ -9,11 +9,6 @@ import { Badge } from "@/components/ui/badge"
 import {
   Search,
   Star,
-  UserCheck,
-  Building,
-  Calendar,
-  CheckCircle2,
-  Clock,
   ArrowUpRight,
   Stethoscope,
   PlusCircle,

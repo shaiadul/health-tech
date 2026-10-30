@@ -1,6 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight, ArrowUpRight, Activity } from "lucide-react"
+import { ArrowRight, Activity } from "lucide-react"
 
 export function MarketingFooter() {
   const footerLinks = {

@@ -20,7 +20,6 @@ import {
   Percent,
   Calendar,
   Download,
-  Filter,
 } from "lucide-react"
 
 interface AnalyticsViewProps {

@@ -15,7 +15,6 @@ import {
 import {
   Clock,
   ShieldCheck,
-  ArrowRight,
   Star,
   ChevronRight,
 } from "lucide-react"
