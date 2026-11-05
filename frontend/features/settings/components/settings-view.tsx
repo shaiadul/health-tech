@@ -8,20 +8,38 @@ import { NotificationSettings } from "./notification-settings"
 import { PreferenceSettings } from "./preference-settings"
 import { UserProfile } from "@/types/user"
 import { User, Shield, Bell, Sliders } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
 
 interface SettingsViewProps {
   user: UserProfile
 }
 
 export function SettingsView({ user }: SettingsViewProps) {
+  const { user: authUser, role } = useAuth()
+
+  const effectiveUser: UserProfile = authUser
+    ? {
+        ...user,
+        id: authUser.id,
+        name: authUser.name,
+        email: authUser.email,
+        role: authUser.roleTitle || user.role,
+        avatarUrl: authUser.avatar || user.avatarUrl,
+        organization: authUser.department ? `MedPulse — ${authUser.department}` : user.organization,
+        phone: authUser.phone || user.phone,
+      }
+    : user
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold tracking-tight text-foreground">
-          System & Enterprise Settings
+          {role === "doctor" ? "Physician Profile & Clinic Schedule" : "Facility & Operations Settings"}
         </h2>
         <p className="text-xs text-muted-foreground">
-          Manage officer profiles, cryptographic security parameters, alerts, and localization
+          {role === "doctor"
+            ? "Manage physician credentials, consultation room parameters, clinical notifications, and EHR preferences"
+            : "Manage clinic officer profiles, cryptographic security parameters, alerts, and localization"}
         </p>
       </div>
 
@@ -46,7 +64,7 @@ export function SettingsView({ user }: SettingsViewProps) {
         </TabsList>
 
         <TabsContent value="profile" className="focus-visible:outline-none">
-          <ProfileForm user={user} />
+          <ProfileForm key={effectiveUser.id} user={effectiveUser} />
         </TabsContent>
 
         <TabsContent value="security" className="focus-visible:outline-none">

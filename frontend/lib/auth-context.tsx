@@ -4,6 +4,16 @@ import * as React from "react"
 
 export type UserRole = "patient" | "doctor" | "organizer"
 
+export function isStaffRole(role?: UserRole | null): boolean {
+  return role === "doctor" || role === "organizer"
+}
+
+export function getRoleBadgeLabel(role?: UserRole | null): string {
+  if (role === "organizer") return "Hospital Management (Admin)"
+  if (role === "doctor") return "Attending Doctor (Physician)"
+  return "Registered Patient"
+}
+
 export interface AuthUser {
   id: string
   name: string

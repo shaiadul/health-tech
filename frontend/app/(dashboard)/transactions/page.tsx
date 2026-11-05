@@ -1,10 +1,11 @@
 import { AppointmentService } from "@/features/appointments/services/appointment.service"
 import { SpecialistService } from "@/features/specialists/services/specialist.service"
-import { ClinicAdminView } from "@/features/admin/components/clinic-admin-view"
+import { DashboardRoleView } from "@/features/admin/components/dashboard-role-view"
 
 export const metadata = {
-  title: "Outpatient Appointment Queue | MedPulse Hospital Admin",
-  description: "Live outpatient consultation records, patient triage ledger, and room scheduling.",
+  title: "Outpatient Appointment Queue & Clinical Ledger | MedPulse",
+  description:
+    "Live outpatient consultation records, patient triage ledger, and attending physician schedule.",
 }
 
 export default async function TransactionsPage() {
@@ -15,7 +16,7 @@ export default async function TransactionsPage() {
 
   return (
     <div className="space-y-6">
-      <ClinicAdminView
+      <DashboardRoleView
         initialAppointments={[...upcoming, ...past]}
         doctors={doctors}
       />

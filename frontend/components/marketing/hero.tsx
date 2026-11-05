@@ -13,7 +13,6 @@ import {
   Building,
   CalendarDays,
   Heart,
-  HeartPulse,
   PhoneCall,
   ShieldCheck,
   Sparkles,
@@ -153,7 +152,7 @@ export function MarketingHero() {
                     <SelectItem
                       key={d.id}
                       value={d.id}
-                      className="rounded-lg py-2.5 pl-2.5 pr-9 cursor-pointer focus:bg-primary/10 focus:text-foreground data-[state=checked]:bg-primary/5"
+                      className="rounded-lg py-2.5 pl-2.5 pr-9 cursor-pointer focus:bg-primary/10 focus:text-foreground"
                     >
                       <span className="flex items-center gap-3">
                         <span className="h-9 w-9 shrink-0 rounded-md bg-primary/10 text-primary flex items-center justify-center">
