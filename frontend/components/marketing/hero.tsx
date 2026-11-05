@@ -76,7 +76,7 @@ export function MarketingHero() {
   };
 
   return (
-    <section className="relative isolate overflow-hidden min-h-[640px] lg:min-h-[720px] flex items-center">
+    <section className="relative isolate overflow-hidden min-h-160 lg:min-h-180 flex items-center">
       {/* Full-bleed background */}
       <Image
         src="/images/hero-consultation.jpg"
@@ -86,8 +86,8 @@ export function MarketingHero() {
         className="object-cover -z-20"
         sizes="100vw"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-slate-950/20" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-r from-slate-950/90 via-slate-950/70 to-slate-950/20" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-t from-slate-950/70 via-transparent to-transparent" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="max-w-2xl space-y-6 text-white">
@@ -125,7 +125,7 @@ export function MarketingHero() {
               <Select value={service} onValueChange={setService}>
                 <SelectTrigger
                   aria-label="Select department"
-                  className="h-auto min-h-14 rounded-lg border-border px-3 py-2 shadow-none hover:border-primary/60 focus:ring-2 focus:ring-primary/30 data-[state=open]:border-primary transition-colors [&>span]:line-clamp-none"
+                  className="h-auto min-h-14 rounded-lg border-border px-3 py-2 shadow-none hover:border-primary/60 focus:ring-2 focus:ring-primary/30 transition-colors [&>span]:line-clamp-none"
                 >
                   <SelectValue>
                     <span className="flex items-center gap-3 text-left">
