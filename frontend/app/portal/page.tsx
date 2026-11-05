@@ -14,10 +14,20 @@ export const metadata = {
 
 function PortalSkeleton() {
   return (
-    <div className="space-y-8 animate-pulse">
-      <Skeleton className="h-20 w-full rounded-3xl" />
-      <Skeleton className="h-64 w-full rounded-3xl" />
-      <Skeleton className="h-40 w-full rounded-2xl" />
+    <div className="w-full space-y-8 animate-pulse">
+      <Skeleton className="h-20 w-full rounded-2xl" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 space-y-6">
+          <Skeleton className="h-56 w-full rounded-2xl" />
+          <Skeleton className="h-48 w-full rounded-2xl" />
+          <Skeleton className="h-48 w-full rounded-2xl" />
+        </div>
+        <div className="lg:col-span-4 space-y-6">
+          <Skeleton className="h-44 w-full rounded-2xl" />
+          <Skeleton className="h-52 w-full rounded-2xl" />
+          <Skeleton className="h-40 w-full rounded-2xl" />
+        </div>
+      </div>
     </div>
   )
 }
@@ -29,7 +39,7 @@ export default async function CustomerPortalPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <MarketingNavbar />
       <main className="flex-1">
-        <PageContainer maxWidth="7xl" paddingY="compact">
+        <PageContainer maxWidth="7xl" paddingY="default" className="space-y-8">
           <React.Suspense fallback={<PortalSkeleton />}>
             <PortalView initialUpcoming={upcoming} initialPast={past} />
           </React.Suspense>

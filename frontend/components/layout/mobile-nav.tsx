@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Calendar,
@@ -13,22 +13,16 @@ import {
   HeartPulse,
   Building2,
   LogOut,
+  Stethoscope,
+  Video,
+  ArrowRightLeft,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/constants"
-import { MOCK_USER } from "@/data/users"
+import { useAuth, DEMO_USERS } from "@/lib/auth-context"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-
-const NAV_LINKS = [
-  { name: "Clinic Operations", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Appointment Queue", href: "/transactions", icon: Calendar },
-  { name: "Physician Roster", href: "/accounts", icon: UserCheck },
-  { name: "Patient Admissions", href: "/payments", icon: Activity },
-  { name: "Clinical Analytics", href: "/analytics", icon: LineChart },
-  { name: "Facility Settings", href: "/settings", icon: Settings },
-]
 
 export function MobileNav({
   open,
@@ -38,6 +32,35 @@ export function MobileNav({
   onOpenChange: (open: boolean) => void
 }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const { user, role, switchRole, logout } = useAuth()
+
+  const isDoctor = role === "doctor"
+  const currentUser = user || (isDoctor ? DEMO_USERS.doctor : DEMO_USERS.organizer)
+
+  const navLinks = isDoctor
+    ? [
+        { name: "Physician Workstation", href: "/dashboard", icon: Stethoscope },
+        { name: "My Patient Queue", href: "/transactions", icon: Calendar },
+        { name: "Telehealth Video Room", href: "/consultation", icon: Video },
+        { name: "Specialists Roster", href: "/accounts", icon: UserCheck },
+        { name: "Clinical Analytics", href: "/analytics", icon: LineChart },
+        { name: "Doctor Profile & Schedule", href: "/settings", icon: Settings },
+      ]
+    : [
+        { name: "Clinic Operations", href: "/dashboard", icon: LayoutDashboard },
+        { name: "Appointment Queue", href: "/transactions", icon: Calendar },
+        { name: "Physician Roster", href: "/accounts", icon: UserCheck },
+        { name: "Patient Admissions", href: "/payments", icon: Activity },
+        { name: "Clinical Analytics", href: "/analytics", icon: LineChart },
+        { name: "Facility Settings", href: "/settings", icon: Settings },
+      ]
+
+  const handleLogout = () => {
+    onOpenChange(false)
+    logout()
+    router.push("/login")
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -52,7 +75,9 @@ export function MobileNav({
                 <SheetTitle className="text-sm font-semibold tracking-tight">
                   {APP_NAME}
                 </SheetTitle>
-                <p className="text-[11px] text-muted-foreground">Hospital Operations</p>
+                <p className="text-[11px] text-muted-foreground font-mono">
+                  {isDoctor ? "Physician Workstation" : "Hospital Operations"}
+                </p>
               </div>
             </div>
           </SheetHeader>
@@ -61,22 +86,45 @@ export function MobileNav({
           <div className="p-3 border-b border-border/50">
             <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
               <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-primary" />
+                {isDoctor ? <Stethoscope className="h-4 w-4 text-primary" /> : <Building2 className="h-4 w-4 text-primary" />}
                 <span className="text-xs font-medium text-foreground">
-                  Main Clinic Center
+                  {isDoctor ? "West Cardiac Wing" : "Main Clinic Center"}
                 </span>
               </div>
-              <Badge variant="outline" className="text-[10px] text-emerald-600 bg-emerald-500/10">
-                Active
+              <Badge
+                variant="outline"
+                className={`text-[10px] capitalize ${
+                  isDoctor
+                    ? "border-primary/40 text-primary bg-primary/10"
+                    : "border-teal-500/40 text-teal-600 bg-teal-500/10"
+                }`}
+              >
+                {isDoctor ? "Doctor" : "Admin"}
               </Badge>
             </div>
           </div>
 
+          {/* Role switcher toggle in mobile */}
+          <div className="px-3 pt-3">
+            <button
+              type="button"
+              onClick={() => {
+                switchRole(isDoctor ? "organizer" : "doctor")
+              }}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 text-xs font-mono text-primary"
+            >
+              <span className="flex items-center gap-1.5 font-semibold">
+                <ArrowRightLeft className="h-3.5 w-3.5" />
+                <span>Switch to {isDoctor ? "Hospital Admin" : "Doctor View"}</span>
+              </span>
+            </button>
+          </div>
+
           {/* Navigation Links */}
           <nav className="p-3 space-y-1">
-            {NAV_LINKS.map((item) => {
+            {navLinks.map((item) => {
               const isActive =
-                pathname === item.href || pathname.startsWith(`${item.href}/`)
+                pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`))
               const Icon = item.icon
               return (
                 <Link
@@ -102,24 +150,26 @@ export function MobileNav({
         <div className="p-3 border-t border-border flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Avatar className="h-8 w-8 rounded-full border border-border">
-              <AvatarImage src={MOCK_USER.avatarUrl} alt={MOCK_USER.name} />
-              <AvatarFallback>DR</AvatarFallback>
+              <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+              <AvatarFallback>{currentUser.name.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="text-left">
               <p className="text-xs font-medium text-foreground truncate max-w-[140px]">
-                {MOCK_USER.name}
+                {currentUser.name}
               </p>
-              <p className="text-[10px] text-muted-foreground">{MOCK_USER.role}</p>
+              <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">
+                {currentUser.roleTitle}
+              </p>
             </div>
           </div>
-          <Link
-            href="/"
-            onClick={() => onOpenChange(false)}
-            className="p-1.5 text-muted-foreground hover:text-destructive"
-            title="Exit Admin"
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="p-1.5 text-muted-foreground hover:text-destructive cursor-pointer"
+            title="Sign Out"
           >
             <LogOut className="h-4 w-4" />
-          </Link>
+          </button>
         </div>
       </SheetContent>
     </Sheet>

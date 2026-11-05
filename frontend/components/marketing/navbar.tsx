@@ -13,6 +13,7 @@ import {
   Stethoscope,
   Building2,
   Clock,
+  Lock,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,8 +27,10 @@ import { useAuth } from "@/lib/auth-context"
 
 export function MarketingNavbar() {
   const pathname = usePathname()
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, role, user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = React.useState(false)
+
+  const isStaff = isAuthenticated && (role === "doctor" || role === "organizer")
 
   const navLinks = [
     { name: "Departments", href: "/services" },
@@ -76,6 +79,25 @@ export function MarketingNavbar() {
 
         {/* Desktop / Tablet Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Staff Dashboard or Staff Login */}
+          {isStaff ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-primary hover:text-primary/90 px-2.5 py-1.5 transition-colors border border-primary/30 rounded-none bg-primary/5"
+            >
+              {role === "doctor" ? <Stethoscope className="h-3.5 w-3.5" /> : <Building2 className="h-3.5 w-3.5" />}
+              <span>{role === "doctor" ? "Doctor Workstation" : "Hospital Admin"}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground px-2.5 py-1.5 transition-colors border border-transparent hover:border-border"
+            >
+              <Lock className="h-3.5 w-3.5 text-primary" />
+              <span>Staff Login</span>
+            </Link>
+          )}
+
           {/* Patient Portal link */}
           <Link
             href="/portal"
@@ -139,6 +161,34 @@ export function MarketingNavbar() {
                     </Link>
                   </Button>
 
+                  {isStaff ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="w-full h-10 text-xs font-mono justify-center px-3 border-primary/40 text-primary bg-primary/5"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Link href="/dashboard" className="flex items-center gap-2">
+                        {role === "doctor" ? <Stethoscope className="h-4 w-4" /> : <Building2 className="h-4 w-4" />}
+                        <span>Open {role === "doctor" ? "Doctor Workstation" : "Admin Operations"}</span>
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="w-full h-10 text-xs font-mono justify-center px-3"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <Link href="/login" className="flex items-center gap-2">
+                        <Lock className="h-4 w-4 text-primary" />
+                        <span>Staff Login (Doctor & Admin)</span>
+                      </Link>
+                    </Button>
+                  )}
+
                   <Button
                     asChild
                     variant="outline"
@@ -148,7 +198,7 @@ export function MarketingNavbar() {
                   >
                     <Link href="/portal" className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>Clinical Portal</span>
+                      <span>Patient Portal</span>
                     </Link>
                   </Button>
 

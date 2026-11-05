@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Search,
   Star,
   ArrowUpRight,
@@ -117,22 +124,20 @@ export function PhysiciansRosterView({ doctors }: PhysiciansRosterViewProps) {
           />
         </div>
 
-        <div className="flex items-center gap-1.5 self-end sm:self-auto text-xs font-mono">
-          <span className="text-muted-foreground mr-1 hidden sm:inline">Filter:</span>
-          {(["all", "on_duty", "in_consultation"] as const).map((mode) => (
-            <button
-              key={mode}
-              type="button"
-              onClick={() => setStatusFilter(mode)}
-              className={`px-3 py-1.5 border text-xs capitalize transition-colors ${
-                statusFilter === mode
-                  ? "border-primary bg-primary text-primary-foreground font-semibold"
-                  : "border-border bg-background hover:bg-muted text-muted-foreground"
-              }`}
-            >
-              {mode.replace("_", " ")}
-            </button>
-          ))}
+        <div className="w-44 self-end sm:self-auto text-xs font-mono">
+          <Select
+            value={statusFilter}
+            onValueChange={(val) => setStatusFilter(val as "all" | "on_duty" | "in_consultation")}
+          >
+            <SelectTrigger className="h-9 text-xs bg-background border-border capitalize">
+              <SelectValue placeholder="All Physicians" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Physicians</SelectItem>
+              <SelectItem value="on_duty">Currently On Duty</SelectItem>
+              <SelectItem value="in_consultation">In Consultation</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
