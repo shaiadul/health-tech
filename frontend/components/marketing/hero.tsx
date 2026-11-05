@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
+import * as React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Baby,
@@ -19,34 +19,62 @@ import {
   Sparkles,
   Star,
   Video,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 const DEPARTMENTS = [
-  { id: "srv_cardio_01", label: "Cardiology", hint: "Heart & blood pressure", icon: Heart },
-  { id: "srv_neuro_02", label: "Neurology", hint: "Migraine, nerves & brain", icon: Brain },
-  { id: "srv_pediatrics_03", label: "Pediatrics", hint: "Child care & vaccines", icon: Baby },
-  { id: "srv_ortho_04", label: "Orthopedics", hint: "Joints, bones & sports injury", icon: Bone },
-  { id: "srv_exec_07", label: "Health Check-up", hint: "Full-body screening", icon: Sparkles },
-]
+  {
+    id: "srv_cardio_01",
+    label: "Cardiology",
+    hint: "Heart & blood pressure",
+    icon: Heart,
+  },
+  {
+    id: "srv_neuro_02",
+    label: "Neurology",
+    hint: "Migraine, nerves & brain",
+    icon: Brain,
+  },
+  {
+    id: "srv_pediatrics_03",
+    label: "Pediatrics",
+    hint: "Child care & vaccines",
+    icon: Baby,
+  },
+  {
+    id: "srv_ortho_04",
+    label: "Orthopedics",
+    hint: "Joints, bones & sports injury",
+    icon: Bone,
+  },
+  {
+    id: "srv_exec_07",
+    label: "Health Check-up",
+    hint: "Full-body screening",
+    icon: Sparkles,
+  },
+];
 
 export function MarketingHero() {
-  const router = useRouter()
-  const [service, setService] = React.useState(DEPARTMENTS[0].id)
-  const [format, setFormat] = React.useState<"in_person" | "video">("in_person")
-  const selectedDept = DEPARTMENTS.find((d) => d.id === service) ?? DEPARTMENTS[0]
+  const router = useRouter();
+  const [service, setService] = React.useState(DEPARTMENTS[0].id);
+  const [format, setFormat] = React.useState<"in_person" | "video">(
+    "in_person",
+  );
+  const selectedDept =
+    DEPARTMENTS.find((d) => d.id === service) ?? DEPARTMENTS[0];
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    router.push(`/book?service=${service}&format=${format}`)
-  }
+    e.preventDefault();
+    router.push(`/book?service=${service}&format=${format}`);
+  };
 
   return (
     <section className="relative isolate overflow-hidden min-h-[640px] lg:min-h-[720px] flex items-center">
@@ -64,16 +92,6 @@ export function MarketingHero() {
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="max-w-2xl space-y-6 text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-3 py-1.5 text-xs font-medium"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Doctors available today · Avg. wait 8 min</span>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -81,7 +99,9 @@ export function MarketingHero() {
             className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]"
           >
             See the right doctor,{" "}
-            <span className="text-teal-300 font-serif italic font-normal">today.</span>
+            <span className="text-teal-300 font-serif italic font-normal">
+              today.
+            </span>
           </motion.h1>
 
           <motion.p
@@ -90,7 +110,8 @@ export function MarketingHero() {
             transition={{ duration: 0.5, delay: 0.16 }}
             className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed"
           >
-            Book board-certified specialists in under a minute. Visit us in clinic or consult by secure video, with no booking fee.
+            Book board-certified specialists in under a minute. Visit us in
+            clinic or consult by secure video, with no booking fee.
           </motion.p>
 
           {/* Booking search bar */}
@@ -139,8 +160,12 @@ export function MarketingHero() {
                           <d.icon className="h-4.5 w-4.5" />
                         </span>
                         <span className="flex flex-col text-left">
-                          <span className="text-sm font-semibold leading-tight">{d.label}</span>
-                          <span className="text-xs text-muted-foreground">{d.hint}</span>
+                          <span className="text-sm font-semibold leading-tight">
+                            {d.label}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {d.hint}
+                          </span>
                         </span>
                       </span>
                     </SelectItem>
@@ -193,7 +218,8 @@ export function MarketingHero() {
               <ShieldCheck className="h-4 w-4 text-teal-300" /> HIPAA secure
             </span>
             <span className="flex items-center gap-1.5">
-              <Star className="h-4 w-4 fill-teal-300 text-teal-300" /> 4.9 from 25,000+ patients
+              <Star className="h-4 w-4 fill-teal-300 text-teal-300" /> 4.9 from
+              25,000+ patients
             </span>
             <Link
               href="tel:+18004325847"
@@ -203,37 +229,7 @@ export function MarketingHero() {
             </Link>
           </motion.div>
         </div>
-
-        {/* Floating glass chips (desktop) */}
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="hidden lg:block absolute right-8 bottom-16 w-72 space-y-3"
-        >
-          <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 text-white">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-teal-400/20 flex items-center justify-center">
-                <HeartPulse className="h-5 w-5 text-teal-300" />
-              </div>
-              <div>
-                <p className="text-sm font-bold">Dr. Sarah Ahmed, MD</p>
-                <p className="text-xs text-white/70">Cardiology · Next slot 3:30 PM</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 text-white flex items-center justify-between">
-            <div>
-              <p className="text-2xl font-bold font-mono">40+</p>
-              <p className="text-xs text-white/70">Board-certified MDs</p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold font-mono">99.4%</p>
-              <p className="text-xs text-white/70">Satisfaction</p>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
-  )
+  );
 }
