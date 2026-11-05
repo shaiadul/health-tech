@@ -4,6 +4,13 @@ import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Appointment, AppointmentStatus } from "@/types/appointment"
 import { Specialist } from "@/types/specialist"
 import {
@@ -108,7 +115,7 @@ export function ClinicAdminView({
   ])
 
   const [searchQuery, setSearchQuery] = React.useState("")
-  const [selectedDepartment] = React.useState("all")
+  const [selectedDepartment, setSelectedDepartment] = React.useState("all")
   const [selectedStatus, setSelectedStatus] = React.useState<string>("all")
 
   // Status transitions: confirmed -> completed or cancelled
@@ -242,27 +249,47 @@ export function ClinicAdminView({
             placeholder="Search by patient name, ref ID, or doctor..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-11 rounded-none border-border bg-background text-xs focus:border-primary"
+            className="pl-10 h-10 rounded-xl border-border bg-background text-xs focus:border-primary"
           />
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-          <span className="text-muted-foreground mr-1">Status:</span>
-          {["all", "confirmed", "completed", "cancelled"].map((status) => (
-            <button
-              key={status}
-              type="button"
-              onClick={() => setSelectedStatus(status)}
-              className={`px-3 py-1.5 border capitalize transition-colors ${
-                selectedStatus === status
-                  ? "border-primary bg-primary text-primary-foreground font-bold"
-                  : "border-border hover:border-foreground text-muted-foreground"
-              }`}
+        {/* Reusable Select Filters */}
+        <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+          <div className="w-44">
+            <Select
+              value={selectedDepartment}
+              onValueChange={(val) => setSelectedDepartment(val)}
             >
-              {status}
-            </button>
-          ))}
+              <SelectTrigger className="h-10 rounded-xl text-xs bg-card border-border">
+                <SelectValue placeholder="All Departments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Departments</SelectItem>
+                <SelectItem value="cardio">Cardiology</SelectItem>
+                <SelectItem value="neuro">Neurology</SelectItem>
+                <SelectItem value="pediatric">Pediatrics</SelectItem>
+                <SelectItem value="ortho">Orthopedics</SelectItem>
+                <SelectItem value="internal">Internal Medicine</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="w-36">
+            <Select
+              value={selectedStatus}
+              onValueChange={(val) => setSelectedStatus(val)}
+            >
+              <SelectTrigger className="h-10 rounded-xl text-xs bg-card border-border capitalize">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

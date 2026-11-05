@@ -12,12 +12,13 @@ export const metadata = {
 
 function LoginSkeleton() {
   return (
-    <div className="w-full max-w-xl h-[600px] rounded-3xl bg-card border border-border animate-pulse p-8 space-y-6">
-      <Skeleton className="h-12 w-48 mx-auto" />
-      <Skeleton className="h-8 w-64 mx-auto" />
-      <Skeleton className="h-16 w-full rounded-2xl" />
-      <Skeleton className="h-32 w-full rounded-2xl" />
-      <Skeleton className="h-12 w-full rounded-xl" />
+    <div className="w-full max-w-md h-[520px] rounded-3xl bg-card border border-border animate-pulse p-7 space-y-5">
+      <Skeleton className="h-10 w-44 mx-auto" />
+      <Skeleton className="h-6 w-56 mx-auto" />
+      <Skeleton className="h-12 w-full rounded-2xl" />
+      <Skeleton className="h-11 w-full rounded-xl" />
+      <Skeleton className="h-11 w-full rounded-xl" />
+      <Skeleton className="h-11 w-full rounded-xl" />
     </div>
   )
 }

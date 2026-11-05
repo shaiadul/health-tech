@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Search,
   Activity,
   CheckCircle2,
@@ -219,22 +226,21 @@ export function PatientAdmissionsView() {
           />
         </div>
 
-        <div className="flex items-center gap-1.5 self-end sm:self-auto text-xs font-mono">
-          <span className="text-muted-foreground mr-1 hidden sm:inline">Urgency:</span>
-          {(["all", "routine", "urgent"] as const).map((urg) => (
-            <button
-              key={urg}
-              type="button"
-              onClick={() => setUrgencyFilter(urg)}
-              className={`px-3 py-1.5 border text-xs capitalize transition-colors ${
-                urgencyFilter === urg
-                  ? "border-primary bg-primary text-primary-foreground font-semibold"
-                  : "border-border bg-background hover:bg-muted text-muted-foreground"
-              }`}
-            >
-              {urg}
-            </button>
-          ))}
+        <div className="w-40 self-end sm:self-auto text-xs font-mono">
+          <Select
+            value={urgencyFilter}
+            onValueChange={(val) => setUrgencyFilter(val)}
+          >
+            <SelectTrigger className="h-9 text-xs bg-background border-border capitalize">
+              <SelectValue placeholder="All Urgencies" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Urgencies</SelectItem>
+              <SelectItem value="routine">Routine</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
+              <SelectItem value="stat">Stat / Emergency</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -5,6 +5,13 @@ import { useAuth, UserRole, DEMO_USERS } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   ShieldCheck,
   Lock,
   CheckCircle2,
@@ -337,19 +344,25 @@ export function PortalAuthGate() {
                 <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold">
                   Account Type
                 </label>
-                <select
+                <Select
                   value={regRole}
-                  onChange={(e) => setRegRole(e.target.value as UserRole)}
-                  className="flex h-11 w-full rounded-xl border border-input bg-card px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  onValueChange={(val) => setRegRole(val as UserRole)}
                 >
-                  <option value="patient">
-                    Patient (Personal & Family Care)
-                  </option>
-                  <option value="doctor">Physician / Medical Specialist</option>
-                  <option value="organizer">
-                    Clinic Staff / Hospital Admin
-                  </option>
-                </select>
+                  <SelectTrigger className="h-11 w-full rounded-xl border border-input bg-card px-3 text-sm shadow-xs focus:ring-1 focus:ring-ring">
+                    <SelectValue placeholder="Select account type" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border border-border shadow-md">
+                    <SelectItem value="patient" className="rounded-lg text-xs py-2">
+                      Patient (Personal & Family Care)
+                    </SelectItem>
+                    <SelectItem value="doctor" className="rounded-lg text-xs py-2">
+                      Physician / Medical Specialist
+                    </SelectItem>
+                    <SelectItem value="organizer" className="rounded-lg text-xs py-2">
+                      Clinic Staff / Hospital Admin
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

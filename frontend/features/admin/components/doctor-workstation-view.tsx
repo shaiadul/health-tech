@@ -8,6 +8,13 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -257,28 +264,20 @@ export function DoctorWorkstationView({ appointments }: DoctorWorkstationProps) 
 
         {/* Room 402B Live Status Control */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="p-1 rounded-xl bg-muted/50 border border-border flex items-center gap-1 text-xs font-mono">
-            <span className="px-2.5 py-1 text-muted-foreground font-semibold">Room Status:</span>
-            {(
-              [
-                { id: "available", label: "Available", color: "bg-emerald-500 text-white" },
-                { id: "in_session", label: "In Consult", color: "bg-blue-600 text-white" },
-                { id: "charting", label: "Charting", color: "bg-amber-500 text-white" },
-              ] as const
-            ).map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setRoomStatus(s.id)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  roomStatus === s.id
-                    ? `${s.color} shadow-xs font-bold scale-[1.02]`
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
+          <div className="w-48 text-xs font-mono">
+            <Select
+              value={roomStatus}
+              onValueChange={(val) => setRoomStatus(val as "available" | "in_session" | "charting")}
+            >
+              <SelectTrigger className="h-10 rounded-xl text-xs bg-card border-border font-mono">
+                <SelectValue placeholder="Room Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="available">🟢 Room Available</SelectItem>
+                <SelectItem value="in_session">🔵 In Consultation</SelectItem>
+                <SelectItem value="charting">🟠 Charting / Break</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <Button
@@ -481,29 +480,22 @@ export function DoctorWorkstationView({ appointments }: DoctorWorkstationProps) 
               </p>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/40 border border-border text-xs font-mono">
-              {(
-                [
-                  { id: "all", label: "All" },
-                  { id: "video", label: "Telehealth" },
-                  { id: "in_person", label: "In-Person" },
-                  { id: "completed", label: "Done" },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    activeFilter === tab.id
-                      ? "bg-card text-foreground shadow-xs font-bold"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            {/* Reusable Select Filter */}
+            <div className="w-48 text-xs font-mono">
+              <Select
+                value={activeFilter}
+                onValueChange={(val) => setActiveFilter(val as "all" | "video" | "in_person" | "completed")}
+              >
+                <SelectTrigger className="h-9 text-xs bg-card border-border font-mono rounded-xl">
+                  <SelectValue placeholder="All Encounters" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Encounters ({queue.length})</SelectItem>
+                  <SelectItem value="video">Telehealth Video ({queue.filter((q) => q.type === "video").length})</SelectItem>
+                  <SelectItem value="in_person">In-Person Clinic ({queue.filter((q) => q.type === "in_person").length})</SelectItem>
+                  <SelectItem value="completed">Completed Today ({queue.filter((q) => q.status === "completed").length})</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
