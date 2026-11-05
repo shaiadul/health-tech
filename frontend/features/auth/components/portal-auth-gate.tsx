@@ -105,18 +105,12 @@ export function PortalAuthGate() {
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
       {/* 1. Header Banner */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          <span>Encrypted Healthcare Portal</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-          MedPulse Care & Staff Portal
+      <div className="text-center space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+          Patient Care Portal
         </h1>
-        <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-          Sign in to access your upcoming specialist appointments, launch
-          encrypted telehealth video visits, view vital telemetry, and manage
-          prescriptions.
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+          Sign in to view your scheduled visits, access video consultations, and manage prescriptions.
         </p>
       </div>
 
