@@ -14,9 +14,7 @@ import {
   CalendarDays,
   Heart,
   PhoneCall,
-  ShieldCheck,
   Sparkles,
-  Star,
   Video,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -76,52 +74,77 @@ export function MarketingHero() {
   };
 
   return (
-    <section className="relative isolate overflow-hidden min-h-160 lg:min-h-180 flex items-center">
-      {/* Full-bleed background */}
+    <section className="relative isolate flex flex-col min-h-svh lg:min-h-190">
+      {/* ── Background photo ── */}
       <Image
         src="/images/hero-consultation.jpg"
         alt="Doctor consulting with a patient at MedPulse"
         fill
         priority
-        className="object-cover -z-20"
+        className="object-cover object-center -z-20"
         sizes="100vw"
       />
-      <div className="absolute inset-0 -z-10 bg-linear-to-r from-slate-950/90 via-slate-950/70 to-slate-950/20" />
-      <div className="absolute inset-0 -z-10 bg-linear-to-t from-slate-950/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-slate-950/55 via-slate-950/40 to-slate-950/85" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-r from-slate-950/70 via-transparent to-transparent" />
 
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="max-w-2xl space-y-6 text-white">
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]"
-          >
-            See the right doctor,{" "}
-            <span className="text-teal-300 font-serif italic font-normal">
-              today.
-            </span>
-          </motion.h1>
+      {/* ── Centre stage: headline + trust chips ── */}
+      <div className="flex flex-1 flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 pb-10">
+        {/* Animated ping badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 backdrop-blur-md"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-400" />
+          </span>
+          <span className="text-xs font-semibold tracking-wide text-white/90 uppercase">
+            Doctors Available Now
+          </span>
+        </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.16 }}
-            className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed"
-          >
-            Book board-certified specialists in under a minute. Visit us in
-            clinic or consult by secure video, with no booking fee.
-          </motion.p>
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.65,
+            delay: 0.1,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="max-w-3xl text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.04]"
+        >
+          World-class care, <br className="hidden sm:block" />
+          <span className="font-serif italic font-normal text-teal-300">
+            at your convenience.
+          </span>
+        </motion.h1>
 
-          {/* Booking search bar */}
+        {/* Sub-copy */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.2 }}
+          className="my-5 max-w-xl text-base sm:text-lg text-white/65 leading-relaxed"
+        >
+          Book board-certified specialists in under a minute — in clinic or by
+          secure video, with no booking fee.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          className="relative z-10 w-full px-4 sm:px-6 pb-8 lg:pb-12"
+        >
           <motion.form
             onSubmit={handleSearch}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.24 }}
-            className="rounded-xl bg-background text-foreground p-3 sm:p-4 shadow-2xl space-y-3"
+            className="mx-auto max-w-2xl rounded-xl bg-background text-foreground p-3 sm:p-4 shadow-2xl space-y-3"
           >
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3">
+              {/* Department Select */}
               <Select value={service} onValueChange={setService}>
                 <SelectTrigger
                   aria-label="Select department"
@@ -130,7 +153,7 @@ export function MarketingHero() {
                   <SelectValue>
                     <span className="flex items-center gap-3 text-left">
                       <span className="h-9 w-9 shrink-0 rounded-md bg-primary/10 text-primary flex items-center justify-center">
-                        <selectedDept.icon className="h-4.5 w-4.5" />
+                        <selectedDept.icon className="h-[18px] w-[18px]" />
                       </span>
                       <span className="flex flex-col">
                         <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground leading-none">
@@ -156,7 +179,7 @@ export function MarketingHero() {
                     >
                       <span className="flex items-center gap-3">
                         <span className="h-9 w-9 shrink-0 rounded-md bg-primary/10 text-primary flex items-center justify-center">
-                          <d.icon className="h-4.5 w-4.5" />
+                          <d.icon className="h-[18px] w-[18px]" />
                         </span>
                         <span className="flex flex-col text-left">
                           <span className="text-sm font-semibold leading-tight">
@@ -172,6 +195,7 @@ export function MarketingHero() {
                 </SelectContent>
               </Select>
 
+              {/* Visit-type toggle */}
               <div className="grid grid-cols-2 rounded-lg border border-border p-1 text-xs font-semibold">
                 {(
                   [
@@ -196,6 +220,7 @@ export function MarketingHero() {
               </div>
             </div>
 
+            {/* CTA button */}
             <Button
               type="submit"
               size="lg"
@@ -207,27 +232,23 @@ export function MarketingHero() {
             </Button>
           </motion.form>
 
+          {/* Below-form contact line */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/75"
+            transition={{ delay: 0.55 }}
+            className="mt-4 flex justify-center"
           >
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-teal-300" /> HIPAA secure
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Star className="h-4 w-4 fill-teal-300 text-teal-300" /> 4.9 from
-              25,000+ patients
-            </span>
             <Link
               href="tel:+18004325847"
-              className="flex items-center gap-1.5 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80 transition-colors"
             >
-              <PhoneCall className="h-4 w-4 text-teal-300" /> +1 (800) 432-5847
+              <PhoneCall className="h-3.5 w-3.5" />
+              Prefer to call?&nbsp;
+              <span className="font-semibold">+1 (800) 432-5847</span>
             </Link>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
