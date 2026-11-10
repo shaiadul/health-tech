@@ -14,9 +14,7 @@ import {
   CalendarDays,
   Heart,
   PhoneCall,
-  ShieldCheck,
   Sparkles,
-  Star,
   Video,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -76,7 +74,7 @@ export function MarketingHero() {
   };
 
   return (
-    <section className="relative isolate flex flex-col min-h-[100svh] lg:min-h-[760px]">
+    <section className="relative isolate flex flex-col min-h-svh lg:min-h-190">
       {/* ── Background photo ── */}
       <Image
         src="/images/hero-consultation.jpg"
@@ -86,8 +84,8 @@ export function MarketingHero() {
         className="object-cover object-center -z-20"
         sizes="100vw"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/55 via-slate-950/40 to-slate-950/85" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/70 via-transparent to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-slate-950/55 via-slate-950/40 to-slate-950/85" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-r from-slate-950/70 via-transparent to-transparent" />
 
       {/* ── Centre stage: headline + trust chips ── */}
       <div className="flex flex-1 flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 pb-10">
