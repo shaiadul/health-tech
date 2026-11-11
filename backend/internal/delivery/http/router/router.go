@@ -45,6 +45,10 @@ func SetupRouter(h *handler.Handler, tm *jwt.TokenManager) *gin.Engine {
 		api.POST("/appointments", h.CreateAppointment)
 		api.GET("/appointments/:id", h.GetAppointment)
 
+		// Public Leads & Newsletter
+		api.POST("/leads", h.SubmitLead)
+		api.POST("/newsletter/subscribe", h.SubscribeNewsletter)
+
 		// ---------------- Protected Routes (Authenticated) ----------------
 		protected := api.Group("")
 		protected.Use(middleware.Auth(tm))
@@ -52,6 +56,11 @@ func SetupRouter(h *handler.Handler, tm *jwt.TokenManager) *gin.Engine {
 			protected.GET("/auth/me", h.GetMe)
 			protected.GET("/appointments", h.ListAppointments)
 			protected.PATCH("/appointments/:id/status", h.UpdateAppointmentStatus)
+			protected.POST("/appointments/:id/reschedule", h.RescheduleAppointment)
+
+			// Prescription Refills
+			protected.POST("/prescriptions/refill", h.RequestRefill)
+			protected.GET("/prescriptions/refills", h.ListRefills)
 
 			// ---------------- Zoom Realtime Telehealth Meetings ----------------
 			protected.POST("/meetings/zoom", h.CreateMeeting)
@@ -62,6 +71,12 @@ func SetupRouter(h *handler.Handler, tm *jwt.TokenManager) *gin.Engine {
 			staff.Use(middleware.RequireRole(entity.RoleDoctor, entity.RoleOrganizer))
 			{
 				staff.GET("/transactions", h.ListTransactions)
+				staff.GET("/accounts", h.ListAccounts)
+				staff.POST("/accounts", h.CreateAccount)
+				staff.GET("/analytics/summary", h.GetAnalyticsSummary)
+				staff.PATCH("/prescriptions/refills/:id/approve", h.ApproveRefill)
+				staff.POST("/ehr/soap-notes", h.CreateSOAPNote)
+				staff.GET("/ehr/soap-notes", h.ListSOAPNotes)
 			}
 		}
 	}

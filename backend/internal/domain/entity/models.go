@@ -75,33 +75,37 @@ const (
 	AppointmentStatusInConsultation AppointmentStatus = "in_consultation"
 	AppointmentStatusCompleted      AppointmentStatus = "completed"
 	AppointmentStatusCancelled      AppointmentStatus = "cancelled"
+	AppointmentStatusRescheduled    AppointmentStatus = "rescheduled"
 )
 
 type Appointment struct {
-	ID             string            `json:"id"`
-	Reference      string            `json:"reference"`
-	PatientID      string            `json:"patientId"`
-	PatientName    string            `json:"patientName"`
-	PatientEmail   string            `json:"patientEmail"`
-	PatientPhone   string            `json:"patientPhone,omitempty"`
-	SpecialistID   string            `json:"specialistId"`
-	SpecialistName string            `json:"specialistName"`
-	ServiceID      string            `json:"serviceId"`
-	ServiceName    string            `json:"serviceName"`
-	Department     string            `json:"department"`
-	Date           string            `json:"date"`
-	TimeSlot       string            `json:"timeSlot"`
-	Format         string            `json:"format"` // in_person or video
-	Status         AppointmentStatus `json:"status"`
-	Price          float64           `json:"price"`
-	Currency       string            `json:"currency"`
-	Symptoms       string            `json:"symptoms,omitempty"`
-	MeetingURL     string            `json:"meetingUrl,omitempty"`
-	ZoomMeetingID  string            `json:"zoomMeetingId,omitempty"`
-	ZoomPassword   string            `json:"zoomPassword,omitempty"`
-	RoomID         string            `json:"roomId,omitempty"`
-	CreatedAt      time.Time         `json:"createdAt"`
-	UpdatedAt      time.Time         `json:"updatedAt"`
+	ID                 string            `json:"id"`
+	Reference          string            `json:"reference"`
+	PatientID          string            `json:"patientId"`
+	PatientName        string            `json:"patientName"`
+	PatientEmail       string            `json:"patientEmail"`
+	PatientPhone       string            `json:"patientPhone,omitempty"`
+	SpecialistID       string            `json:"specialistId"`
+	SpecialistName     string            `json:"specialistName"`
+	SpecialistTitle    string            `json:"specialistTitle,omitempty"`
+	SpecialistAvatar   string            `json:"specialistAvatar,omitempty"`
+	ServiceID          string            `json:"serviceId"`
+	ServiceName        string            `json:"serviceName"`
+	Department         string            `json:"department"`
+	Date               string            `json:"date"`
+	TimeSlot           string            `json:"timeSlot"`
+	Format             string            `json:"format"` // in_person or video
+	Status             AppointmentStatus `json:"status"`
+	CancellationReason string            `json:"cancellationReason,omitempty"`
+	Price              float64           `json:"price"`
+	Currency           string            `json:"currency"`
+	Symptoms           string            `json:"symptoms,omitempty"`
+	MeetingURL         string            `json:"meetingUrl,omitempty"`
+	ZoomMeetingID      string            `json:"zoomMeetingId,omitempty"`
+	ZoomPassword       string            `json:"zoomPassword,omitempty"`
+	RoomID             string            `json:"roomId,omitempty"`
+	CreatedAt          time.Time         `json:"createdAt"`
+	UpdatedAt          time.Time         `json:"updatedAt"`
 }
 
 type TransactionStatus string
@@ -125,6 +129,81 @@ type Transaction struct {
 	Status        TransactionStatus `json:"status"`
 	PaymentMethod string            `json:"paymentMethod"`
 	Date          time.Time         `json:"date"`
+}
+
+type LeadSubmission struct {
+	ID                 string    `json:"id"`
+	FullName           string    `json:"fullName"`
+	Email              string    `json:"email"`
+	Phone              string    `json:"phone,omitempty"`
+	ServiceInterest    string    `json:"serviceInterest,omitempty"`
+	EstimatedPortfolio string    `json:"estimatedPortfolio,omitempty"`
+	CreatedAt          time.Time `json:"createdAt"`
+}
+
+type NewsletterSubmission struct {
+	ID           string    `json:"id"`
+	Email        string    `json:"email"`
+	SubscribedAt time.Time `json:"subscribedAt"`
+}
+
+type PrescriptionRefill struct {
+	ID               string    `json:"id"`
+	PatientID        string    `json:"patientId"`
+	PatientName      string    `json:"patientName"`
+	MedicationID     string    `json:"medicationId"`
+	MedicationName   string    `json:"medicationName"`
+	Dosage           string    `json:"dosage"`
+	RxNumber         string    `json:"rxNumber"`
+	PharmacyName     string    `json:"pharmacyName,omitempty"`
+	RefillsRemaining int       `json:"refillsRemaining"`
+	Status           string    `json:"status"` // pending, approved, rejected
+	PrescribedBy     string    `json:"prescribedBy"`
+	CreatedAt        time.Time `json:"createdAt"`
+}
+
+type SOAPNote struct {
+	ID             string    `json:"id"`
+	AppointmentID  string    `json:"appointmentId"`
+	PatientID      string    `json:"patientId"`
+	PatientName    string    `json:"patientName"`
+	DoctorID       string    `json:"doctorId"`
+	DoctorName     string    `json:"doctorName"`
+	Subjective     string    `json:"subjective"`
+	Objective      string    `json:"objective"`
+	Assessment     string    `json:"assessment"`
+	Plan           string    `json:"plan"`
+	CreatedAt      time.Time `json:"createdAt"`
+}
+
+type BankAccount struct {
+	ID               string  `json:"id"`
+	Name             string  `json:"name"`
+	AccountType      string  `json:"accountType"`
+	AccountNumber    string  `json:"accountNumber"`
+	RoutingNumber    string  `json:"routingNumber"`
+	Balance          float64 `json:"balance"`
+	AvailableBalance float64 `json:"availableBalance"`
+	Currency         string  `json:"currency"`
+	Status           string  `json:"status"`
+	CardLast4        string  `json:"cardLast4,omitempty"`
+	CreditLimit      float64 `json:"creditLimit,omitempty"`
+	InterestRate     float64 `json:"interestRate,omitempty"`
+	InstitutionName  string  `json:"institutionName"`
+	ColorTheme       string  `json:"colorTheme,omitempty"`
+}
+
+type AnalyticsSummary struct {
+	TotalIncomeMonth   float64 `json:"totalIncomeMonth"`
+	TotalExpenseMonth  float64 `json:"totalExpenseMonth"`
+	SavingsRate        float64 `json:"savingsRate"`
+	MonthlyGrowthRate  float64 `json:"monthlyGrowthRate"`
+	TopExpenseCategory string  `json:"topExpenseCategory"`
+	AverageDailySpend  float64 `json:"averageDailySpend"`
+	OutpatientVolume   int     `json:"outpatientVolume"`
+	AverageWaitMinutes float64 `json:"averageWaitMinutes"`
+	TelehealthRatio    float64 `json:"telehealthRatio"`
+	SatisfactionRate   float64 `json:"satisfactionRate"`
 }
 
 type ZoomMeeting struct {

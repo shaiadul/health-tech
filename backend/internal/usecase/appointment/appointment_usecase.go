@@ -80,30 +80,32 @@ func (uc *UseCase) Create(ctx context.Context, input CreateAppointmentInput) (*e
 	}
 
 	apt := &entity.Appointment{
-		ID:             aptID,
-		Reference:      ref,
-		PatientID:      input.PatientID,
-		PatientName:    input.PatientName,
-		PatientEmail:   input.PatientEmail,
-		PatientPhone:   input.PatientPhone,
-		SpecialistID:   spec.ID,
-		SpecialistName: spec.Name,
-		ServiceID:      srv.ID,
-		ServiceName:    srv.Name,
-		Department:     spec.Department,
-		Date:           input.Date,
-		TimeSlot:       input.TimeSlot,
-		Format:         input.Format,
-		Status:         entity.AppointmentStatusConfirmed,
-		Price:          srv.Price,
-		Currency:       srv.Currency,
-		Symptoms:       input.Symptoms,
-		MeetingURL:     meetingURL,
-		ZoomMeetingID:  zoomMeetingID,
-		ZoomPassword:   zoomPassword,
-		RoomID:         roomID,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
+		ID:               aptID,
+		Reference:        ref,
+		PatientID:        input.PatientID,
+		PatientName:      input.PatientName,
+		PatientEmail:     input.PatientEmail,
+		PatientPhone:     input.PatientPhone,
+		SpecialistID:     spec.ID,
+		SpecialistName:   spec.Name,
+		SpecialistTitle:  spec.Title,
+		SpecialistAvatar: spec.Avatar,
+		ServiceID:        srv.ID,
+		ServiceName:      srv.Name,
+		Department:       spec.Department,
+		Date:             input.Date,
+		TimeSlot:         input.TimeSlot,
+		Format:           input.Format,
+		Status:           entity.AppointmentStatusConfirmed,
+		Price:            srv.Price,
+		Currency:         srv.Currency,
+		Symptoms:         input.Symptoms,
+		MeetingURL:       meetingURL,
+		ZoomMeetingID:    zoomMeetingID,
+		ZoomPassword:     zoomPassword,
+		RoomID:           roomID,
+		CreatedAt:        time.Now(),
+		UpdatedAt:        time.Now(),
 	}
 
 	if err := uc.aptRepo.Create(ctx, apt); err != nil {
@@ -125,7 +127,11 @@ func (uc *UseCase) List(ctx context.Context, filter repository.AppointmentFilter
 	return uc.aptRepo.List(ctx, filter, params)
 }
 
-func (uc *UseCase) UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus) error {
-	return uc.aptRepo.UpdateStatus(ctx, id, status)
+func (uc *UseCase) UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus, reason string) error {
+	return uc.aptRepo.UpdateStatus(ctx, id, status, reason)
+}
+
+func (uc *UseCase) Reschedule(ctx context.Context, id string, newDate, newTime string) (*entity.Appointment, error) {
+	return uc.aptRepo.Reschedule(ctx, id, newDate, newTime)
 }
 

@@ -10,6 +10,7 @@ import {
   CashflowTrendPoint,
   AnalyticsSummary,
 } from "@/types/analytics"
+import { getAnalyticsSummaryAction } from "@/lib/actions"
 
 export const AnalyticsService = {
   async getMonthlyComparison(): Promise<MonthlyComparison[]> {
@@ -25,6 +26,17 @@ export const AnalyticsService = {
   },
 
   async getSummary(): Promise<AnalyticsSummary> {
+    try {
+      const res = await getAnalyticsSummaryAction()
+      if (res.success && res.data) {
+        return {
+          ...MOCK_ANALYTICS_SUMMARY,
+          ...res.data,
+        }
+      }
+    } catch {
+      // Fallback
+    }
     return { ...MOCK_ANALYTICS_SUMMARY }
   },
 }
