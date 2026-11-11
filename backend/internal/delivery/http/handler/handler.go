@@ -7,9 +7,13 @@ import (
 	"github.com/health-tech/backend/internal/delivery/http/middleware"
 	"github.com/health-tech/backend/internal/domain/entity"
 	"github.com/health-tech/backend/internal/domain/repository"
+	"github.com/health-tech/backend/internal/usecase/account"
+	"github.com/health-tech/backend/internal/usecase/analytics"
 	"github.com/health-tech/backend/internal/usecase/appointment"
 	"github.com/health-tech/backend/internal/usecase/auth"
+	"github.com/health-tech/backend/internal/usecase/clinical_record"
 	"github.com/health-tech/backend/internal/usecase/clinical_service"
+	"github.com/health-tech/backend/internal/usecase/lead"
 	"github.com/health-tech/backend/internal/usecase/meeting"
 	"github.com/health-tech/backend/internal/usecase/specialist"
 	"github.com/health-tech/backend/internal/usecase/transaction"
@@ -24,6 +28,10 @@ type Handler struct {
 	appointmentUC *appointment.UseCase
 	txUC          *transaction.UseCase
 	meetingUC     *meeting.UseCase
+	leadUC        *lead.UseCase
+	clinicalRecUC *clinical_record.UseCase
+	accountUC     *account.UseCase
+	analyticsUC   *analytics.UseCase
 }
 
 func NewHandler(
@@ -33,6 +41,10 @@ func NewHandler(
 	aptUC *appointment.UseCase,
 	txUC *transaction.UseCase,
 	meetUC *meeting.UseCase,
+	leadUC *lead.UseCase,
+	clinicalRecUC *clinical_record.UseCase,
+	accountUC *account.UseCase,
+	analyticsUC *analytics.UseCase,
 ) *Handler {
 	return &Handler{
 		authUC:        authUC,
@@ -41,6 +53,10 @@ func NewHandler(
 		appointmentUC: aptUC,
 		txUC:          txUC,
 		meetingUC:     meetUC,
+		leadUC:        leadUC,
+		clinicalRecUC: clinicalRecUC,
+		accountUC:     accountUC,
+		analyticsUC:   analyticsUC,
 	}
 }
 
@@ -265,6 +281,7 @@ func (h *Handler) GetAppointment(c *gin.Context) {
 
 type UpdateStatusInput struct {
 	Status entity.AppointmentStatus `json:"status" binding:"required"`
+	Reason string                   `json:"reason"`
 }
 
 func (h *Handler) UpdateAppointmentStatus(c *gin.Context) {
@@ -275,12 +292,196 @@ func (h *Handler) UpdateAppointmentStatus(c *gin.Context) {
 		return
 	}
 
-	if err := h.appointmentUC.UpdateStatus(c.Request.Context(), id, input.Status); err != nil {
+	if err := h.appointmentUC.UpdateStatus(c.Request.Context(), id, input.Status, input.Reason); err != nil {
 		response.BadRequest(c, err.Error())
 		return
 	}
 
 	response.OK(c, nil, "Appointment status updated")
+}
+
+type RescheduleInput struct {
+	Date string `json:"date" binding:"required"`
+	Time string `json:"time" binding:"required"`
+}
+
+func (h *Handler) RescheduleAppointment(c *gin.Context) {
+	id := c.Param("id")
+	var input RescheduleInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	apt, err := h.appointmentUC.Reschedule(c.Request.Context(), id, input.Date, input.Time)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.OK(c, apt, "Appointment rescheduled successfully")
+}
+
+// ------------------- Leads & Newsletter Handlers -------------------
+
+func (h *Handler) SubmitLead(c *gin.Context) {
+	var input lead.CreateLeadInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	result, err := h.leadUC.SubmitLead(c.Request.Context(), input)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.Created(c, result, "Thank you! Our care team will contact you shortly.")
+}
+
+type NewsletterInput struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
+func (h *Handler) SubscribeNewsletter(c *gin.Context) {
+	var input NewsletterInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	result, err := h.leadUC.SubscribeNewsletter(c.Request.Context(), input.Email)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.Created(c, result, "Subscribed successfully!")
+}
+
+// ------------------- Clinical Records (Refills & SOAP Notes) -------------------
+
+func (h *Handler) RequestRefill(c *gin.Context) {
+	var input clinical_record.CreateRefillInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	if uid, exists := c.Get(middleware.CtxUserIDKey); exists && input.PatientID == "" {
+		input.PatientID = uid.(string)
+	}
+
+	refill, err := h.clinicalRecUC.RequestRefill(c.Request.Context(), input)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.Created(c, refill, "Prescription refill request submitted to pharmacy")
+}
+
+func (h *Handler) ListRefills(c *gin.Context) {
+	patientID := c.Query("patientId")
+	status := c.Query("status")
+
+	if roleVal, exists := c.Get(middleware.CtxRoleKey); exists {
+		role := roleVal.(entity.UserRole)
+		if role == entity.RolePatient {
+			uid, _ := c.Get(middleware.CtxUserIDKey)
+			patientID = uid.(string)
+		}
+	}
+
+	refills, err := h.clinicalRecUC.ListRefills(c.Request.Context(), patientID, status)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.OK(c, refills, "Prescription refills retrieved")
+}
+
+func (h *Handler) ApproveRefill(c *gin.Context) {
+	id := c.Param("id")
+	if err := h.clinicalRecUC.ApproveRefill(c.Request.Context(), id); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.OK(c, nil, "Refill authorized and signed by physician")
+}
+
+func (h *Handler) CreateSOAPNote(c *gin.Context) {
+	var input clinical_record.CreateSOAPInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	if uid, exists := c.Get(middleware.CtxUserIDKey); exists && input.DoctorID == "" {
+		input.DoctorID = uid.(string)
+	}
+	if name, exists := c.Get(middleware.CtxNameKey); exists && input.DoctorName == "" {
+		input.DoctorName = name.(string)
+	}
+
+	note, err := h.clinicalRecUC.CreateSOAPNote(c.Request.Context(), input)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.Created(c, note, "Clinical SOAP note recorded in EHR")
+}
+
+func (h *Handler) ListSOAPNotes(c *gin.Context) {
+	patientID := c.Query("patientId")
+	notes, err := h.clinicalRecUC.ListSOAPNotes(c.Request.Context(), patientID)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.OK(c, notes, "SOAP notes retrieved")
+}
+
+// ------------------- Bank Accounts & Facilities -------------------
+
+func (h *Handler) ListAccounts(c *gin.Context) {
+	accounts, err := h.accountUC.List(c.Request.Context())
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+	response.OK(c, accounts, "Operating accounts retrieved")
+}
+
+func (h *Handler) CreateAccount(c *gin.Context) {
+	var input account.CreateAccountInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	acc, err := h.accountUC.Create(c.Request.Context(), input)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+	response.Created(c, acc, "Account created successfully")
+}
+
+// ------------------- Clinical Analytics Summary -------------------
+
+func (h *Handler) GetAnalyticsSummary(c *gin.Context) {
+	summary, err := h.analyticsUC.GetSummary(c.Request.Context())
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+	response.OK(c, summary, "Analytics summary retrieved")
 }
 
 // ------------------- Transaction Handlers -------------------

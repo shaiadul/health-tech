@@ -51,8 +51,34 @@ type AppointmentRepository interface {
 	GetByReference(ctx context.Context, ref string) (*entity.Appointment, error)
 	List(ctx context.Context, filter AppointmentFilter, params pagination.Params) (*pagination.PageResult[entity.Appointment], error)
 	Create(ctx context.Context, apt *entity.Appointment) error
-	UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus) error
+	UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus, reason string) error
+	Reschedule(ctx context.Context, id string, newDate, newTime string) (*entity.Appointment, error)
 	Update(ctx context.Context, apt *entity.Appointment) error
+}
+
+type LeadRepository interface {
+	CreateLead(ctx context.Context, lead *entity.LeadSubmission) error
+	CreateNewsletter(ctx context.Context, sub *entity.NewsletterSubmission) error
+	ListLeads(ctx context.Context, params pagination.Params) (*pagination.PageResult[entity.LeadSubmission], error)
+}
+
+type ClinicalRecordRepository interface {
+	CreateRefill(ctx context.Context, refill *entity.PrescriptionRefill) error
+	ListRefills(ctx context.Context, patientID string, status string) ([]entity.PrescriptionRefill, error)
+	ApproveRefill(ctx context.Context, refillID string) error
+	CreateSOAPNote(ctx context.Context, note *entity.SOAPNote) error
+	ListSOAPNotes(ctx context.Context, patientID string) ([]entity.SOAPNote, error)
+}
+
+type AccountRepository interface {
+	ListAccounts(ctx context.Context) ([]entity.BankAccount, error)
+	GetAccountByID(ctx context.Context, id string) (*entity.BankAccount, error)
+	CreateAccount(ctx context.Context, acc *entity.BankAccount) error
+	UpdateBalance(ctx context.Context, id string, amountDelta float64) error
+}
+
+type AnalyticsRepository interface {
+	GetSummary(ctx context.Context) (*entity.AnalyticsSummary, error)
 }
 
 type TransactionFilter struct {

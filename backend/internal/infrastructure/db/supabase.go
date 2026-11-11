@@ -26,6 +26,11 @@ type SupabaseDB struct {
 	services     map[string]*entity.ClinicalService
 	appointments map[string]*entity.Appointment
 	transactions map[string]*entity.Transaction
+	leads        map[string]*entity.LeadSubmission
+	newsletters  []*entity.NewsletterSubmission
+	refills      map[string]*entity.PrescriptionRefill
+	soapNotes    map[string]*entity.SOAPNote
+	accounts     map[string]*entity.BankAccount
 }
 
 func NewSupabaseDB(databaseURL string) (*SupabaseDB, error) {
@@ -35,6 +40,10 @@ func NewSupabaseDB(databaseURL string) (*SupabaseDB, error) {
 		services:     make(map[string]*entity.ClinicalService),
 		appointments: make(map[string]*entity.Appointment),
 		transactions: make(map[string]*entity.Transaction),
+		leads:        make(map[string]*entity.LeadSubmission),
+		refills:      make(map[string]*entity.PrescriptionRefill),
+		soapNotes:    make(map[string]*entity.SOAPNote),
+		accounts:     make(map[string]*entity.BankAccount),
 	}
 
 	s.seedDefaultData()
@@ -252,22 +261,39 @@ func (s *SupabaseDB) seedDefaultData() {
 	}
 	s.appointments[apt1.ID] = apt1
 
-	// Seed Transactions
-	tx1 := &entity.Transaction{
-		ID:            "tx_101",
-		Reference:     "TX-MED-80214",
-		PatientID:     "usr_patient_alex",
-		PatientName:   "Alex Mercer",
-		AppointmentID: "apt_live_001",
-		Category:      "Cardiology & Diagnostics",
-		Department:    "Cardiology & Heart Health",
-		Amount:        180.0,
-		Currency:      "USD",
-		Status:        entity.TxStatusCompleted,
-		PaymentMethod: "Visa ending in 4242",
-		Date:          time.Now().Add(-2 * time.Hour),
+	// Seed Default Refills
+	r1 := &entity.PrescriptionRefill{
+		ID:               "ref_001",
+		PatientID:        "usr_patient_alex",
+		PatientName:      "Alex Mercer",
+		MedicationID:     "med_1",
+		MedicationName:   "Atorvastatin Calcium",
+		Dosage:           "20 mg Oral Tablet",
+		RxNumber:         "RX-884102",
+		PharmacyName:     "CVS Pharmacy #4192",
+		RefillsRemaining: 2,
+		Status:           "pending",
+		PrescribedBy:     "Dr. Sarah Ahmed, MD",
+		CreatedAt:        time.Now().Add(-24 * time.Hour),
 	}
-	s.transactions[tx1.ID] = tx1
+	s.refills[r1.ID] = r1
+
+	// Seed Default Accounts
+	acc1 := &entity.BankAccount{
+		ID:               "acc_01",
+		Name:             "MedPulse Clinical Operating Account",
+		AccountType:      "checking",
+		AccountNumber:    "482910481920",
+		RoutingNumber:    "121000358",
+		Balance:          845200.0,
+		AvailableBalance: 845200.0,
+		Currency:         "USD",
+		Status:           "active",
+		CardLast4:        "1920",
+		InstitutionName:  "JPMorgan Chase Healthcare",
+		ColorTheme:       "navy",
+	}
+	s.accounts[acc1.ID] = acc1
 }
 
 func (s *SupabaseDB) createTables(db *sql.DB) error {
@@ -672,7 +698,7 @@ func (s *SupabaseDB) AppointmentCreate(ctx context.Context, apt *entity.Appointm
 	return nil
 }
 
-func (s *SupabaseDB) AppointmentUpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus) error {
+func (s *SupabaseDB) AppointmentUpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus, reason string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	apt, ok := s.appointments[id]
@@ -680,8 +706,189 @@ func (s *SupabaseDB) AppointmentUpdateStatus(ctx context.Context, id string, sta
 		return fmt.Errorf("appointment not found")
 	}
 	apt.Status = status
+	if reason != "" {
+		apt.CancellationReason = reason
+	}
 	apt.UpdatedAt = time.Now()
 	return nil
+}
+
+func (s *SupabaseDB) AppointmentReschedule(ctx context.Context, id string, newDate, newTime string) (*entity.Appointment, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	apt, ok := s.appointments[id]
+	if !ok {
+		return nil, fmt.Errorf("appointment not found")
+	}
+	apt.Date = newDate
+	apt.TimeSlot = newTime
+	apt.Status = entity.AppointmentStatusRescheduled
+	apt.UpdatedAt = time.Now()
+	return apt, nil
+}
+
+// ----------------- Lead & Newsletter Repository -----------------
+
+func (s *SupabaseDB) CreateLead(ctx context.Context, lead *entity.LeadSubmission) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.leads[lead.ID] = lead
+	return nil
+}
+
+func (s *SupabaseDB) CreateNewsletter(ctx context.Context, sub *entity.NewsletterSubmission) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.newsletters = append(s.newsletters, sub)
+	return nil
+}
+
+func (s *SupabaseDB) ListLeads(ctx context.Context, params pagination.Params) (*pagination.PageResult[entity.LeadSubmission], error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var list []entity.LeadSubmission
+	for _, l := range s.leads {
+		list = append(list, *l)
+	}
+
+	total := int64(len(list))
+	start := params.Offset()
+	end := start + params.Limit()
+	if start > len(list) {
+		start = len(list)
+	}
+	if end > len(list) {
+		end = len(list)
+	}
+
+	return &pagination.PageResult[entity.LeadSubmission]{
+		Data: list[start:end],
+		Meta: pagination.NewMeta(total, params.Page, params.PageSize),
+	}, nil
+}
+
+// ----------------- Clinical Records (Refills & SOAP) -----------------
+
+func (s *SupabaseDB) CreateRefill(ctx context.Context, refill *entity.PrescriptionRefill) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.refills[refill.ID] = refill
+	return nil
+}
+
+func (s *SupabaseDB) ListRefills(ctx context.Context, patientID string, status string) ([]entity.PrescriptionRefill, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var list []entity.PrescriptionRefill
+	for _, r := range s.refills {
+		if patientID != "" && r.PatientID != patientID {
+			continue
+		}
+		if status != "" && r.Status != status {
+			continue
+		}
+		list = append(list, *r)
+	}
+	return list, nil
+}
+
+func (s *SupabaseDB) ApproveRefill(ctx context.Context, refillID string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ref, ok := s.refills[refillID]
+	if !ok {
+		return fmt.Errorf("refill not found")
+	}
+	ref.Status = "approved"
+	if ref.RefillsRemaining > 0 {
+		ref.RefillsRemaining--
+	}
+	return nil
+}
+
+func (s *SupabaseDB) CreateSOAPNote(ctx context.Context, note *entity.SOAPNote) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.soapNotes[note.ID] = note
+	return nil
+}
+
+func (s *SupabaseDB) ListSOAPNotes(ctx context.Context, patientID string) ([]entity.SOAPNote, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var list []entity.SOAPNote
+	for _, n := range s.soapNotes {
+		if patientID != "" && n.PatientID != patientID {
+			continue
+		}
+		list = append(list, *n)
+	}
+	return list, nil
+}
+
+// ----------------- Bank Accounts & Facilities -----------------
+
+func (s *SupabaseDB) ListAccounts(ctx context.Context) ([]entity.BankAccount, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var list []entity.BankAccount
+	for _, a := range s.accounts {
+		list = append(list, *a)
+	}
+	return list, nil
+}
+
+func (s *SupabaseDB) GetAccountByID(ctx context.Context, id string) (*entity.BankAccount, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	acc, ok := s.accounts[id]
+	if !ok {
+		return nil, fmt.Errorf("account not found")
+	}
+	return acc, nil
+}
+
+func (s *SupabaseDB) CreateAccount(ctx context.Context, acc *entity.BankAccount) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.accounts[acc.ID] = acc
+	return nil
+}
+
+func (s *SupabaseDB) UpdateBalance(ctx context.Context, id string, amountDelta float64) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	acc, ok := s.accounts[id]
+	if !ok {
+		return fmt.Errorf("account not found")
+	}
+	acc.Balance += amountDelta
+	acc.AvailableBalance += amountDelta
+	return nil
+}
+
+// ----------------- Analytics -----------------
+
+func (s *SupabaseDB) GetSummary(ctx context.Context) (*entity.AnalyticsSummary, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	return &entity.AnalyticsSummary{
+		TotalIncomeMonth:   48250.0,
+		TotalExpenseMonth:  12480.0,
+		SavingsRate:        74.1,
+		MonthlyGrowthRate:  14.2,
+		TopExpenseCategory: "Medical Equipment & Diagnostics",
+		AverageDailySpend:  416.0,
+		OutpatientVolume:   1325,
+		AverageWaitMinutes: 11.4,
+		TelehealthRatio:    36.8,
+		SatisfactionRate:   99.4,
+	}, nil
 }
 
 func (s *SupabaseDB) AppointmentUpdate(ctx context.Context, apt *entity.Appointment) error {

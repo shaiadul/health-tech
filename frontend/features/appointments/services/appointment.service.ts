@@ -7,6 +7,12 @@ import {
   DayAvailability,
   TimeSlot,
 } from "@/types/appointment"
+import {
+  createAppointmentAction,
+  getAppointmentsAction,
+  updateAppointmentStatusAction,
+  rescheduleAppointmentAction,
+} from "@/lib/actions"
 
 // In-memory store for session appointments
 let appointmentsStore: Appointment[] = [...INITIAL_USER_APPOINTMENTS]
@@ -67,10 +73,65 @@ export const AppointmentService = {
    * Creates and confirms an appointment
    */
   async createAppointment(draft: BookingDraft): Promise<Appointment> {
-    await new Promise((r) => setTimeout(r, 600)) // network delay simulation
-
     const service = FINANCIAL_SERVICES.find((s) => s.id === draft.serviceId) || FINANCIAL_SERVICES[0]
     const specialist = SPECIALISTS.find((sp) => sp.id === draft.specialistId) || SPECIALISTS[0]
+
+    try {
+      const res = await createAppointmentAction({
+        patientName: draft.customer ? `${draft.customer.firstName} ${draft.customer.lastName}` : "Alex Mercer",
+        patientEmail: draft.customer?.email || "alex.mercer@gmail.com",
+        patientPhone: draft.customer?.phone || "+1 (555) 389-9921",
+        specialistId: specialist.id,
+        serviceId: service.id,
+        date: draft.date || new Date().toISOString().split("T")[0],
+        timeSlot: draft.time || "10:00 AM",
+        format: draft.consultationType === "video" ? "video" : "in_person",
+        symptoms: draft.customer?.reason || "General clinical review",
+      })
+
+      if (res.success && res.data) {
+        const aptData = res.data
+        const dateObj = new Date(aptData.date)
+        const dateFormatted = dateObj.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+
+        const mappedApt: Appointment = {
+          id: aptData.id,
+          referenceNumber: aptData.reference,
+          serviceId: aptData.serviceId,
+          serviceTitle: aptData.serviceName,
+          specialistId: aptData.specialistId,
+          specialistName: aptData.specialistName,
+          specialistTitle: aptData.specialistTitle || specialist.title,
+          specialistAvatar: aptData.specialistAvatar || specialist.avatar,
+          date: aptData.date,
+          dateFormatted,
+          time: aptData.timeSlot,
+          durationMinutes: service.durationMinutes,
+          consultationType: aptData.format === "video" ? "video" : "in_person",
+          status: aptData.status,
+          meetingLink: aptData.meetingUrl || `/consultation/${aptData.reference.toLowerCase()}`,
+          locationAddress: "MedPulse Hospital Main Campus · 742 Healthcare Ave, Floor 4",
+          createdAt: aptData.createdAt,
+          customer: {
+            firstName: draft.customer?.firstName || "Alex",
+            lastName: draft.customer?.lastName || "Mercer",
+            email: aptData.patientEmail,
+            phone: aptData.patientPhone || "+1 (555) 389-9921",
+            contactMethod: draft.consultationType || "video",
+            reason: aptData.symptoms || "Clinical medical consultation",
+          },
+        }
+
+        appointmentsStore = [mappedApt, ...appointmentsStore]
+        return mappedApt
+      }
+    } catch {
+      // Fallback
+    }
 
     const ref = `MED-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
     const aptId = `apt_${Date.now().toString(36)}`
@@ -144,7 +205,24 @@ export const AppointmentService = {
     newDate: string,
     newTime: string
   ): Promise<Appointment | null> {
-    await new Promise((r) => setTimeout(r, 500))
+    try {
+      const res = await rescheduleAppointmentAction(id, newDate, newTime)
+      if (res.success && res.data) {
+        const aptData = res.data
+        const index = appointmentsStore.findIndex((a) => a.id === id)
+        if (index !== -1) {
+          appointmentsStore[index] = {
+            ...appointmentsStore[index],
+            date: aptData.date,
+            time: aptData.timeSlot,
+            status: "rescheduled",
+          }
+          return appointmentsStore[index]
+        }
+      }
+    } catch {
+      // Fallback
+    }
 
     const index = appointmentsStore.findIndex((a) => a.id === id)
     if (index === -1) return null
@@ -173,7 +251,11 @@ export const AppointmentService = {
    * Cancels an appointment
    */
   async cancelAppointment(id: string, reason?: string): Promise<boolean> {
-    await new Promise((r) => setTimeout(r, 400))
+    try {
+      await updateAppointmentStatusAction(id, "cancelled", reason)
+    } catch {
+      // Fallback
+    }
 
     const index = appointmentsStore.findIndex((a) => a.id === id)
     if (index === -1) return false

@@ -13,9 +13,13 @@ import (
 	"github.com/health-tech/backend/internal/infrastructure/cache"
 	"github.com/health-tech/backend/internal/infrastructure/db"
 	"github.com/health-tech/backend/internal/infrastructure/zoom"
+	"github.com/health-tech/backend/internal/usecase/account"
+	"github.com/health-tech/backend/internal/usecase/analytics"
 	"github.com/health-tech/backend/internal/usecase/appointment"
 	"github.com/health-tech/backend/internal/usecase/auth"
+	"github.com/health-tech/backend/internal/usecase/clinical_record"
 	"github.com/health-tech/backend/internal/usecase/clinical_service"
+	"github.com/health-tech/backend/internal/usecase/lead"
 	"github.com/health-tech/backend/internal/usecase/meeting"
 	"github.com/health-tech/backend/internal/usecase/specialist"
 	"github.com/health-tech/backend/internal/usecase/transaction"
@@ -61,6 +65,10 @@ func main() {
 	serviceRepo := db.NewClinicalServiceRepoAdapter(supabaseDB)
 	appointmentRepo := db.NewAppointmentRepoAdapter(supabaseDB)
 	transactionRepo := db.NewTransactionRepoAdapter(supabaseDB)
+	leadRepo := db.NewLeadRepoAdapter(supabaseDB)
+	clinicalRecRepo := db.NewClinicalRecordRepoAdapter(supabaseDB)
+	accountRepo := db.NewAccountRepoAdapter(supabaseDB)
+	analyticsRepo := db.NewAnalyticsRepoAdapter(supabaseDB)
 
 	// 2. Infrastructure: Redis Cloud Cache with namespacing
 	var cacheClient cache.Cache
@@ -92,9 +100,24 @@ func main() {
 	appointmentUC := appointment.NewUseCase(appointmentRepo, specialistRepo, serviceRepo, zoomService, cacheClient)
 	txUC := transaction.NewUseCase(transactionRepo)
 	meetingUC := meeting.NewUseCase(zoomService)
+	leadUC := lead.NewUseCase(leadRepo)
+	clinicalRecUC := clinical_record.NewUseCase(clinicalRecRepo)
+	accountUC := account.NewUseCase(accountRepo)
+	analyticsUC := analytics.NewUseCase(analyticsRepo)
 
 	// 6. HTTP Handlers & Router
-	h := handler.NewHandler(authUC, specialistUC, serviceUC, appointmentUC, txUC, meetingUC)
+	h := handler.NewHandler(
+		authUC,
+		specialistUC,
+		serviceUC,
+		appointmentUC,
+		txUC,
+		meetingUC,
+		leadUC,
+		clinicalRecUC,
+		accountUC,
+		analyticsUC,
+	)
 	r := router.SetupRouter(h, tokenManager)
 
 	srv := &http.Server{

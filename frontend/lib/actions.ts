@@ -191,7 +191,8 @@ export async function createAppointmentAction(input: {
 
 export async function updateAppointmentStatusAction(
   id: string,
-  status: "confirmed" | "in_consultation" | "completed" | "cancelled"
+  status: "confirmed" | "in_consultation" | "completed" | "cancelled" | "rescheduled",
+  reason?: string
 ): Promise<ApiResponse> {
   const token = await getServerToken();
   if (!token) {
@@ -199,8 +200,158 @@ export async function updateAppointmentStatusAction(
   }
   return fetcherWithAuth(`/appointments/${id}/status`, token, {
     method: "PATCH",
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, reason }),
   });
+}
+
+export async function rescheduleAppointmentAction(
+  id: string,
+  date: string,
+  time: string
+): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Authentication required" };
+  }
+  return fetcherWithAuth(`/appointments/${id}/reschedule`, token, {
+    method: "POST",
+    body: JSON.stringify({ date, time }),
+  });
+}
+
+// ------------------- Leads & Newsletter Actions -------------------
+
+export async function submitLeadAction(data: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  serviceInterest?: string;
+  estimatedPortfolio?: string;
+}): Promise<ApiResponse> {
+  return fetcher("/leads", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function subscribeNewsletterAction(email: string): Promise<ApiResponse> {
+  return fetcher("/newsletter/subscribe", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+// ------------------- Prescription Refills Actions -------------------
+
+export async function requestRefillAction(data: {
+  patientId?: string;
+  patientName: string;
+  medicationId: string;
+  medicationName: string;
+  dosage: string;
+  rxNumber: string;
+  pharmacyName?: string;
+  prescribedBy?: string;
+}): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Authentication required" };
+  }
+  return fetcherWithAuth("/prescriptions/refill", token, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getRefillsAction(status?: string): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Authentication required" };
+  }
+  return fetcherWithAuth("/prescriptions/refills", token, {
+    params: { status },
+  });
+}
+
+export async function approveRefillAction(refillId: string): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth(`/prescriptions/refills/${refillId}/approve`, token, {
+    method: "PATCH",
+  });
+}
+
+// ------------------- EHR SOAP Notes Actions -------------------
+
+export async function createSOAPNoteAction(data: {
+  appointmentId?: string;
+  patientId?: string;
+  patientName: string;
+  doctorId?: string;
+  doctorName?: string;
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+}): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth("/ehr/soap-notes", token, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getSOAPNotesAction(patientId?: string): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth("/ehr/soap-notes", token, {
+    params: { patientId },
+  });
+}
+
+// ------------------- Operating Accounts / Facility Billing Actions -------------------
+
+export async function getAccountsAction(): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth("/accounts", token);
+}
+
+export async function createAccountAction(data: {
+  name: string;
+  accountType: string;
+  routingNumber?: string;
+  initialDeposit: number;
+  institutionName?: string;
+  colorTheme?: string;
+}): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth("/accounts", token, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+// ------------------- Clinical Analytics Summary Actions -------------------
+
+export async function getAnalyticsSummaryAction(): Promise<ApiResponse> {
+  const token = await getServerToken();
+  if (!token) {
+    return { success: false, data: null, error: "Staff authentication required" };
+  }
+  return fetcherWithAuth("/analytics/summary", token);
 }
 
 // ------------------- Transactions / Billing Actions (Staff-only) -------------------

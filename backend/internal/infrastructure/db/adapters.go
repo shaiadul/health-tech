@@ -80,8 +80,12 @@ func (a *AppointmentRepoAdapter) Create(ctx context.Context, apt *entity.Appoint
 	return a.db.AppointmentCreate(ctx, apt)
 }
 
-func (a *AppointmentRepoAdapter) UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus) error {
-	return a.db.AppointmentUpdateStatus(ctx, id, status)
+func (a *AppointmentRepoAdapter) UpdateStatus(ctx context.Context, id string, status entity.AppointmentStatus, reason string) error {
+	return a.db.AppointmentUpdateStatus(ctx, id, status, reason)
+}
+
+func (a *AppointmentRepoAdapter) Reschedule(ctx context.Context, id string, newDate, newTime string) (*entity.Appointment, error) {
+	return a.db.AppointmentReschedule(ctx, id, newDate, newTime)
 }
 
 func (a *AppointmentRepoAdapter) Update(ctx context.Context, apt *entity.Appointment) error {
@@ -106,5 +110,97 @@ func (a *TransactionRepoAdapter) List(ctx context.Context, filter repository.Tra
 
 func (a *TransactionRepoAdapter) Create(ctx context.Context, tx *entity.Transaction) error {
 	return a.db.TransactionCreate(ctx, tx)
+}
+
+// ----------------- Lead & Newsletter Repo Adapter -----------------
+
+type LeadRepoAdapter struct {
+	db *SupabaseDB
+}
+
+func NewLeadRepoAdapter(db *SupabaseDB) repository.LeadRepository {
+	return &LeadRepoAdapter{db: db}
+}
+
+func (a *LeadRepoAdapter) CreateLead(ctx context.Context, lead *entity.LeadSubmission) error {
+	return a.db.CreateLead(ctx, lead)
+}
+
+func (a *LeadRepoAdapter) CreateNewsletter(ctx context.Context, sub *entity.NewsletterSubmission) error {
+	return a.db.CreateNewsletter(ctx, sub)
+}
+
+func (a *LeadRepoAdapter) ListLeads(ctx context.Context, params pagination.Params) (*pagination.PageResult[entity.LeadSubmission], error) {
+	return a.db.ListLeads(ctx, params)
+}
+
+// ----------------- Clinical Records Repo Adapter -----------------
+
+type ClinicalRecordRepoAdapter struct {
+	db *SupabaseDB
+}
+
+func NewClinicalRecordRepoAdapter(db *SupabaseDB) repository.ClinicalRecordRepository {
+	return &ClinicalRecordRepoAdapter{db: db}
+}
+
+func (a *ClinicalRecordRepoAdapter) CreateRefill(ctx context.Context, refill *entity.PrescriptionRefill) error {
+	return a.db.CreateRefill(ctx, refill)
+}
+
+func (a *ClinicalRecordRepoAdapter) ListRefills(ctx context.Context, patientID string, status string) ([]entity.PrescriptionRefill, error) {
+	return a.db.ListRefills(ctx, patientID, status)
+}
+
+func (a *ClinicalRecordRepoAdapter) ApproveRefill(ctx context.Context, refillID string) error {
+	return a.db.ApproveRefill(ctx, refillID)
+}
+
+func (a *ClinicalRecordRepoAdapter) CreateSOAPNote(ctx context.Context, note *entity.SOAPNote) error {
+	return a.db.CreateSOAPNote(ctx, note)
+}
+
+func (a *ClinicalRecordRepoAdapter) ListSOAPNotes(ctx context.Context, patientID string) ([]entity.SOAPNote, error) {
+	return a.db.ListSOAPNotes(ctx, patientID)
+}
+
+// ----------------- Account Repo Adapter -----------------
+
+type AccountRepoAdapter struct {
+	db *SupabaseDB
+}
+
+func NewAccountRepoAdapter(db *SupabaseDB) repository.AccountRepository {
+	return &AccountRepoAdapter{db: db}
+}
+
+func (a *AccountRepoAdapter) ListAccounts(ctx context.Context) ([]entity.BankAccount, error) {
+	return a.db.ListAccounts(ctx)
+}
+
+func (a *AccountRepoAdapter) GetAccountByID(ctx context.Context, id string) (*entity.BankAccount, error) {
+	return a.db.GetAccountByID(ctx, id)
+}
+
+func (a *AccountRepoAdapter) CreateAccount(ctx context.Context, acc *entity.BankAccount) error {
+	return a.db.CreateAccount(ctx, acc)
+}
+
+func (a *AccountRepoAdapter) UpdateBalance(ctx context.Context, id string, amountDelta float64) error {
+	return a.db.UpdateBalance(ctx, id, amountDelta)
+}
+
+// ----------------- Analytics Repo Adapter -----------------
+
+type AnalyticsRepoAdapter struct {
+	db *SupabaseDB
+}
+
+func NewAnalyticsRepoAdapter(db *SupabaseDB) repository.AnalyticsRepository {
+	return &AnalyticsRepoAdapter{db: db}
+}
+
+func (a *AnalyticsRepoAdapter) GetSummary(ctx context.Context) (*entity.AnalyticsSummary, error) {
+	return a.db.GetSummary(ctx)
 }
 
